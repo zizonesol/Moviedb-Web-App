@@ -50,7 +50,18 @@ public class p1 extends HttpServlet {
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
-            String query = "SELECT * from stars";
+            String query = "select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list,rating \r\n" + 
+            		"from ratings r, movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
+            		"where gs.id = gm.genreId\r\n" + 
+            		"    AND gm.movieId = s.id\r\n" + 
+            		"    AND ss.id = sm.starId\r\n" + 
+            		"    AND sm.movieId = r.movieId\r\n" + 
+            		"    AND s.id = r.movieId\r\n" + 
+            		"\r\n" + 
+            		"Group by s.id\r\n" + 
+            		"order by r.rating DESC\r\n" + 
+            		"limit 20;";
+            
 
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
@@ -59,11 +70,13 @@ public class p1 extends HttpServlet {
 
             // Iterate through each row of rs
             while (rs.next()) {
-                String m_id = rs.getString("id");
-                String m_name = rs.getString("name");
-                String m_dob = rs.getString("birthYear");
+                String m_id = rs.getString("title");
+                Integer m_year = rs.getInt("year");
+                Float m_name = rs.getFloat("rating");
+                String m_dob = rs.getString("director");
+                String m_stars = rs.getString("Stars_Appear");
                 out.println("<tr>" + "<td>" + m_id + "</td>" + "<td>" + m_name + "</td>" + "<td>" + m_dob + "</td>"
-                        + "</tr>");
+                        + "</tr>" + "<tr>" + "<td>" + m_year + "</td>" + "<tr>" + "<td>" + m_stars + "</td>");
             }
 
             out.println("</TABLE>");
