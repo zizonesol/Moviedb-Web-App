@@ -39,7 +39,7 @@ public class p1 extends HttpServlet {
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-        out.println("<HTML><HEAD><TITLE>MovieDB</TITLE></HEAD>");
+        out.println("<HTML><HEAD><CENTER><TITLE>MovieDB</CENTER></TITLE></HEAD>");
         out.println("<BODY><H1>MovieDB</H1>");
 
         try {
@@ -69,14 +69,17 @@ public class p1 extends HttpServlet {
             out.println("<TABLE border>");
 
             // Iterate through each row of rs
+            out.println("<tr>" + "<td>" + "Movie Title" + "</td>" + "<td>" + "Released Year" + "</td>"+"<td>" + "Movie Director" + "</td>"
+            			+"<td>" + "List of Stars" + "</td>" + "<td>" + "List of Genres" + "</td>" + "<td>" + "Rating" + "</td>" + "</tr>");
             while (rs.next()) {
-                String m_id = rs.getString("title");
+                String m_title = rs.getString("title");
                 Integer m_year = rs.getInt("year");
-                Float m_name = rs.getFloat("rating");
-                String m_dob = rs.getString("director");
+                Float m_rating = rs.getFloat("rating");
+                String m_director = rs.getString("director");
                 String m_stars = rs.getString("Stars_Appear");
-                out.println("<tr>" + "<td>" + m_id + "</td>" + "<td>" + m_name + "</td>" + "<td>" + m_dob + "</td>"
-                        + "</tr>" + "<tr>" + "<td>" + m_year + "</td>" + "<tr>" + "<td>" + m_stars + "</td>");
+                String m_genres = rs.getString("geners_list");
+                out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_director + "</td>"
+                           + "<td>" + m_stars + "</td>"+ "<td>" + m_genres + "</td>" + "<td>" + m_rating + "</td>" + "</tr>");
             }
 
             out.println("</TABLE>");
