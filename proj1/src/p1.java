@@ -1,6 +1,3 @@
-
-/* A servlet to display the contents of the MySQL movieDB database */
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -13,17 +10,28 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-public class testing extends HttpServlet {
+/**
+ * Servlet implementation class p1
+ */
+@WebServlet("/p1")
+public class p1 extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
     public String getServletInfo() {
         return "Servlet connects to MySQL database and displays result of a SELECT";
     }
-
-    // Use http GET
-
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String loginUser = "lihengz";
-        String loginPasswd = "as499069589";
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
         response.setContentType("text/html"); // Response mime type
@@ -77,4 +85,6 @@ public class testing extends HttpServlet {
         }
         out.close();
     }
+
+
 }
