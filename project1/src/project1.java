@@ -39,8 +39,8 @@ public class project1 extends HttpServlet {
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-        out.println("<HTML><HEAD><CENTER><TITLE>MovieDB</CENTER></TITLE></HEAD>");
-        out.println("<BODY><H1>MovieDB</H1>");
+        out.println("<HTML><HEAD><TITLE>MovieDB</TITLE></HEAD>");
+        out.println("<CENTER><BODY><H1>MovieDB</H1>");
 
         try {
             //Class.forName("org.gjt.mm.mysql.Driver");
@@ -82,7 +82,7 @@ public class project1 extends HttpServlet {
                            + "<td>" + m_stars + "</td>"+ "<td>" + m_genres + "</td>" + "<td>" + m_rating + "</td>" + "</tr>");
             }
 
-            out.println("</TABLE>");
+            out.println("</TABLE></BODY></CENTER>");
 
             rs.close();
             statement.close();

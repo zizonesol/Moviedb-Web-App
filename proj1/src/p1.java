@@ -39,7 +39,7 @@ public class p1 extends HttpServlet {
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-        out.println("<HTML><HEAD><CENTER><TITLE>MovieDB</CENTER></TITLE></HEAD>");
+        out.println("<HTML><HEAD><CENTER><TITLE>NIHAO MovieDB</CENTER></TITLE></HEAD>");
         out.println("<BODY><H1>MovieDB</H1>");
 
         try {
