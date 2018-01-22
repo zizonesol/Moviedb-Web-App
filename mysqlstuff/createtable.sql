@@ -19,8 +19,8 @@ CREATE TABLE stars(
 CREATE TABLE stars_in_movies(
 	starId	varchar(10) DEFAULT '' NOT NULL,
 	movieId varchar(10) DEFAULT '' NOT NULL,
-    foreign key(starId) REFERENCES stars(id),
-    foreign key(movieId) REFERENCES movies(id)
+    foreign key(starId) REFERENCES stars(id) ON DELETE CASCADE,
+    foreign key(movieId) REFERENCES movies(id) ON DELETE CASCADE
 );
 
 CREATE TABLE genres(
@@ -32,8 +32,8 @@ CREATE TABLE genres(
 CREATE TABLE genres_in_movies(
 	genreId	integer NOT NULL,
     movieId	varchar(10) DEFAULT '' NOT NULL,
-    foreign key(genreId) REFERENCES genres(id),
-    foreign key(movieId) REFERENCES movies(id)
+    foreign key(genreId) REFERENCES genres(id) ON DELETE CASCADE,
+    foreign key(movieId) REFERENCES movies(id) ON DELETE CASCADE
 );
 
 
@@ -63,14 +63,14 @@ CREATE TABLE sales(
     movieId varchar(10) DEFAULT ''  NOT NULL,
     saleDate date NOT NULL,
 	primary key(id),
-	foreign key(customerId) REFERENCES customers(id),
-    foreign key(movieId) REFERENCES movies(id)
+	foreign key(customerId) REFERENCES customers(id) ON DELETE CASCADE,
+    foreign key(movieId) REFERENCES movies(id) ON DELETE CASCADE
 );
 
 CREATE TABLE ratings(
 	movieId		varchar(10) DEFAULT '' NOT NULL,
     rating	float NOT NULL,
     numVotes	integer,
-    foreign key(movieId) REFERENCES movies(id)
+    foreign key(movieId) REFERENCES movies(id) ON DELETE CASCADE
 
 );
