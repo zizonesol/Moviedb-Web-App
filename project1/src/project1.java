@@ -77,8 +77,8 @@ public class project1 extends HttpServlet {
                 Integer m_year = rs.getInt("year");
                 Float m_rating = rs.getFloat("rating");
                 String m_director = rs.getString("director");
-                String m_stars = rs.getString("Stars_Appear");
-                String m_genres = rs.getString("geners_list");
+                String m_stars = (rs.getString("Stars_Appear")).replace(",", ", ");
+                String m_genres = (rs.getString("geners_list")).replace(",", ", ");
                 out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_director + "</td>"
                            + "<td>" + m_stars + "</td>"+ "<td>" + m_genres + "</td>" + "<td>" + m_rating + "</td>" + "</tr>");
             }
