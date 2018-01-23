@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class p1
  */
-@WebServlet("/project1")
+
 public class project1 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -30,8 +30,8 @@ public class project1 extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String loginUser = "lihengz";
-        String loginPasswd = "as499069589";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
         response.setContentType("text/html"); // Response mime type
