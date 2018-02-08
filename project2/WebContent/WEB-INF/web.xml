@@ -787,7 +787,7 @@ information in the standard deployment descriptor.
 Tools are not allowed to add the non-standard information into the
 standard deployment descriptor.
 -->
-<web-app xmlns:web="http://xmlns.jcp.org/xml/ns/javaee">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
   <display-name>Test Tomcat Connection to MySQL DB</display-name>
   <description>
       Test Tomcat Connection to mySQL DB
@@ -800,6 +800,44 @@ standard deployment descriptor.
     <servlet-name>login</servlet-name>
     <url-pattern>/servlet/login</url-pattern>
   </servlet-mapping>
-  
-  
+  <servlet>
+    <servlet-name>searchpageR</servlet-name>
+    <servlet-class>searchpage</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>searchpageR</servlet-name>
+    <url-pattern>/servlet/searchpage</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>movieinfo</servlet-name>
+    <servlet-class>movieinfo</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>movieinfo</servlet-name>
+    <url-pattern>/servlet/movieinfo</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>starinfo</servlet-name>
+    <servlet-class>starinfo</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>starinfo</servlet-name>
+    <url-pattern>/servlet/starinfo</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>genresearch</servlet-name>
+    <servlet-class>genresearch</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>genresearch</servlet-name>
+    <url-pattern>/servlet/genresearch</url-pattern>
+  </servlet-mapping>
+    <servlet>
+    <servlet-name>browsegenre</servlet-name>
+    <servlet-class>browsegenre</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>browsegenre</servlet-name>
+    <url-pattern>/servlet/browsegenre</url-pattern>
+  </servlet-mapping>
 </web-app>
