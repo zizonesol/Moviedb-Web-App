@@ -62,7 +62,7 @@ public class starinfo extends HttpServlet {
 	          String query = "select ss.name, ss.birthYear, GROUP_CONCAT(distinct m.title) as Movie_appear\r\n" + 
 	          		"from stars ss, stars_in_movies sm, movies m\r\n" + 
 	          		"where m.id = sm.movieId\r\n" + 
-	          		"AND	ss.id = sm.starId AND ss.name = \" "+ name +"\"\r\n" + 
+	          		"AND	ss.id = sm.starId AND ss.name = \""+ name +"\"\r\n" + 
 	          		"GROUP BY ss.id;";
 
            // Perform the query
@@ -71,14 +71,24 @@ public class starinfo extends HttpServlet {
            out.println("<TABLE border>");
 
            // Iterate through each row of rs
-           out.println("<tr>" + "<td>" + "Star Name" + "</td>" + "<td>" + "Released Year" + "</td>"+"<td>" + "Movie Director" + "</td>"
+           out.println("<tr>" + "<td>" + "Star Name" + "</td>" + "<td>" + "Released Year" + "</td>"+"<td>" + "Movies Appear In" + "</td>"
            			+ "</tr>");
-           while (rs.first()) {
+           
+          
+           while (rs.next()) {
                String m_title = rs.getString("ss.name");
-               System.out.println(m_title);
                Integer m_year = rs.getInt("ss.birthYear");
-               String m_movies = (rs.getString("Movie_appear")).replace(",", ", ");
-               out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_movies + "</td>"
+               String m_movies = rs.getString("Movie_appear");
+               
+               String m_hypermovie = "";
+               
+               for (String n : m_movies.split(","))
+               {
+            	   m_hypermovie = m_hypermovie + "<a href= \"/project2/servlet/movieinfo?movie_title=" + n.replace(" ","+") + "\">" + n + "</a>, ";
+               }
+               m_hypermovie = m_hypermovie.substring(0, m_hypermovie.length()-2);
+               
+               out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_hypermovie + "</td>"
                            + "</tr>");
            }
 

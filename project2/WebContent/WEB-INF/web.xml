@@ -824,4 +824,20 @@ standard deployment descriptor.
     <servlet-name>starinfo</servlet-name>
     <url-pattern>/servlet/starinfo</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>genresearch</servlet-name>
+    <servlet-class>genresearch</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>genresearch</servlet-name>
+    <url-pattern>/servlet/genresearch</url-pattern>
+  </servlet-mapping>
+    <servlet>
+    <servlet-name>browsegenre</servlet-name>
+    <servlet-class>browsegenre</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>browsegenre</servlet-name>
+    <url-pattern>/servlet/browsegenre</url-pattern>
+  </servlet-mapping>
 </web-app>

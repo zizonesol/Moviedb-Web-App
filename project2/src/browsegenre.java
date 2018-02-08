@@ -1,5 +1,3 @@
-
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -15,16 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class movieinfo
+ * Servlet implementation class browsegenre
  */
-@WebServlet("/movieinfo")
-public class movieinfo extends HttpServlet {
+@WebServlet("/browsegenre")
+public class browsegenre extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public movieinfo() {
+    public browsegenre() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -56,21 +54,9 @@ public class movieinfo extends HttpServlet {
            // Declare our statement
            Statement statement = dbcon.createStatement();
 
-           String name = request.getParameter("movie_title");
 	          
-	         
-	          
-	          String query = "select * , r.rating from\r\n" + 
-	            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
-	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
-	            		"	where gs.id = gm.genreId\r\n" + 
-	            		"		AND gm.movieId = s.id\r\n" + 
-	            		"		AND ss.id = sm.starId\r\n" + 
-	            		"        AND sm.movieId = s.id\r\n AND s.title = \"" + name + "\" \r\n" + 
-	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
-	            		"    where m.title = masterp.title\r\n" + 
-	            		"    AND m.id = r.movieId \r\n" + 
-	            		"limit 20;";
+	          String query = "select g.name\r\n" + 
+	          		"from genres g;";
 
            // Perform the query
            ResultSet rs = statement.executeQuery(query);
@@ -78,25 +64,9 @@ public class movieinfo extends HttpServlet {
            out.println("<TABLE border>");
 
            // Iterate through each row of rs
-           out.println("<tr>" + "<td>" + "Movie Title" + "</td>" + "<td>" + "Released Year" + "</td>"+"<td>" + "Movie Director" + "</td>"
-           			+"<td>" + "List of Stars" + "</td>" + "<td>" + "List of Genres" + "</td>" + "<td>" + "Rating" + "</td>" + "</tr>");
+           out.println("<tr>" + "<td>" + "List of Genre"  + "</td>" + "</tr>");
            while (rs.next()) {
-               String m_title = rs.getString("title");
-               Integer m_year = rs.getInt("year");
-               Float m_rating = rs.getFloat("rating");
-               String m_director = rs.getString("director");
-               String m_stars = rs.getString("Stars_Appear");
-               String m_genres = rs.getString("geners_list");
-               
-               String m_hyperstars = "";
-               String[] splitstar = m_stars.split(",");
-               
-               for (String n : splitstar)
-               {
-            	   m_hyperstars = m_hyperstars + "<a href= \"/project2/servlet/starinfo?star_name=" + n.replace(" ","+") + "\">" + n + "</a>, ";
-               }
-               m_hyperstars = m_hyperstars.substring(0, m_hyperstars.length()-2);
-               
+               String m_genres = rs.getString("name");
                
                String m_hypergenre = "";
                for (String n : m_genres.split(","))
@@ -105,10 +75,7 @@ public class movieinfo extends HttpServlet {
                }
                m_hypergenre = m_hypergenre.substring(0, m_hypergenre.length()-2);
                
-               
-               
-               out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_director + "</td>"
-                          + "<td>" + m_hyperstars + "</td>"+ "<td>" + m_hypergenre + "</td>" + "<td>" + m_rating + "</td>" + "</tr>");
+               out.println("<tr>" + "<td>" + m_hypergenre + "</td>" + "</tr>");
            }
 
            out.println("</TABLE></BODY></CENTER>");
@@ -135,7 +102,7 @@ public class movieinfo extends HttpServlet {
 	             return;
 	         }
         out.close();
-	
+		
 		
 	}
 

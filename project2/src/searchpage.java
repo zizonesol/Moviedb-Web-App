@@ -94,6 +94,7 @@ public class searchpage extends HttpServlet {
                {
             	   m_hyperstars = m_hyperstars + "<a href= \"/project2/servlet/starinfo?star_name=" + n.replace(" ","+") + "\">" + n + "</a>, ";
                }
+               m_hyperstars = m_hyperstars.substring(0, m_hyperstars.length()-2);
                
                String m_genres = (rs.getString("geners_list")).replace(",", ", ");
                out.println("<tr>" + "<td>" + "<a href= \"/project2/servlet/movieinfo?movie_title=" + m_title.replace(" ","+") + "\">"+ m_title + "</a>" + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_director + "</td>"
