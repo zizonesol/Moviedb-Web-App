@@ -53,13 +53,30 @@ public class searchpage extends HttpServlet {
            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            // Declare our statement
            Statement statement = dbcon.createStatement();
-
+           String query = "";
+           if(request.getParameter("title") != null)
+           {
+        	   String title = request.getParameter("title");
+        	   query = "select * , r.rating from\r\n" + 
+	            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
+	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
+	            		"	where gs.id = gm.genreId\r\n" + 
+	            		"		AND gm.movieId = s.id\r\n" + 
+	            		"		AND ss.id = sm.starId\r\n" + 
+	            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '" + title + "%'\r\n" + 
+	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
+	            		"    where m.title = masterp.title\r\n" + 
+	            		"    AND m.id = r.movieId \r\n" + 
+	            		"limit 20;";
+           }
+           else {
+           
 	          String name = request.getParameter("movie_title");
 	          String year = request.getParameter("year");
 	          String director = request.getParameter("director");
 	          String star_name = request.getParameter("star_name");
 	          
-	          String query = "select * , r.rating from\r\n" + 
+	          query = "select * , r.rating from\r\n" + 
 	            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
 	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
 	            		"	where gs.id = gm.genreId\r\n" + 
@@ -70,7 +87,7 @@ public class searchpage extends HttpServlet {
 	            		"    where m.title = masterp.title\r\n" + 
 	            		"    AND m.id = r.movieId AND masterp.Stars_Appear LIKE '%" + star_name + "%'\r\n" + 
 	            		"limit 20;";
-
+           }
            // Perform the query
            ResultSet rs = statement.executeQuery(query);
 
