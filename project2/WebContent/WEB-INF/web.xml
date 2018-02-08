@@ -816,4 +816,12 @@ standard deployment descriptor.
     <servlet-name>movieinfo</servlet-name>
     <url-pattern>/servlet/movieinfo</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>starinfo</servlet-name>
+    <servlet-class>starinfo</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>starinfo</servlet-name>
+    <url-pattern>/servlet/starinfo</url-pattern>
+  </servlet-mapping>
 </web-app>

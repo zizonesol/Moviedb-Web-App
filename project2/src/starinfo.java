@@ -15,16 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class searchpage
+ * Servlet implementation class starinfo
  */
-@WebServlet("/searchpage")
-public class searchpage extends HttpServlet {
+@WebServlet("/starinfo")
+public class starinfo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public searchpage() {
+    public starinfo() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -45,6 +45,8 @@ public class searchpage extends HttpServlet {
         out.println("<HTML><HEAD><TITLE>MovieDB: Found Records</TITLE></HEAD>");
         out.println("<BODY><H1>MovieDB: Found Records</H1>");
 		
+        
+        
         try
         {
            //Class.forName("org.gjt.mm.mysql.Driver");
@@ -54,22 +56,14 @@ public class searchpage extends HttpServlet {
            // Declare our statement
            Statement statement = dbcon.createStatement();
 
-	          String name = request.getParameter("movie_title");
-	          String year = request.getParameter("year");
-	          String director = request.getParameter("director");
-	          String star_name = request.getParameter("star_name");
+           String name = request.getParameter("star_name");
 	          
-	          String query = "select * , r.rating from\r\n" + 
-	            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
-	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
-	            		"	where gs.id = gm.genreId\r\n" + 
-	            		"		AND gm.movieId = s.id\r\n" + 
-	            		"		AND ss.id = sm.starId\r\n" + 
-	            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '%" + name + "%'AND s.director LIKE '%" + director + "%' AND s.year LIKE '%" + year+"%'\r\n" + 
-	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
-	            		"    where m.title = masterp.title\r\n" + 
-	            		"    AND m.id = r.movieId AND masterp.Stars_Appear LIKE '%" + star_name + "%'\r\n" + 
-	            		"limit 20;";
+	          
+	          String query = "select ss.name, ss.birthYear, GROUP_CONCAT(distinct m.title) as Movie_appear\r\n" + 
+	          		"from stars ss, stars_in_movies sm, movies m\r\n" + 
+	          		"where m.id = sm.movieId\r\n" + 
+	          		"AND	ss.id = sm.starId AND ss.name = \" "+ name +"\"\r\n" + 
+	          		"GROUP BY ss.id;";
 
            // Perform the query
            ResultSet rs = statement.executeQuery(query);
@@ -77,27 +71,15 @@ public class searchpage extends HttpServlet {
            out.println("<TABLE border>");
 
            // Iterate through each row of rs
-           out.println("<tr>" + "<td>" + "Movie Title" + "</td>" + "<td>" + "Released Year" + "</td>"+"<td>" + "Movie Director" + "</td>"
-           			+"<td>" + "List of Stars" + "</td>" + "<td>" + "List of Genres" + "</td>" + "<td>" + "Rating" + "</td>" + "</tr>");
-           while (rs.next()) {
-               String m_title = rs.getString("title");
-               Integer m_year = rs.getInt("year");
-               Float m_rating = rs.getFloat("rating");
-               String m_director = rs.getString("director");
-               String m_stars = rs.getString("Stars_Appear");
-               
-               
-               String m_hyperstars = "";
-               String[] splitstar = m_stars.split(",");
-               
-               for (String n : splitstar)
-               {
-            	   m_hyperstars = m_hyperstars + "<a href= \"/project2/servlet/starinfo?star_name=" + n.replace(" ","+") + "\">" + n + "</a>, ";
-               }
-               
-               String m_genres = (rs.getString("geners_list")).replace(",", ", ");
-               out.println("<tr>" + "<td>" + "<a href= \"/project2/servlet/movieinfo?movie_title=" + m_title.replace(" ","+") + "\">"+ m_title + "</a>" + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_director + "</td>"
-                          + "<td>" + m_hyperstars + "</td>"+ "<td>" + m_genres + "</td>" + "<td>" + m_rating + "</td>" + "</tr>");
+           out.println("<tr>" + "<td>" + "Star Name" + "</td>" + "<td>" + "Released Year" + "</td>"+"<td>" + "Movie Director" + "</td>"
+           			+ "</tr>");
+           while (rs.first()) {
+               String m_title = rs.getString("ss.name");
+               System.out.println(m_title);
+               Integer m_year = rs.getInt("ss.birthYear");
+               String m_movies = (rs.getString("Movie_appear")).replace(",", ", ");
+               out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_movies + "</td>"
+                           + "</tr>");
            }
 
            out.println("</TABLE></BODY></CENTER>");
@@ -124,8 +106,6 @@ public class searchpage extends HttpServlet {
 	             return;
 	         }
         out.close();
-	
-	
 	}
 
 	/**
