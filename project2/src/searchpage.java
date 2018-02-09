@@ -60,6 +60,34 @@ public class searchpage extends HttpServlet {
            // Declare our statement
            Statement statement = dbcon.createStatement();
            String query = "";
+           
+           String yearsort = request.getParameter("sorty");
+           String moviesort = request.getParameter("sortm");
+           String qsort = "";
+           String htmlicon = "&#9650";
+           if(yearsort != null)
+           {
+        	   if(yearsort.equals("up"))
+        	   {
+        		   qsort = "ORDER BY masterp.year ASC \r\n";
+        	   }
+        	   else
+        	   {
+        		   qsort = "ORDER BY masterp.year DESC \r\n";
+        	   }
+           }
+           else if(moviesort != null)
+           {
+        	   if(moviesort.equals("up"))
+        	   {
+        		   qsort = "ORDER BY masterp.title ASC \r\n";
+        	   }
+        	   else
+        	   {
+        		   qsort = "ORDER BY masterp.title DESC \r\n";
+        	   }
+           }
+        	   
            if(request.getParameter("title") != null)
            {
         	   String title = request.getParameter("title");
@@ -72,7 +100,7 @@ public class searchpage extends HttpServlet {
 	            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '" + title + "%'\r\n" + 
 	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
 	            		"    where m.title = masterp.title\r\n" + 
-	            		"    AND m.id = r.movieId \r\n" + 
+	            		"    AND m.id = r.movieId \r\n" + qsort +
 	            		"limit 20;";
            }
            else {
@@ -91,7 +119,7 @@ public class searchpage extends HttpServlet {
 	            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '%" + name + "%'AND s.director LIKE '%" + director + "%' AND s.year LIKE '%" + year+"%'\r\n" + 
 	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
 	            		"    where m.title = masterp.title\r\n" + 
-	            		"    AND m.id = r.movieId AND masterp.Stars_Appear LIKE '%" + star_name + "%'\r\n" + 
+	            		"    AND m.id = r.movieId AND masterp.Stars_Appear LIKE '%" + star_name + "%'\r\n" + qsort +
 	            		"limit 20;";
            }
            // Perform the query
@@ -100,7 +128,7 @@ public class searchpage extends HttpServlet {
            out.println("<TABLE border>");
 
            // Iterate through each row of rs
-           out.println("<tr>" + "<td>" + "Movie Title" + "</td>" + "<td>" + "Released Year" + "</td>"+"<td>" + "Movie Director" + "</td>"
+           out.println("<tr>" + "<td>" + "Movie Title" + "<a href = \"/project2/"     +"&#9650" + "</td>" + "<td>" + "Released Year&#9650" + "</td>"+"<td>" + "Movie Director" + "</td>"
            			+"<td>" + "List of Stars" + "</td>" + "<td>" + "List of Genres" + "</td>" + "<td>" + "Rating" + "</td>" + "</tr>");
            while (rs.next()) {
                String m_title = rs.getString("title");
