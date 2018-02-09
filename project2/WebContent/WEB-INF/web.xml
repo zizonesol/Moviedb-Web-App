@@ -788,9 +788,9 @@ Tools are not allowed to add the non-standard information into the
 standard deployment descriptor.
 -->
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-  <display-name>Test Tomcat Connection to MySQL DB</display-name>
+  <display-name>Project 2</display-name>
   <description>
-      Test Tomcat Connection to mySQL DB
+      Project 2
     </description>
   <servlet>
     <servlet-name>login</servlet-name>
@@ -848,4 +848,7 @@ standard deployment descriptor.
     <servlet-name>welcome</servlet-name>
     <url-pattern>/servlet/welcome</url-pattern>
   </servlet-mapping>
+  <welcome-file-list>
+  	<welcome-file>/servlet/welcome</welcome-file>
+  </welcome-file-list>
 </web-app>

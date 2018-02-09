@@ -37,6 +37,22 @@ public class movieinfo extends HttpServlet {
 		String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+        
+        
+        HttpSession session = request.getSession(true);
+        if(session.isNew())
+        {
+        	session.setAttribute("loginsuss", "no");
+        	response.sendRedirect("/project2/servlet/welcome");
+        	
+        }
+        else
+        {
+        	if(session.getAttribute("loginsuss").equals("no"))
+        	{
+        		response.sendRedirect("/project2/servlet/welcome");
+        	}
+        }
 
         response.setContentType("text/html");    // Response mime type
 
@@ -46,17 +62,9 @@ public class movieinfo extends HttpServlet {
         out.println("<HTML><HEAD><TITLE>MovieDB: Found Records</TITLE></HEAD>");
         out.println("<BODY><H1>MovieDB: Found Records</H1>");
 		
-        HttpSession session = request.getSession(true);
         
-        if(session.isNew())
-        {
-        	System.out.println("not working");
-        }
-        else
-        {
-        	System.out.println("working");
-        }
         
+
         try
         {
            //Class.forName("org.gjt.mm.mysql.Driver");
