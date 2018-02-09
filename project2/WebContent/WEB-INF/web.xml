@@ -832,12 +832,20 @@ standard deployment descriptor.
     <servlet-name>genresearch</servlet-name>
     <url-pattern>/servlet/genresearch</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>browsegenre</servlet-name>
     <servlet-class>browsegenre</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>browsegenre</servlet-name>
     <url-pattern>/servlet/browsegenre</url-pattern>
+  </servlet-mapping>
+    <servlet>
+    <servlet-name>welcome</servlet-name>
+    <servlet-class>welcome</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>welcome</servlet-name>
+    <url-pattern>/servlet/welcome</url-pattern>
   </servlet-mapping>
 </web-app>

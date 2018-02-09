@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class movieinfo
@@ -45,7 +46,16 @@ public class movieinfo extends HttpServlet {
         out.println("<HTML><HEAD><TITLE>MovieDB: Found Records</TITLE></HEAD>");
         out.println("<BODY><H1>MovieDB: Found Records</H1>");
 		
+        HttpSession session = request.getSession(true);
         
+        if(session.isNew())
+        {
+        	System.out.println("not working");
+        }
+        else
+        {
+        	System.out.println("working");
+        }
         
         try
         {
