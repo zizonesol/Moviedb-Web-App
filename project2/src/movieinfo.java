@@ -58,12 +58,12 @@ public class movieinfo extends HttpServlet {
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-        out.println("<HTML><HEAD><TITLE>MovieDB: Found Records</TITLE></HEAD>");
+        out.println("<HTML><HEAD><TITLE>Movie Information</TITLE></HEAD>");
         out.println("<div align=\"center\"><form action=\"/project2/servlet/shoppingcart\">\r\n" + 
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
         		"</form>\r\n" + 
         		"</div>");
-        out.println("<BODY><H1>MovieDB: Found Records</H1>");
+        out.println("<BODY><H1>Movie Information</H1>");
 		
         
         

@@ -46,8 +46,8 @@ public class finalcheckout extends HttpServlet {
         
         PrintWriter out = response.getWriter();
 
-        out.println("<HTML><HEAD><TITLE>MovieDB: Found Records</TITLE></HEAD>");
-        out.println("<BODY><H1>MovieDB: Found Records</H1>");
+        out.println("<HTML><HEAD><TITLE>Confirm Order</TITLE></HEAD>");
+        out.println("<BODY><H1>Confirm Order</H1>");
         out.println("<TABLE border>");
         
         try
@@ -96,7 +96,7 @@ public class finalcheckout extends HttpServlet {
            
            
            out.println("<FORM ACTION=\"/project2/servlet/checkccinfo\"\r\n" + 
-           		"      METHOD=\"GET\">\r\n" + 
+           		"      METHOD=\"POST\">\r\n" + 
            		"  \r\n" + 
            		"  First Name:<br> <input type = \"text\" name = \"fname\"><br>\r\n" + 
            		"  Last Name:<br> <input type = \"text\" name = \"lname\"><br>\r\n" + 
