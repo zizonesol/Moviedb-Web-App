@@ -62,7 +62,10 @@ public class starinfo extends HttpServlet {
         out.println("<HTML><HEAD><TITLE>MovieDB: Found Records</TITLE></HEAD>");
         out.println("<BODY><H1>MovieDB: Found Records</H1>");
 		
-        
+        out.println("<div align=\"center\"><form action=\"/project2/servlet/shoppingcart\">\r\n" + 
+        		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
+        		"</form>\r\n" + 
+        		"</div>");
         
         try
         {

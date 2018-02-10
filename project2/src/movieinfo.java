@@ -59,6 +59,10 @@ public class movieinfo extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         out.println("<HTML><HEAD><TITLE>MovieDB: Found Records</TITLE></HEAD>");
+        out.println("<div align=\"center\"><form action=\"/project2/servlet/shoppingcart\">\r\n" + 
+        		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
+        		"</form>\r\n" + 
+        		"</div>");
         out.println("<BODY><H1>MovieDB: Found Records</H1>");
 		
         
@@ -78,7 +82,7 @@ public class movieinfo extends HttpServlet {
 	         
 	          
 	          String query = "select * , r.rating from\r\n" + 
-	            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
+	            		"	(select s.id,s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
 	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
 	            		"	where gs.id = gm.genreId\r\n" + 
 	            		"		AND gm.movieId = s.id\r\n" + 
@@ -91,13 +95,14 @@ public class movieinfo extends HttpServlet {
 
            // Perform the query
            ResultSet rs = statement.executeQuery(query);
-
+           String m_id = "";
            out.println("<TABLE border>");
 
            // Iterate through each row of rs
            out.println("<tr>" + "<td>" + "Movie Title" + "</td>" + "<td>" + "Released Year" + "</td>"+"<td>" + "Movie Director" + "</td>"
            			+"<td>" + "List of Stars" + "</td>" + "<td>" + "List of Genres" + "</td>" + "<td>" + "Rating" + "</td>" + "</tr>");
            while (rs.next()) {
+        	   m_id = rs.getString("id");
                String m_title = rs.getString("title");
                Integer m_year = rs.getInt("year");
                Float m_rating = rs.getFloat("rating");
@@ -127,8 +132,14 @@ public class movieinfo extends HttpServlet {
                out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_director + "</td>"
                           + "<td>" + m_hyperstars + "</td>"+ "<td>" + m_hypergenre + "</td>" + "<td>" + m_rating + "</td>" + "</tr>");
            }
+           
 
-           out.println("</TABLE></BODY></CENTER>");
+
+           out.println("</TABLE>");
+
+           out.println("<div align=\"center\"> <a href= \"/project2/servlet/shoppingcart?movieid="+ m_id + "&amount=1\"> Add To Shopping Cart </a>");
+           
+           out.print("</BODY></CENTER>");
 
            rs.close();
            statement.close();

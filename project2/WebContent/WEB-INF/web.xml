@@ -840,7 +840,7 @@ standard deployment descriptor.
     <servlet-name>browsegenre</servlet-name>
     <url-pattern>/servlet/browsegenre</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>welcome</servlet-name>
     <servlet-class>welcome</servlet-class>
   </servlet>
@@ -848,7 +848,31 @@ standard deployment descriptor.
     <servlet-name>welcome</servlet-name>
     <url-pattern>/servlet/welcome</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>shoppingcart</servlet-name>
+    <servlet-class>shoppingcart</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>shoppingcart</servlet-name>
+    <url-pattern>/servlet/shoppingcart</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>finalinfo</servlet-name>
+    <servlet-class>finalcheckout</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>finalinfo</servlet-name>
+    <url-pattern>/servlet/finalcheckout</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>checkcc</servlet-name>
+    <servlet-class>checkccinfo</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>checkcc</servlet-name>
+    <url-pattern>/servlet/checkccinfo</url-pattern>
+  </servlet-mapping>
   <welcome-file-list>
-  	<welcome-file>/servlet/welcome</welcome-file>
+    <welcome-file>/servlet/welcome</welcome-file>
   </welcome-file-list>
 </web-app>

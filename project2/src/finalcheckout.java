@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,29 +17,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class genresearch
+ * Servlet implementation class finalcheckout
  */
-@WebServlet("/genresearch")
-public class genresearch extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public genresearch() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+@WebServlet("/finalcheckout")
+public class finalcheckout extends HttpServlet {
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
-        
-        HttpSession session = request.getSession(true);
+		
+		HttpSession session = request.getSession(true);
         if(session.isNew())
         {
         	session.setAttribute("loginsuss", "no");
@@ -52,20 +38,17 @@ public class genresearch extends HttpServlet {
         		response.sendRedirect("/project2/servlet/welcome");
         	}
         }
-
-        response.setContentType("text/html");    // Response mime type
-
-        // Output stream to STDOUT
+        String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
+        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+        
+        response.setContentType("text/html");
+        
         PrintWriter out = response.getWriter();
 
         out.println("<HTML><HEAD><TITLE>MovieDB: Found Records</TITLE></HEAD>");
-        out.println("<div align=\"center\"><form action=\"/project2/servlet/shoppingcart\">\r\n" + 
-        		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
-        		"</form>\r\n" + 
-        		"</div>");
         out.println("<BODY><H1>MovieDB: Found Records</H1>");
-		
-        
+        out.println("<TABLE border>");
         
         try
         {
@@ -73,45 +56,61 @@ public class genresearch extends HttpServlet {
            Class.forName("com.mysql.jdbc.Driver").newInstance();
 
            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-           // Declare our statement
            Statement statement = dbcon.createStatement();
 
-           String genre = request.getParameter("genre");
-	          
-	          
-	          String query = "select title\r\n" + 
-	          		"from movies m, genres_in_movies gm, genres g\r\n" + 
-	          		"where m.id = gm.movieId\r\n" + 
-	          		"	AND gm.genreId = g.id\r\n" + 
-	          		"    AND g.name = \"" + genre +"\"\r\n" + 
-	          		"LIMIT 20;";
-
-           // Perform the query
-           ResultSet rs = statement.executeQuery(query);
-
+           ArrayList<String> mlist = (ArrayList<String>) session.getAttribute("mlist");
+           
            out.println("<TABLE border>");
 
-           // Iterate through each row of rs
-           out.println("<tr>" + "<td>" + "Movie Title" + "</td>" + "</tr>");
            
-          
-           while (rs.next()) {
-               String m_title = rs.getString("title");
-               
-               String m_hypertitle = "";
-               
-               for (String n : m_title.split(","))
-               {
-            	   m_hypertitle = m_hypertitle + "<a href= \"/project2/servlet/movieinfo?movie_title=" + n.replace(" ","+") + "\">" + n + "</a>, ";
-               }
-               m_hypertitle = m_hypertitle.substring(0, m_hypertitle.length()-2);
-               
-               out.println("<tr>" + "<td>" + m_title + "</td>" + "</tr>");
+           out.println("<tr>" + "<td>" + "Title" + "</td>" + "<td>" + "Amount" + "</td>" + "</tr>");
+           if(mlist != null)
+           {
+	           for(String n : mlist)
+	           {
+		           String query = "select * from movies\r\n" + 
+		           		"where id = \""+ n +"\"\r\n" + 
+		           		"limit 1;";
+			     
+		       
+		           ResultSet rs = statement.executeQuery(query);
+		           String am = (String) session.getAttribute(n);
+		           
+		           while (rs.next()) {
+		               String m_title = rs.getString("title");
+	
+		               out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + am  + "</td>" + "</tr>");
+		           }
+		           rs.close();
+	           }
            }
-
-           out.println("</TABLE></BODY></CENTER>");
-
-           rs.close();
+           out.println("</TABLE></div>");
+           
+           if(session.getAttribute("ccauth") != null)
+           {
+        	   if(session.getAttribute("ccauth").equals("fail"))
+        	   {
+        		   out.println("<p>Incorrect Information Inputed.</p>");
+        	   }
+           }
+           
+           
+           out.println("<FORM ACTION=\"/project2/servlet/checkccinfo\"\r\n" + 
+           		"      METHOD=\"GET\">\r\n" + 
+           		"  \r\n" + 
+           		"  First Name:<br> <input type = \"text\" name = \"fname\"><br>\r\n" + 
+           		"  Last Name:<br> <input type = \"text\" name = \"lname\"><br>\r\n" + 
+           		"  Credit Card Number:<br> <input type = \"number\" name = \"ccnum\"><br>\r\n" + 
+           		"  Expiration Date(Year/Month/Day):<br> <input type = \"text\" name = \"expdate\"><br>\r\n" + 
+           		"  \r\n" + 
+           		"  <INPUT TYPE=\"SUBMIT\" VALUE=\"Submit Order\"><br>\r\n" + 
+           		"  \r\n" + 
+           		"</FORM>");
+           
+           
+           out.println("</BODY></CENTER>");
+           
+     
            statement.close();
            dbcon.close();
          }
@@ -133,7 +132,6 @@ public class genresearch extends HttpServlet {
 	             return;
 	         }
         out.close();
-		
 		
 	}
 
