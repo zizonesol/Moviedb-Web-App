@@ -17,16 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class shoppingcart
+ * Servlet implementation class finalcheckout
  */
-@WebServlet("/shoppingcart")
-public class shoppingcart extends HttpServlet {
+@WebServlet("/finalcheckout")
+public class finalcheckout extends HttpServlet {
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+		
 		HttpSession session = request.getSession(true);
         if(session.isNew())
         {
@@ -41,43 +38,6 @@ public class shoppingcart extends HttpServlet {
         		response.sendRedirect("/project2/servlet/welcome");
         	}
         }
-        
-         ArrayList<String> mlist = new ArrayList<String>();
-	        
-        if(session.getAttribute("mlist") == null)
-        {
-        	session.setAttribute("mlist", mlist);
-        }
-        else
-        {
-        	mlist = (ArrayList<String>) session.getAttribute("mlist");
-        }
-        
-        if(request.getParameter("movieid") != null)
-        {
-		      
-	        String item = request.getParameter("movieid");
-	        String nun = request.getParameter("amount");
-	        
-	        if(mlist.contains(item) && nun.equals("0"))
-	        {
-	        	mlist.remove(item);
-	        }
-	        else
-	        {
-	        	if(mlist.contains(item) == false)
-	        	{
-	        		mlist.add(item);
-	        	}
-	        	if(nun != "")
-	        	{
-	        		session.setAttribute(item, nun);
-	        	}
-	        }
-	        session.setAttribute("mlist", mlist);
-        }
-        
-        
         String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
@@ -88,7 +48,6 @@ public class shoppingcart extends HttpServlet {
 
         out.println("<HTML><HEAD><TITLE>MovieDB: Found Records</TITLE></HEAD>");
         out.println("<BODY><H1>MovieDB: Found Records</H1>");
-        
         out.println("<TABLE border>");
         
         try
@@ -99,46 +58,46 @@ public class shoppingcart extends HttpServlet {
            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            Statement statement = dbcon.createStatement();
 
+           ArrayList<String> mlist = (ArrayList<String>) session.getAttribute("mlist");
+           
            out.println("<TABLE border>");
 
            
            out.println("<tr>" + "<td>" + "Title" + "</td>" + "<td>" + "Amount" + "</td>" + "</tr>");
-        
-           for(String n : mlist)
+           if(mlist != null)
            {
-	           String query = "select * from movies\r\n" + 
-	           		"where id = \""+ n +"\"\r\n" + 
-	           		"limit 1;";
-		     
-	       
-	           ResultSet rs = statement.executeQuery(query);
-	           String am = (String) session.getAttribute(n);
-	           
-	           while (rs.next()) {
-	               String m_title = rs.getString("title");
-	               
-	               
-	               String s = "<FORM ACTION=\"/project2/servlet/shoppingcart\"\r\n" + 
-	               		"      METHOD=\"GET\">\r\n" + 
-	               		"  New Amount: <input type = \"number\" name = \"amount\"><br>\r\n" + 
-	               		"<input type=\"hidden\" name=\"movieid\" value=\"" + n + "\" />"+
-	               		"  <INPUT TYPE=\"SUBMIT\" VALUE=\"Submit\">"
-	               		+ "<br>\r\n" + 
-	               		"  \r\n" + 
-	               		"</FORM>";
-	               
-	               
+	           for(String n : mlist)
+	           {
+		           String query = "select * from movies\r\n" + 
+		           		"where id = \""+ n +"\"\r\n" + 
+		           		"limit 1;";
+			     
+		       
+		           ResultSet rs = statement.executeQuery(query);
+		           String am = (String) session.getAttribute(n);
+		           
+		           while (rs.next()) {
+		               String m_title = rs.getString("title");
 	
-	               out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + am + s + "</td>" + "</tr>");
+		               out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + am  + "</td>" + "</tr>");
+		           }
+		           rs.close();
 	           }
-	           rs.close();
            }
            out.println("</TABLE></div>");
            
-           out.println("<div align=\"center\"><form action=\"/project2/servlet/finalcheckout\">\r\n" + 
-           		"<input type=\"submit\" value=\"Checkout Now!\" />\r\n" + 
-           		"</form>\r\n" + 
-           		"</div>");
+           out.println("<FORM ACTION=\"/project2/servlet/checkccinfo\"\r\n" + 
+           		"      METHOD=\"GET\">\r\n" + 
+           		"  \r\n" + 
+           		"  First Name:<br> <input type = \"text\" name = \"fname\"><br>\r\n" + 
+           		"  Last Name:<br> <input type = \"text\" name = \"lname\"><br>\r\n" + 
+           		"  Credit Card Number:<br> <input type = \"number\" name = \"ccnum\"><br>\r\n" + 
+           		"  Expiration Date(Year/Month/Day):<br> <input type = \"text\" name = \"expdate\"><br>\r\n" + 
+           		"  \r\n" + 
+           		"  <INPUT TYPE=\"SUBMIT\" VALUE=\"Submit Order\"><br>\r\n" + 
+           		"  \r\n" + 
+           		"</FORM>");
+           
            
            out.println("</BODY></CENTER>");
            
@@ -164,15 +123,15 @@ public class shoppingcart extends HttpServlet {
 	             return;
 	         }
         out.close();
-
+		
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-	
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }

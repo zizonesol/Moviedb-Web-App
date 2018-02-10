@@ -68,6 +68,7 @@ public class login extends HttpServlet
         		 HttpSession session = request.getSession(true);
         	      System.out.println(session.getAttribute("visitcount"));
         	      session.setAttribute("loginsuss", "yes");
+        	      session.setAttribute("customerid", rs.getString("id"));
         	       response.sendRedirect("/project2/mainpage.html");
         	 
         	 }

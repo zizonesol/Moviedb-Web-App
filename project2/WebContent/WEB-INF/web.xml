@@ -856,6 +856,22 @@ standard deployment descriptor.
     <servlet-name>shoppingcart</servlet-name>
     <url-pattern>/servlet/shoppingcart</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>finalinfo</servlet-name>
+    <servlet-class>finalcheckout</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>finalinfo</servlet-name>
+    <url-pattern>/servlet/finalcheckout</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>checkcc</servlet-name>
+    <servlet-class>checkccinfo</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>checkcc</servlet-name>
+    <url-pattern>/servlet/checkccinfo</url-pattern>
+  </servlet-mapping>
   <welcome-file-list>
     <welcome-file>/servlet/welcome</welcome-file>
   </welcome-file-list>
