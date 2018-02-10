@@ -27,11 +27,11 @@ public class welcome extends HttpServlet {
 			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
 					"<HTML>\r\n" + 
 					"<HEAD>\r\n" + 
-					"  <TITLE>Form Example</TITLE>\r\n" + 
+					"  <TITLE>Welcome</TITLE>\r\n" + 
 					"</HEAD>\r\n" + 
 					"\r\n" + 
 					"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
-					"<H1 ALIGN=\"CENTER\">Form Example</H1>\r\n" + 
+					"<H1 ALIGN=\"CENTER\">Welcome</H1>\r\n" + 
 					"\r\n" + 
 					"<FORM ACTION=\"/project2/servlet/login\"\r\n" + 
 					"      METHOD=\"POST\">\r\n" + 
@@ -62,11 +62,11 @@ public class welcome extends HttpServlet {
 				out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
 						"<HTML>\r\n" + 
 						"<HEAD>\r\n" + 
-						"  <TITLE>Form Example</TITLE>\r\n" + 
+						"  <TITLE>Welcome</TITLE>\r\n" + 
 						"</HEAD>\r\n" + 
 						"\r\n" + 
 						"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
-						"<H1 ALIGN=\"CENTER\">Form Example</H1>\r\n" + 
+						"<H1 ALIGN=\"CENTER\">Welcome</H1>\r\n" + 
 						"\r\n" + 
 						"<FORM ACTION=\"/project2/servlet/login\"\r\n" + 
 						"      METHOD=\"POST\">\r\n" + 
