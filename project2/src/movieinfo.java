@@ -59,6 +59,10 @@ public class movieinfo extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         out.println("<HTML><HEAD><TITLE>MovieDB: Found Records</TITLE></HEAD>");
+        out.println("<div align=\"center\"><form action=\"/project2/servlet/shoppingcart\">\r\n" + 
+        		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
+        		"</form>\r\n" + 
+        		"</div>");
         out.println("<BODY><H1>MovieDB: Found Records</H1>");
 		
         
@@ -133,7 +137,7 @@ public class movieinfo extends HttpServlet {
 
            out.println("</TABLE>");
 
-           
+           out.println("<div align=\"center\"> <a href= \"/project2/servlet/shoppingcart?movieid="+ m_id + "&amount=1\"> Add To Shopping Cart </a>");
            
            out.print("</BODY></CENTER>");
 
