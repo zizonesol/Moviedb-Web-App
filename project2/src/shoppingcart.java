@@ -88,6 +88,10 @@ public class shoppingcart extends HttpServlet {
 
         out.println("<HTML><HEAD><TITLE>Shopping Cart</TITLE></HEAD>");
         out.println("<BODY><H1>Shopping Cart</H1>");
+        out.println("<div align=\"center\"><form action=\"/project2/mainpage.html\">\r\n" + 
+           		"<input type=\"submit\" value=\"Home\" />\r\n" + 
+           		"</form>\r\n" + 
+           		"</div>");
         
         out.println("<TABLE border>");
         
