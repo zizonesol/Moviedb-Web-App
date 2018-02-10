@@ -52,6 +52,10 @@ public class searchpage extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         out.println("<HTML><HEAD><TITLE>Seach Result</TITLE></HEAD>");
+        out.println("<div align=\"right\"><form action=\"/project2/searchpage.html\">\r\n" + 
+           		"<input type=\"submit\" value=\"Back\" />\r\n" + 
+           		"</form>\r\n" + 
+           		"</div>");
         out.println("<div align=\"center\"><form action=\"/project2/servlet/shoppingcart\">\r\n" + 
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
         		"</form>\r\n" + 
