@@ -86,6 +86,15 @@ public class finalcheckout extends HttpServlet {
            }
            out.println("</TABLE></div>");
            
+           if(session.getAttribute("ccauth") != null)
+           {
+        	   if(session.getAttribute("ccauth").equals("fail"))
+        	   {
+        		   out.println("<p>Incorrect Information Inputed.</p>");
+        	   }
+           }
+           
+           
            out.println("<FORM ACTION=\"/project2/servlet/checkccinfo\"\r\n" + 
            		"      METHOD=\"GET\">\r\n" + 
            		"  \r\n" + 

@@ -72,9 +72,9 @@ public class checkccinfo extends HttpServlet {
            
            if(zs.next() == false)
            {
-        	   System.out.println("gay");
         	   zs.close();
-        	   response.sendRedirect("/project2/mainpage.html");
+        	   session.setAttribute("ccauth", "fail");
+        	   response.sendRedirect("/project2/servlet/finalcheckout");
         	   out.close();
            }
            zs.close();
