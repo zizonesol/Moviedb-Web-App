@@ -24,8 +24,6 @@ public class searchpage extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 
 		String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
@@ -53,8 +51,9 @@ public class searchpage extends HttpServlet {
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-        out.println("<HTML><HEAD><TITLE>MovieDB: Found Records</TITLE></HEAD>");
-        out.println("<BODY><H1>MovieDB: Found Records</H1>");
+        out.println("<HTML><HEAD><TITLE>Seach Result</TITLE></HEAD>");
+        out.println("<BODY><div align=\"center\"><H1>Seach Result</H1>");
+        
 		
         try
         {
@@ -69,16 +68,65 @@ public class searchpage extends HttpServlet {
            String yearsort = request.getParameter("sorty");
            String moviesort = request.getParameter("sortm");
            String qsort = "";
-           String htmlicon = "&#9650";
+           String mhtmlicon = "&sortm=up" +"\">" + "Movie Title &#9650";
+           String yhtmlicon = "&sorty=up" +"\">" + "Released Year&#9650";
+           String msortbutton = "";
+           String ysortbutton = "";
+           
+           
+           String Numpp = "10";
+           
+           String npp = request.getParameter("npp");
+           if(npp != null)
+           {
+        	   Numpp = npp;
+           }
+        	   
+           String b10 = "<a href= \"/project2/servlet/searchpage?npp=10";
+           String b25 = "<a href= \"/project2/servlet/searchpage?npp=25";
+           String b50 = "<a href= \"/project2/servlet/searchpage?npp=50";
+           
+           String page = "1";
+           String os = "0";
+           
+           String pagen = request.getParameter("pagenum");
+           if (pagen != null)
+           {
+        	   page = pagen;
+           }
+           
+           int x = Integer.parseInt(page);
+           if (x > 1)
+           {
+        	   int y = Integer.parseInt(Numpp);
+        	   int z = (x-1)*y;
+        	   os = String.valueOf(z);
+           }
+           
+           String backbutton = "<a href= \"/project2/servlet/searchpage?npp=" + Numpp;
+           String nextbutton = "<a href= \"/project2/servlet/searchpage?npp=" + Numpp;
+           
            if(yearsort != null)
            {
         	   if(yearsort.equals("up"))
         	   {
         		   qsort = "ORDER BY masterp.year ASC \r\n";
+        		   yhtmlicon = "&sorty=down" +"\">" + "Released Year&#9660";
+        		   b10 = b10 + "&sorty=up";
+        		   b25 = b25 + "&sorty=up";
+        		   b50 = b50 + "&sorty=up";
+        		   backbutton = backbutton + "&sorty=up";
+        		   nextbutton = nextbutton + "&sorty=up";
         	   }
         	   else
         	   {
         		   qsort = "ORDER BY masterp.year DESC \r\n";
+        		   yhtmlicon = "&sorty=up" +"\">" + "Released Year&#9650";
+        		   b10 = b10 + "&sorty=down";
+        		   b25 = b25 + "&sorty=down";
+        		   b50 = b50 + "&sorty=down";
+        		   backbutton = backbutton + "&sorty=down";
+        		   nextbutton = nextbutton + "&sorty=down";
         	   }
            }
            else if(moviesort != null)
@@ -86,10 +134,22 @@ public class searchpage extends HttpServlet {
         	   if(moviesort.equals("up"))
         	   {
         		   qsort = "ORDER BY masterp.title ASC \r\n";
+        		   mhtmlicon = "&sortm=down" +"\">" + "Movie Title &#9660";
+        		   b10 = b10 + "&sortm=up";
+        		   b25 = b25 + "&sortm=up";
+        		   b50 = b50 + "&sortm=up";
+        		   backbutton = backbutton + "&sortm=up";
+        		   nextbutton = nextbutton + "&sortm=up";
         	   }
         	   else
         	   {
         		   qsort = "ORDER BY masterp.title DESC \r\n";
+        		   mhtmlicon = "&sortm=up" +"\">" + "Movie Title &#9650";
+        		   b10 = b10 + "&sortm=down";
+        		   b25 = b25 + "&sortm=down";
+        		   b50 = b50 + "&sortm=down";
+        		   backbutton = backbutton + "&sortm=down";
+        		   nextbutton = nextbutton + "&sortm=down";
         	   }
            }
         	   
@@ -106,7 +166,18 @@ public class searchpage extends HttpServlet {
 	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
 	            		"    where m.title = masterp.title\r\n" + 
 	            		"    AND m.id = r.movieId \r\n" + qsort +
-	            		"limit 20;";
+	            		"limit " + Numpp + "\r\n"+
+	            		"OFFSET " + os +";";
+        	   
+        	   msortbutton = "<a href= \"/project2/servlet/searchpage?title=" + title  + mhtmlicon +"</a>";
+        	   ysortbutton= "<a href= \"/project2/servlet/searchpage?title=" + title + yhtmlicon +"</a>";
+        	   b10 = b10 + "&title=\"" + title + "\">"+ "10</a>";
+    		   b25 = b25 + "&title=\"" + title + "\">"+ "25</a>";
+    		   b50 = b50 + "&title=\"" + title + "\">"+ "50</a>";
+    		   backbutton = backbutton + "&title=\"" + title;
+    		   nextbutton = nextbutton + "&title=\"" + title;
+    		   
+        	   
            }
            else {
            
@@ -125,15 +196,25 @@ public class searchpage extends HttpServlet {
 	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
 	            		"    where m.title = masterp.title\r\n" + 
 	            		"    AND m.id = r.movieId AND masterp.Stars_Appear LIKE '%" + star_name + "%'\r\n" + qsort +
-	            		"limit 20;";
+	            		"limit "+ Numpp + "\r\n"+
+	            		"OFFSET " + os +";";
+	          
+	          msortbutton = "<a href= \"/project2/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + mhtmlicon +"</a>";
+	          ysortbutton = "<a href= \"/project2/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + yhtmlicon +"</a>";
+	          b10 = b10 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "10</a>";
+	   		   b25 = b25 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "25</a>";
+	   		   b50 = b50 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "50</a>";
+	   		backbutton = backbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name ;
+ 		   nextbutton = nextbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name;
            }
            // Perform the query
            ResultSet rs = statement.executeQuery(query);
 
+           out.println("<div align=\"right\">Number of Movie per page:"+ b10 + ", " + b25 + ", " + b50 +"</div>");
            out.println("<TABLE border>");
 
            // Iterate through each row of rs
-           out.println("<tr>" + "<td>" + "Movie Title" + "<a href = \"/project2/"     +"&#9650" + "</td>" + "<td>" + "Released Year&#9650" + "</td>"+"<td>" + "Movie Director" + "</td>"
+           out.println("<tr>" + "<td>" + msortbutton + "</td>" + "<td>" + ysortbutton + "</td>"+"<td>" + "Movie Director" + "</td>"
            			+"<td>" + "List of Stars" + "</td>" + "<td>" + "List of Genres" + "</td>" + "<td>" + "Rating" + "</td>" + "</tr>");
            while (rs.next()) {
                String m_title = rs.getString("title");
@@ -157,8 +238,23 @@ public class searchpage extends HttpServlet {
                           + "<td>" + m_hyperstars + "</td>"+ "<td>" + m_genres + "</td>" + "<td>" + m_rating + "</td>" + "</tr>");
            }
 
-           out.println("</TABLE></BODY></CENTER>");
-
+           out.println("</TABLE></div>");
+           
+           if(x == 1)
+           {
+        	   backbutton = "Previous";
+        	   nextbutton = nextbutton + "&pagenum=2\">Next</a>";
+        	   out.println("<div align=\"center\">" + backbutton + " | " + nextbutton + "</div>");
+           }
+           else
+           {
+        	   backbutton = backbutton + "&pagenum="+ String.valueOf(x-1) + "\">Previous</a>";
+        	   nextbutton = nextbutton + "&pagenum="+ String.valueOf(x+1) + "\">Next</a>";
+        	   out.println("<div align=\"center\">" + backbutton + " | " + nextbutton + "</div>");
+           }
+           
+           out.println("</BODY></CENTER>");
+           
            rs.close();
            statement.close();
            dbcon.close();
