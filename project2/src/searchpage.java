@@ -1,6 +1,7 @@
 
 
 import java.io.IOException;
+
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,6 +23,10 @@ import javax.servlet.http.HttpSession;
 public class searchpage extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+
 		String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
@@ -274,8 +279,7 @@ public class searchpage extends HttpServlet {
 	             return;
 	         }
         out.close();
-	
-	
+
 	}
 
 	/**
