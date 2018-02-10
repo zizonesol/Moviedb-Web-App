@@ -840,7 +840,7 @@ standard deployment descriptor.
     <servlet-name>browsegenre</servlet-name>
     <url-pattern>/servlet/browsegenre</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>welcome</servlet-name>
     <servlet-class>welcome</servlet-class>
   </servlet>
@@ -849,6 +849,6 @@ standard deployment descriptor.
     <url-pattern>/servlet/welcome</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
-  	<welcome-file>/servlet/welcome</welcome-file>
+    <welcome-file>/servlet/welcome</welcome-file>
   </welcome-file-list>
 </web-app>
