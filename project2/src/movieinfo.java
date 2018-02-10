@@ -1,5 +1,4 @@
 
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -13,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class movieinfo
@@ -36,6 +36,22 @@ public class movieinfo extends HttpServlet {
 		String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+        
+        
+        HttpSession session = request.getSession(true);
+        if(session.isNew())
+        {
+        	session.setAttribute("loginsuss", "no");
+        	response.sendRedirect("/project2/servlet/welcome");
+        	
+        }
+        else
+        {
+        	if(session.getAttribute("loginsuss").equals("no"))
+        	{
+        		response.sendRedirect("/project2/servlet/welcome");
+        	}
+        }
 
         response.setContentType("text/html");    // Response mime type
 
@@ -47,6 +63,7 @@ public class movieinfo extends HttpServlet {
 		
         
         
+
         try
         {
            //Class.forName("org.gjt.mm.mysql.Driver");
