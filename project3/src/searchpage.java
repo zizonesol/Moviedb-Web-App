@@ -33,16 +33,16 @@ public class searchpage extends HttpServlet {
         HttpSession session = request.getSession(true);
         if(session.isNew())
         {
-        	session.setAttribute("loginsuss", "no");
-        	response.sendRedirect("/project2/servlet/welcome");
-        	
-        }
+	        	session.setAttribute("loginsuss", "no");
+	        	response.sendRedirect("/project3/servlet/welcome");
+	        	
+	    }
         else
         {
-        	if(session.getAttribute("loginsuss").equals("no"))
-        	{
-        		response.sendRedirect("/project2/servlet/welcome");
-        	}
+	        	if(session.getAttribute("loginsuss").equals("no"))
+	        	{
+	        		response.sendRedirect("/project3/servlet/welcome");
+	        	}
         }
         
 
@@ -52,11 +52,11 @@ public class searchpage extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         out.println("<HTML><HEAD><TITLE>Seach Result</TITLE></HEAD>");
-        out.println("<div align=\"right\"><form action=\"/project2/searchpage.html\">\r\n" + 
+        out.println("<div align=\"right\"><form action=\"/project3/searchpage.html\">\r\n" + 
            		"<input type=\"submit\" value=\"Back\" />\r\n" + 
            		"</form>\r\n" + 
            		"</div>");
-        out.println("<div align=\"center\"><form action=\"/project2/servlet/shoppingcart\">\r\n" + 
+        out.println("<div align=\"center\"><form action=\"/project3/servlet/shoppingcart\">\r\n" + 
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
         		"</form>\r\n" + 
         		"</div>");
@@ -90,9 +90,9 @@ public class searchpage extends HttpServlet {
         	   Numpp = npp;
            }
         	   
-           String b10 = "<a href= \"/project2/servlet/searchpage?npp=10";
-           String b25 = "<a href= \"/project2/servlet/searchpage?npp=25";
-           String b50 = "<a href= \"/project2/servlet/searchpage?npp=50";
+           String b10 = "<a href= \"/project3/servlet/searchpage?npp=10";
+           String b25 = "<a href= \"/project3/servlet/searchpage?npp=25";
+           String b50 = "<a href= \"/project3/servlet/searchpage?npp=50";
            
            String page = "1";
            String os = "0";
@@ -111,8 +111,8 @@ public class searchpage extends HttpServlet {
         	   os = String.valueOf(z);
            }
            
-           String backbutton = "<a href= \"/project2/servlet/searchpage?npp=" + Numpp;
-           String nextbutton = "<a href= \"/project2/servlet/searchpage?npp=" + Numpp;
+           String backbutton = "<a href= \"/project3/servlet/searchpage?npp=" + Numpp;
+           String nextbutton = "<a href= \"/project3/servlet/searchpage?npp=" + Numpp;
            
            if(yearsort != null)
            {
@@ -177,8 +177,8 @@ public class searchpage extends HttpServlet {
 	            		"limit " + Numpp + "\r\n"+
 	            		"OFFSET " + os +";";
         	   
-        	   msortbutton = "<a href= \"/project2/servlet/searchpage?title=" + title  + mhtmlicon +"</a>";
-        	   ysortbutton= "<a href= \"/project2/servlet/searchpage?title=" + title + yhtmlicon +"</a>";
+        	   msortbutton = "<a href= \"/project3/servlet/searchpage?title=" + title  + mhtmlicon +"</a>";
+        	   ysortbutton= "<a href= \"/project3/servlet/searchpage?title=" + title + yhtmlicon +"</a>";
         	   b10 = b10 + "&title=\"" + title + "\">"+ "10</a>";
     		   b25 = b25 + "&title=\"" + title + "\">"+ "25</a>";
     		   b50 = b50 + "&title=\"" + title + "\">"+ "50</a>";
@@ -207,8 +207,8 @@ public class searchpage extends HttpServlet {
 	            		"limit "+ Numpp + "\r\n"+
 	            		"OFFSET " + os +";";
 	          
-	          msortbutton = "<a href= \"/project2/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + mhtmlicon +"</a>";
-	          ysortbutton = "<a href= \"/project2/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + yhtmlicon +"</a>";
+	          msortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + mhtmlicon +"</a>";
+	          ysortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + yhtmlicon +"</a>";
 	          b10 = b10 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "10</a>";
 	   		   b25 = b25 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "25</a>";
 	   		   b50 = b50 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "50</a>";
@@ -237,12 +237,12 @@ public class searchpage extends HttpServlet {
                
                for (String n : splitstar)
                {
-            	   m_hyperstars = m_hyperstars + "<a href= \"/project2/servlet/starinfo?star_name=" + n.replace(" ","+") + "\">" + n + "</a>, ";
+            	   m_hyperstars = m_hyperstars + "<a href= \"/project3/servlet/starinfo?star_name=" + n.replace(" ","+") + "\">" + n + "</a>, ";
                }
                m_hyperstars = m_hyperstars.substring(0, m_hyperstars.length()-2);
                
                String m_genres = (rs.getString("geners_list")).replace(",", ", ");
-               out.println("<tr>" + "<td>" + "<a href= \"/project2/servlet/movieinfo?movie_title=" + m_title.replace(" ","+") + "\">"+ m_title + "</a>" + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_director + "</td>"
+               out.println("<tr>" + "<td>" + "<a href= \"/project3/servlet/movieinfo?movie_title=" + m_title.replace(" ","+") + "\">"+ m_title + "</a>" + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_director + "</td>"
                           + "<td>" + m_hyperstars + "</td>"+ "<td>" + m_genres + "</td>" + "<td>" + m_rating + "</td>" + "</tr>");
            }
 

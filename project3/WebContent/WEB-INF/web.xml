@@ -89,4 +89,21 @@
     <servlet-name>checkcc</servlet-name>
     <url-pattern>/servlet/checkccinfo</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>dashboard</servlet-name>
+    <servlet-class>dashboard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dashboard</servlet-name>
+    <url-pattern>/servlet/dashbaord</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>dLoginpage</servlet-name>
+  	<servlet-class>dLoginpage</servelet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>dLoginpage</servlet-name>
+  	<url-pattern>/servlet/dLoginpage</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

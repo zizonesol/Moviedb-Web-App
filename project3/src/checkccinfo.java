@@ -27,16 +27,16 @@ public class checkccinfo extends HttpServlet {
 		HttpSession session = request.getSession(true);
         if(session.isNew())
         {
-        	session.setAttribute("loginsuss", "no");
-        	response.sendRedirect("/project2/servlet/welcome");
+	        	session.setAttribute("loginsuss", "no");
+	        	response.sendRedirect("/project3/servlet/welcome");
         	
         }
         else
         {
-        	if(session.getAttribute("loginsuss").equals("no"))
-        	{
-        		response.sendRedirect("/project2/servlet/welcome");
-        	}
+	        	if(session.getAttribute("loginsuss").equals("no"))
+	        	{
+	        		response.sendRedirect("/project3/servlet/welcome");
+	        	}
         }
         String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
