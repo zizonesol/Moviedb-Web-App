@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -41,16 +42,24 @@ public class parsingtesting {
 			 Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
         	// Declare our statement
 			 Statement statement = dbcon.createStatement();
-
+			 dbcon.setAutoCommit(false);
+			 
+			 PreparedStatement add_movie = null;
+			 String sqladd_movie = null;
+			 sqladd_movie = "insert into movies (id, title, year, director) value(?,?,?)";
+			 add_movie = dbcon.prepareStatement(sqladd_movie);
+			 
+			 PreparedStatement add_gm = null;
+			 String sqladd_gm = null;
+			 sqladd_gm = "insert into genres_in_movies (genreId, movieId) value(?,?)";
+			 add_gm = dbcon.prepareStatement(sqladd_gm);
+			 
 			
-			//Using factory get an instance of document builder
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			
-			//parse using builder to get DOM representation of the XML file
 			dom = db.parse("mains243.xml");
 			
 			Element docEle = dom.getDocumentElement();
-			
 			NodeList nl = docEle.getElementsByTagName("directorfilms");
 			if(nl != null && nl.getLength() > 0) {
 				for(int i = 0 ; i < 10;i++) {
@@ -81,7 +90,29 @@ public class parsingtesting {
 								
 								String query = "";
 								
-								if(!cats.equals(""))
+		
+								query = "SELECT check_movie(\"" + til +"\");";
+						    	// Perform the query
+					        	ResultSet rs = statement.executeQuery(query);
+					        	rs.next();
+				        		if(rs.getString(1).equals("0"))
+				        		{
+				        			add_movie.setString(1,fid);
+				        			add_movie.setString(2, til);
+				        			add_movie.setInt(3,  Integer.parseInt(year));
+				        			add_movie.setString(4, dir_name);
+				        			add_movie.addBatch();
+				        		}
+				        		else
+				        		{
+				        			query = "SELECT * from movies where title LIKE \"" + til + "\";";
+				        			rs = statement.executeQuery(query);
+				        			rs.next();
+				        			fid = rs.getString("id");
+				        		}
+				        		rs.close();
+				        		
+				        		if(!cats.equals(""))
 			        			{
 			        				query = "SELECT check_genre(\"" + cats +"\");";
 			        				ResultSet gs = statement.executeQuery(query);
@@ -94,31 +125,30 @@ public class parsingtesting {
 			        				gs = statement.executeQuery("SELECT * from genres where name LIKE \""+ cats + "\";");
 			        				gs.next();
 			        				g_id = gs.getString("id");
+			        				
+			        				query = "SELECT check g_in_m(" + g_id +",\"" + fid  +"\");";
+			        				gs = statement.executeQuery(query);
+			        				gs.next();
+			        				if(gs.getString(1).equals("0"))
+			        				{
+			        					add_gm.setInt(1, Integer.parseInt(g_id));
+			        					add_gm.setString(2,fid);
+			        					add_gm.addBatch();
+			        				}
 			        				gs.close();
+			        			
 			        			}
-
-								
-								
-								query = "SELECT check_movie(\"" + til +"\");";
-						    	// Perform the query
-					        	ResultSet rs = statement.executeQuery(query);
-					        	rs.next();
-				        		if(rs.getString(1).equals("0"))
-				        		{
-				        			
-				       			
-				        			
-				        			
-				        		}
 					        	
 					        	
-					        	rs.close();
 							}
 							
 						}
 					}
 					
 				}
+				add_gm.executeBatch();
+				add_movie.executeBatch();
+				dbcon.commit();
 			}
 			
 			
