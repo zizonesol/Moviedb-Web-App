@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
-
 public class login extends HttpServlet
 {
     // Use http GET
@@ -50,14 +49,14 @@ public class login extends HttpServlet
         if(se.isNew())
         {
         		se.setAttribute("loginsuss", "no");
-        		response.sendRedirect("/project2/servlet/welcome");
+        		response.sendRedirect("/project3/servlet/welcome");
         	
         }
         else
         {
 	        	if(se.getAttribute("loginsuss").equals("no"))
 	        	{
-	        		response.sendRedirect("/project2/servlet/welcome");
+	        		response.sendRedirect("/project3/servlet/welcome");
 	        	}
         }
         
@@ -80,33 +79,33 @@ public class login extends HttpServlet
            
            if(rs.next())
            {
-        	 String pw = rs.getString("password");
-        	 if (pw.equals(passw))
-        	 {
-        		 HttpSession session = request.getSession(true);
-        	      session.setAttribute("loginsuss", "yes");
-        	      session.setAttribute("customerid", rs.getString("id"));
-        	       response.sendRedirect("/project2/mainpage.html");
-        	 
-        	 }
-        	 else
-        	 {
-        		 response.sendRedirect("/project2/servlet/welcome");
-        	 }
-           }
-           else
-           {
-        	   statement.executeUpdate("INSERT INTO customers (email,password,ccId) \r\n"
-        			   + "VALUES ('" + em + "', '" + passw + "',941);");
-        	   HttpSession session = request.getSession(true);
-        	   session.setAttribute("loginsuss", "yes");
-     	       response.sendRedirect("/project2/mainpage.html");
-           }
-
-
-           rs.close();
-           statement.close();
-           dbcon.close();
+		        	 String pw = rs.getString("password");
+		        	 if (pw.equals(passw))
+		        	 {
+		        		 HttpSession session = request.getSession(true);
+		        	      session.setAttribute("loginsuss", "yes");
+		        	      session.setAttribute("customerid", rs.getString("id"));
+		        	       response.sendRedirect("/project3/mainpage.html");
+		        	 
+		        	 }
+		        	 else
+		        	 {
+		        		 response.sendRedirect("/project3/servlet/welcome");
+		        	 }
+	        }
+	        else
+	        {
+	        	   statement.executeUpdate("INSERT INTO customers (email,password,ccId) \r\n"
+	        			   + "VALUES ('" + em + "', '" + passw + "',941);");
+	        	   HttpSession session = request.getSession(true);
+	        	   session.setAttribute("loginsuss", "yes");
+	     	   response.sendRedirect("/project3/mainpage.html");
+	        }
+	
+	
+	           rs.close();
+	           statement.close();
+	           dbcon.close();
          }
 	     catch (SQLException ex) {
 	           while (ex != null) {

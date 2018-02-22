@@ -31,14 +31,14 @@ public class shoppingcart extends HttpServlet {
         if(session.isNew())
         {
         	session.setAttribute("loginsuss", "no");
-        	response.sendRedirect("/project2/servlet/welcome");
+        	response.sendRedirect("/project3/servlet/welcome");
         	
         }
         else
         {
         	if(session.getAttribute("loginsuss").equals("no"))
         	{
-        		response.sendRedirect("/project2/servlet/welcome");
+        		response.sendRedirect("/project3/servlet/welcome");
         	}
         }
         
@@ -88,7 +88,7 @@ public class shoppingcart extends HttpServlet {
 
         out.println("<HTML><HEAD><TITLE>Shopping Cart</TITLE></HEAD>");
         out.println("<BODY><H1>Shopping Cart</H1>");
-        out.println("<div align=\"center\"><form action=\"/project2/mainpage.html\">\r\n" + 
+        out.println("<div align=\"center\"><form action=\"/project3/mainpage.html\">\r\n" + 
            		"<input type=\"submit\" value=\"Home\" />\r\n" + 
            		"</form>\r\n" + 
            		"</div>");
@@ -122,7 +122,7 @@ public class shoppingcart extends HttpServlet {
 	               String m_title = rs.getString("title");
 	               
 	               
-	               String s = "<FORM ACTION=\"/project2/servlet/shoppingcart\"\r\n" + 
+	               String s = "<FORM ACTION=\"/project3/servlet/shoppingcart\"\r\n" + 
 	               		"      METHOD=\"GET\">\r\n" + 
 	               		"  New Amount: <input type = \"number\" name = \"amount\"><br>\r\n" + 
 	               		"<input type=\"hidden\" name=\"movieid\" value=\"" + n + "\" />"+
@@ -139,7 +139,7 @@ public class shoppingcart extends HttpServlet {
            }
            out.println("</TABLE></div>");
            
-           out.println("<div align=\"center\"><form action=\"/project2/servlet/finalcheckout\">\r\n" + 
+           out.println("<div align=\"center\"><form action=\"/project3/servlet/finalcheckout\">\r\n" + 
            		"<input type=\"submit\" value=\"Checkout Now!\" />\r\n" + 
            		"</form>\r\n" + 
            		"</div>");

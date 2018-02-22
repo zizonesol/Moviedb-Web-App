@@ -41,14 +41,14 @@ public class browsegenre extends HttpServlet {
         if(session.isNew())
         {
         	session.setAttribute("loginsuss", "no");
-        	response.sendRedirect("/project2/servlet/welcome");
+        	response.sendRedirect("/project3/servlet/welcome");
         	
         }
         else
         {
         	if(session.getAttribute("loginsuss").equals("no"))
         	{
-        		response.sendRedirect("/project2/servlet/welcome");
+        		response.sendRedirect("/project3/servlet/welcome");
         	}
         }
 
@@ -58,7 +58,7 @@ public class browsegenre extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         out.println("<HTML><HEAD><TITLE>All Genre</TITLE></HEAD>");
-        out.println("<div align=\"center\"><form action=\"/project2/servlet/shoppingcart\">\r\n" + 
+        out.println("<div align=\"center\"><form action=\"/project3/servlet/shoppingcart\">\r\n" + 
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
         		"</form>\r\n" + 
         		"</div>");
@@ -92,7 +92,7 @@ public class browsegenre extends HttpServlet {
                String m_hypergenre = "";
                for (String n : m_genres.split(","))
                {
-            	   m_hypergenre = m_hypergenre + "<a href= \"/project2/servlet/genresearch?genre=" + n + "\">" + n + "</a>, ";
+            	   m_hypergenre = m_hypergenre + "<a href= \"/project3/servlet/genresearch?genre=" + n + "\">" + n + "</a>, ";
                }
                m_hypergenre = m_hypergenre.substring(0, m_hypergenre.length()-2);
                

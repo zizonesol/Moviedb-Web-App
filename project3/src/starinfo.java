@@ -42,16 +42,15 @@ public class starinfo extends HttpServlet {
         HttpSession session = request.getSession(true);
         if(session.isNew())
         {
-        	session.setAttribute("loginsuss", "no");
-        	response.sendRedirect("/project2/servlet/welcome");
-        	
+	        	session.setAttribute("loginsuss", "no");
+	        	response.sendRedirect("/project3/servlet/welcome");
         }
         else
         {
-        	if(session.getAttribute("loginsuss").equals("no"))
-        	{
-        		response.sendRedirect("/project2/servlet/welcome");
-        	}
+	        	if(session.getAttribute("loginsuss").equals("no"))
+	        	{
+	        		response.sendRedirect("/project3/servlet/welcome");
+	        	}
         }
         
         response.setContentType("text/html");    // Response mime type
@@ -62,7 +61,7 @@ public class starinfo extends HttpServlet {
         out.println("<HTML><HEAD><TITLE>Star Information</TITLE></HEAD>");
         out.println("<BODY><H1>Star Information</H1>");
 		
-        out.println("<div align=\"center\"><form action=\"/project2/servlet/shoppingcart\">\r\n" + 
+        out.println("<div align=\"center\"><form action=\"/project3/servlet/shoppingcart\">\r\n" + 
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
         		"</form>\r\n" + 
         		"</div>");
@@ -104,7 +103,7 @@ public class starinfo extends HttpServlet {
                
                for (String n : m_movies.split(","))
                {
-            	   m_hypermovie = m_hypermovie + "<a href= \"/project2/servlet/movieinfo?movie_title=" + n.replace(" ","+") + "\">" + n + "</a>, ";
+            	   m_hypermovie = m_hypermovie + "<a href= \"/project3/servlet/movieinfo?movie_title=" + n.replace(" ","+") + "\">" + n + "</a>, ";
                }
                m_hypermovie = m_hypermovie.substring(0, m_hypermovie.length()-2);
                

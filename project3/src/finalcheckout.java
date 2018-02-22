@@ -28,14 +28,14 @@ public class finalcheckout extends HttpServlet {
         if(session.isNew())
         {
         	session.setAttribute("loginsuss", "no");
-        	response.sendRedirect("/project2/servlet/welcome");
+        	response.sendRedirect("/project3/servlet/welcome");
         	
         }
         else
         {
         	if(session.getAttribute("loginsuss").equals("no"))
         	{
-        		response.sendRedirect("/project2/servlet/welcome");
+        		response.sendRedirect("/project3/servlet/welcome");
         	}
         }
         String loginUser = "mytestuser";
@@ -95,7 +95,7 @@ public class finalcheckout extends HttpServlet {
            }
            
            
-           out.println("<FORM ACTION=\"/project2/servlet/checkccinfo\"\r\n" + 
+           out.println("<FORM ACTION=\"/project3/servlet/checkccinfo\"\r\n" + 
            		"      METHOD=\"POST\">\r\n" + 
            		"  \r\n" + 
            		"  First Name:<br> <input type = \"text\" name = \"fname\"><br>\r\n" + 

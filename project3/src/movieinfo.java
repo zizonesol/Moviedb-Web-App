@@ -42,14 +42,14 @@ public class movieinfo extends HttpServlet {
         if(session.isNew())
         {
         	session.setAttribute("loginsuss", "no");
-        	response.sendRedirect("/project2/servlet/welcome");
+        	response.sendRedirect("/project3/servlet/welcome");
         	
         }
         else
         {
         	if(session.getAttribute("loginsuss").equals("no"))
         	{
-        		response.sendRedirect("/project2/servlet/welcome");
+        		response.sendRedirect("/project3/servlet/welcome");
         	}
         }
 
@@ -59,7 +59,7 @@ public class movieinfo extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         out.println("<HTML><HEAD><TITLE>Movie Information</TITLE></HEAD>");
-        out.println("<div align=\"center\"><form action=\"/project2/servlet/shoppingcart\">\r\n" + 
+        out.println("<div align=\"center\"><form action=\"/project3/servlet/shoppingcart\">\r\n" + 
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
         		"</form>\r\n" + 
         		"</div>");
@@ -115,7 +115,7 @@ public class movieinfo extends HttpServlet {
                
                for (String n : splitstar)
                {
-            	   m_hyperstars = m_hyperstars + "<a href= \"/project2/servlet/starinfo?star_name=" + n.replace(" ","+") + "\">" + n + "</a>, ";
+            	   m_hyperstars = m_hyperstars + "<a href= \"/project3/servlet/starinfo?star_name=" + n.replace(" ","+") + "\">" + n + "</a>, ";
                }
                m_hyperstars = m_hyperstars.substring(0, m_hyperstars.length()-2);
                
@@ -123,7 +123,7 @@ public class movieinfo extends HttpServlet {
                String m_hypergenre = "";
                for (String n : m_genres.split(","))
                {
-            	   m_hypergenre = m_hypergenre + "<a href= \"/project2/servlet/genresearch?genre=" + n + "\">" + n + "</a>, ";
+            	   m_hypergenre = m_hypergenre + "<a href= \"/project3/servlet/genresearch?genre=" + n + "\">" + n + "</a>, ";
                }
                m_hypergenre = m_hypergenre.substring(0, m_hypergenre.length()-2);
                
@@ -137,7 +137,7 @@ public class movieinfo extends HttpServlet {
 
            out.println("</TABLE>");
 
-           out.println("<div align=\"center\"> <a href= \"/project2/servlet/shoppingcart?movieid="+ m_id + "&amount=1\"> Add To Shopping Cart </a>");
+           out.println("<div align=\"center\"> <a href= \"/project3/servlet/shoppingcart?movieid="+ m_id + "&amount=1\"> Add To Shopping Cart </a>");
            
            out.print("</BODY></CENTER>");
 

@@ -28,20 +28,20 @@ public class welcome extends HttpServlet {
 					"<HTML>\r\n" + 
 					"<HEAD>\r\n" + 
 					"  <TITLE>Welcome</TITLE>\r\n" + 
-					"  <SCRIPT SRC='https://www.google.com/recaptcha/api.js'></SCRIPT>\n" + 
+					"  <SCRIPT SRC='https://www.google.com/recaptcha/api.js'></SCRIPT>\r\n" + 
 					"</HEAD>\r\n" + 
 					"\r\n" + 
 					"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
 					"<H1 ALIGN=\"CENTER\">Welcome</H1>\r\n" + 
 					"\r\n" + 
-					"<FORM ACTION=\"/project2/servlet/login\"\r\n" + 
+					"<FORM ACTION=\"/project3/servlet/login\"\r\n" + 
 					"      METHOD=\"POST\">\r\n" + 
 					"      \r\n" + 
 					"      Email: <input type = \"text\" name = \"email\"><br>\r\n" + 
 					"      Password: <input type = \"text\" name = \"password\"><br>\r\n" + 
 					"      \r\n" + 
 					"  <DIV CLASS=\"g-recaptcha\"" +
-					"      data-sitekey=\"6LdilEcUAAAAALullJ_Y3PQs3m_MfvRBXOURG4Uas\"></DIV>\n" +
+					"      data-sitekey=\"6LdilEcUAAAAALullJ_Y3PQs3m_MfvRBXOURG4Uas\"></DIV>\r\n" +
 					"  <CENTER>\r\n" + 
 					"    <INPUT TYPE=\"SUBMIT\" VALUE=\"Submit Order\">\r\n" + 
 					"  </CENTER>\r\n" + 
@@ -56,7 +56,7 @@ public class welcome extends HttpServlet {
 		{
 			if(session.getAttribute("loginsuss").equals("yes"))
 			{
-				response.sendRedirect("/project2/mainpage.html");
+				response.sendRedirect("/project3/mainpage.html");
 			}
 			else
 			{
@@ -66,20 +66,20 @@ public class welcome extends HttpServlet {
 						"<HTML>\r\n" + 
 						"<HEAD>\r\n" + 
 						"  <TITLE>Welcome</TITLE>\r\n" + 
-						"  <SCRIPT SRC='https://www.google.com/recaptcha/api.js'></SCRIPT>\n" + 
+						"  <SCRIPT SRC='https://www.google.com/recaptcha/api.js'></SCRIPT>\r\n" + 
 						"</HEAD>\r\n" + 
 						"\r\n" + 
 						"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
 						"<H1 ALIGN=\"CENTER\">Welcome</H1>\r\n" + 
 						"\r\n" + 
-						"<FORM ACTION=\"/project2/servlet/login\"\r\n" + 
+						"<FORM ACTION=\"/project3/servlet/login\"\r\n" + 
 						"      METHOD=\"POST\">\r\n" + 
 						"      \r\n" + 
 						"      Email: <input type = \"text\" name = \"email\"><br>\r\n" + 
 						"      Password: <input type = \"text\" name = \"password\"><br>\r\n" + 
 						"      \r\n" + 
 						"  <DIV CLASS=\"g-recaptcha\"" +
-						"      data-sitekey=\"6LdilEcUAAAAALullJ_Y3PQs3m_MfvRBXOURG4Uas\"></DIV>\n" +
+						"      data-sitekey=\"6LdilEcUAAAAALullJ_Y3PQs3m_MfvRBXOURG4Uas\"></DIV>\r\n" +
 						"  <CENTER>\r\n" + 
 						"    <INPUT TYPE=\"SUBMIT\" VALUE=\"Submit Order\">\r\n" + 
 						"  </CENTER>\r\n" + 

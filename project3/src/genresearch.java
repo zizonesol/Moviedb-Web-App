@@ -42,14 +42,14 @@ public class genresearch extends HttpServlet {
         if(session.isNew())
         {
         	session.setAttribute("loginsuss", "no");
-        	response.sendRedirect("/project2/servlet/welcome");
+        	response.sendRedirect("/project3/servlet/welcome");
         	
         }
         else
         {
         	if(session.getAttribute("loginsuss").equals("no"))
         	{
-        		response.sendRedirect("/project2/servlet/welcome");
+        		response.sendRedirect("/project3/servlet/welcome");
         	}
         }
 
@@ -59,7 +59,7 @@ public class genresearch extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         out.println("<HTML><HEAD><TITLE>Movie List by Genre</TITLE></HEAD>");
-        out.println("<div align=\"center\"><form action=\"/project2/servlet/shoppingcart\">\r\n" + 
+        out.println("<div align=\"center\"><form action=\"/project3/servlet/shoppingcart\">\r\n" + 
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
         		"</form>\r\n" + 
         		"</div>");
@@ -102,7 +102,7 @@ public class genresearch extends HttpServlet {
                
                for (String n : m_title.split(","))
                {
-            	   m_hypertitle = m_hypertitle + "<a href= \"/project2/servlet/movieinfo?movie_title=" + n.replace(" ","+") + "\">" + n + "</a>, ";
+            	   m_hypertitle = m_hypertitle + "<a href= \"/project3/servlet/movieinfo?movie_title=" + n.replace(" ","+") + "\">" + n + "</a>, ";
                }
                m_hypertitle = m_hypertitle.substring(0, m_hypertitle.length()-2);
                
