@@ -78,7 +78,7 @@ public class dLogin extends HttpServlet {
         			{
         				HttpSession session = request.getSession(true);
         				session.setAttribute("loginsuss", "yes");
-        				//session.setAttribute();
+        				//session.setAttribute("fullname", rs.getString(""));
         				response.sendRedirect("/project3/servlet/dashboard");
         			}
         			else

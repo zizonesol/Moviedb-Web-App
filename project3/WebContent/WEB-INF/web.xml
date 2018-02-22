@@ -99,7 +99,7 @@
   </servlet-mapping>
   <servlet>
   	<servlet-name>dLoginpage</servlet-name>
-  	<servlet-class>dLoginpage</servelet-class>
+  	<servlet-class>dLoginpage</servlet-class>
   </servlet>
   <servlet-mapping>
   	<servlet-name>dLoginpage</servlet-name>
