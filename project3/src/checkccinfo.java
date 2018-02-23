@@ -74,7 +74,7 @@ public class checkccinfo extends HttpServlet {
            {
         	   zs.close();
         	   session.setAttribute("ccauth", "fail");
-        	   response.sendRedirect("/project2/servlet/finalcheckout");
+        	   response.sendRedirect("/project3/servlet/finalcheckout");
         	   out.close();
            }
            zs.close();

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class metadata
  */
+@WebServlet("/metadata")
 public class metadata extends HttpServlet {
 
 

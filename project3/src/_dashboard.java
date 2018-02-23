@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class _dashboard
  */
-@WebServlet("/_dashboard")
+@WebServlet("/dashboard")
 public class _dashboard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

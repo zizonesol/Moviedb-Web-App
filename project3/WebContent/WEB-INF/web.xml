@@ -15,7 +15,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>searchpage</servlet-name>
-    <url-pattern>/serlvet/searchpage</url-pattern>
+    <url-pattern>/servlet/searchpage</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>movieinfo</servlet-name>
@@ -87,7 +87,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>_dashboard</servlet-name>
-    <url-pattern>/servlet/_dashbaord</url-pattern>
+    <url-pattern>/servlet/dashboard</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>dLoginpage</servlet-name>
