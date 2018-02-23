@@ -15,10 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * Servlet implementation class dLogin
- */
-@WebServlet("/dLogin")
+
 public class dLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -78,7 +75,7 @@ public class dLogin extends HttpServlet {
         			{
         				HttpSession session = request.getSession(true);
         				session.setAttribute("loginsuss", "yes");
-        				//session.setAttribute();
+        				//session.setAttribute("fullname", rs.getString(""));
         				response.sendRedirect("/project3/servlet/dashboard");
         			}
         			else
