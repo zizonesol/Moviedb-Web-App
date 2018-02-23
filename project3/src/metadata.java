@@ -17,18 +17,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class add_movie
+ * Servlet implementation class metadata
  */
-@WebServlet("/add_movie")
-public class add_movie extends HttpServlet 
-{
+@WebServlet("/metadata")
+public class metadata extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public add_movie() 
-    {
+    public metadata() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -62,6 +60,8 @@ public class add_movie extends HttpServlet
 		// Output stream to STDOUT
 		PrintWriter out = response.getWriter();
 		
+		out.println("<HTML><HEAD><TITLE>Metadata</TITLE></HEAD>");
+		
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -71,35 +71,8 @@ public class add_movie extends HttpServlet
 			Statement statement = dbcon.createStatement();
 			
 			
-			// Get the unique star id number;
-			String sidQuery = "SELECT MAX(id) FROM stars;\n";
-			ResultSet rsstar = statement.executeQuery(sidQuery);
-			int sid = ((Number) rsstar.getObject(1)).intValue() + 1;
+			String tName = request.getParameter("table_name");
 			
-			// Get the unique star id number;
-			String gidQuery = "SELECT MAX(id) FROM genres;\n";
-			ResultSet rsgenre = statement.executeQuery(gidQuery);
-			int gid = ((Number) rsgenre.getObject(1)).intValue() + 1;
-						
-			// Get the unique star id number;
-			String midQuery = "SELECT MAX(id) FROM stars;\n";
-			ResultSet rsmovie = statement.executeQuery(midQuery);
-			int mid = ((Number) rsmovie.getObject(1)).intValue() + 1;
-						
-			
-			String movie = request.getParameter("movie_title");
-			String star = request.getParameter("star_name");
-			String genre = request.getParameter("genre");
-			String director = request.getParameter("director");
-			String year = request.getParameter("year");
-			
-			String queryM = "INSERT INTO movies VALUES(" + mid + ",'" + movie + "', " + year + ", '" + director + "');";
-			String queryS = "INSERT INTO stars(id, name) VALUES(" + sid  + ", '" + star + "');";
-			String queryG = "INSERT INTO genres VALUES(" + gid + ", '" + genre + "');";
-			
-			int insertM = statement.executeUpdate(queryM);
-			int insertS = statement.executeUpdate(queryS);
-			int insertG = statement.executeUpdate(queryG);
 			
 			
 			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
@@ -122,9 +95,6 @@ public class add_movie extends HttpServlet
 					"</HTML>\r\n" + 
 					"");
 			
-			rsstar.close();
-			rsmovie.close();
-			rsgenre.close();
 			statement.close();
 			dbcon.close();
 		}
@@ -148,9 +118,7 @@ public class add_movie extends HttpServlet
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException 
-	{
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

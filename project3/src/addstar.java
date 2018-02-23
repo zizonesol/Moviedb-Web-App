@@ -68,15 +68,40 @@ public class addstar extends HttpServlet {
 			Statement statement = dbcon.createStatement();
 			
 			String star = request.getParameter("star_name");
+
+			// Get the unique id number;
+			String idQuery = "SELECT MAX(id) FROM stars;\n";
+			ResultSet rs = statement.executeQuery(idQuery);
+
+			int id = ((Number) rs.getObject(1)).intValue() + 1;
 			
-			
-			String queryS = "INSERT INTO stars VALUES('" + star + "', '" + ");";
+			String queryS = "INSERT INTO stars (id, name) VALUES(" + id + ", '" + star + ");";
 			
 			int insertS = statement.executeUpdate(queryS);
 			
+			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
+					"<HTML>\r\n" + 
+					"<HEAD>\r\n" + 
+					"  <TITLE>Add Star Success</TITLE>\r\n" + 
+					"</HEAD>\r\n" + 
+					"\r\n" + 
+					"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
+					"<H1 ALIGN=\"CENTER\">Star Added</H1>\r\n" + 
+					"\r\n" + 
+					"<FORM ACTION=\"/project3/servlet/_dashboard\"\r\n" + 
+					"      METHOD=\"POST\">\r\n" + 
+					"  <CENTER>\r\n" + 
+					"    <INPUT TYPE=\"SUBMIT\" VALUE=\"Go Back\">\r\n" + 
+					"  </CENTER>\r\n" + 
+					"</FORM>\r\n" + 
+					"\r\n" + 
+					"</BODY>\r\n" + 
+					"</HTML>\r\n" + 
+					"");
 			
 			statement.close();
 			dbcon.close();
+			rs.close();
 		}
 		catch (SQLException ex)
 		{
@@ -102,5 +127,4 @@ public class addstar extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
 }
