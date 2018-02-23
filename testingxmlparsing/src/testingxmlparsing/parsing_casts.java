@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-public class parsingcast {
+public class parsing_casts {
 
 	
 	
