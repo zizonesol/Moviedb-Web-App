@@ -60,6 +60,10 @@ public class searchpage extends HttpServlet {
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
         		"</form>\r\n" + 
         		"</div>");
+        out.println("<div align=\"right\"><form action=\"/project3/servlet/dLoginpage\">\r\n" + 
+        		"<input type=\"submit\" value=\"Dashboard\" />\r\n" + 
+        		"</form>\r\n" + 
+        		"</div>");
         out.println("<BODY><div align=\"center\"><H1>Seach Result</H1>");
         
 		

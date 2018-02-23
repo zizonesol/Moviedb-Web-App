@@ -90,30 +90,51 @@
     <url-pattern>/servlet/checkccinfo</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>dashboard</servlet-name>
-    <servlet-class>dashboard</servlet-class>
+    <servlet-name>_dashboard</servlet-name>
+    <servlet-class>_dashboard</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>dashboard</servlet-name>
-    <url-pattern>/servlet/dashbaord</url-pattern>
+    <servlet-name>_dashboard</servlet-name>
+    <url-pattern>/servlet/_dashbaord</url-pattern>
   </servlet-mapping>
   <servlet>
-  	<servlet-name>dLoginpage</servlet-name>
-  	<servlet-class>dLoginpage</servlet-class>
+    <servlet-name>dLoginpage</servlet-name>
+    <servlet-class>dLoginpage</servlet-class>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>dLoginpage</servlet-name>
-  	<url-pattern>/servlet/dLoginpage</url-pattern>
+    <servlet-name>dLoginpage</servlet-name>
+    <url-pattern>/servlet/dLoginpage</url-pattern>
   </servlet-mapping>
-  
-  <!--security-constraint>
- 	<web-resource-collection>
-    		<web-resource-name>HTTPSOnly</web-resource-name>
-    		<url-pattern>/*</url-pattern>
- 	</web-resource-collection>
- 	<user-data-constraint>
-    		<transport-guarantee>CONFIDENTIAL</transport-guarantee>
- 	</user-data-constraint>
-  </security-constraint-->
-  
+  <servlet>
+    <servlet-name>dLogin</servlet-name>
+    <servlet-class>dLogin</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dLogin</servlet-name>
+    <url-pattern>/servlet/dLogin</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>add_movie</servlet-name>
+    <servlet-class>add_movie</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>add_movie</servlet-name>
+    <url-pattern>/servlet/add_movie</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>addstar</servlet-name>
+    <servlet-class>addstar</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>addstar</servlet-name>
+    <url-pattern>/servlet/addstar</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>metadata</servlet-name>
+    <servlet-class>metadata</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>metadata</servlet-name>
+    <url-pattern>/servlet/metadata</url-pattern>
+  </servlet-mapping>
 </web-app>
