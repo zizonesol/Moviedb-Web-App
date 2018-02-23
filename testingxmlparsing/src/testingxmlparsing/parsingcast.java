@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-public class parsecast {
+public class parsingcast {
 
 	
 	
@@ -51,72 +51,55 @@ public class parsecast {
 			 sqladd_star = "insert into stars (id, name, birthYear) value(?,?,?)";
 			 add_star = dbcon.prepareStatement(sqladd_star);
 			 
+			 
+			 
+			ResultSet rs = statement.executeQuery("select max(id) from stars\r\n" + 
+					"where id like \"aa%\";");
 			
 			String idf = "aa";
 			Integer idb = 0;
+			if(rs.next())
+			{
+				String ts = rs.getString(1);
+				if(ts.substring(0, 2).equals("aa"))
+				{
+					idb = Integer.parseInt(ts.substring(2));
+				}
+				idb++;
+			}
+
+			
 
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
-			dom = db.parse("actors63.xml");
+			dom = db.parse("casts124.xml");
 			
 			Element docEle = dom.getDocumentElement();
-			NodeList nl = docEle.getElementsByTagName("actor");
+			NodeList nl = docEle.getElementsByTagName("dirfilms");
 			System.out.println(nl.getLength());
 			for(int i = 0; i < nl.getLength();i++)
 			{
 				if(nl.item(i).getNodeType() == Node.ELEMENT_NODE)
 				{
-					
 					Element el = (Element) nl.item(i);
+					System.out.println(el.getElementsByTagName("is").item(0).getTextContent());
 					
-					String name = el.getElementsByTagName("stagename").item(0).getTextContent();
-					String dob = "";
-					System.out.println(name);
-					name = name.replaceAll("\"", "");
-					String query = "SELECT check_star(\"" + name +"\" );";
-					ResultSet rs = statement.executeQuery(query);
-					rs.next();
-					
-					if(rs.getString(1).equals("0"))
+					NodeList ml = el.getElementsByTagName("filmc");
+					for(int x = 0; x< ml.getLength(); x++)
 					{
-						if(el.getElementsByTagName("dob").getLength() > 0)
+						if(ml.item(x).getNodeType() == Node.ELEMENT_NODE)
 						{
-							String dd = el.getElementsByTagName("dob").item(0).getTextContent();
-							if(!dd.equals(""))
-							{
-								dob = dd;
-							}
-							if(dob.equals(""))
-							{
-								add_star.setString(3, null);
-							}
-							else
-							{
-								try
-								{
-									Integer x = Integer.parseInt(dob);
-									add_star.setInt(3, x);
-								}
-								catch (Exception e)
-								{
-									add_star.setString(3, null);
-								}
-							}
+							Element ee = (Element) ml.item(x);
+							System.out.println(ee.getElementsByTagName("a").item(0).getTextContent());
 						}
-						
-						String sid = idf + String.format("%07d", idb);
-						add_star.setString(1, sid);
-						add_star.setString(2,name);
-						add_star.addBatch();
-						idb++;
 					}
 				}
 			}	
 			
 				
 			
-			add_star.executeBatch();
-			dbcon.commit();
+			//add_star.executeBatch();
+			//dbcon.commit();
 			
 			
 			
