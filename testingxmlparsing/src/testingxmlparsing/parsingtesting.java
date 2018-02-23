@@ -30,6 +30,11 @@ public class parsingtesting {
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
         
+        List<String> mid_list = new ArrayList<String>();
+        List<String> gid_list = new ArrayList<String>();
+        List<String> new_list = new ArrayList<String>();
+
+        
 		//create an instance
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		//dbf.setValidating(true);
@@ -46,12 +51,13 @@ public class parsingtesting {
 			 
 			 PreparedStatement add_movie = null;
 			 String sqladd_movie = null;
-			 sqladd_movie = "insert into movies (id, title, year, director) value(?,?,?)";
+			 sqladd_movie = "insert into movies (id, title, year, director) value(?,?,?,?)";
 			 add_movie = dbcon.prepareStatement(sqladd_movie);
 			 
 			 PreparedStatement add_gm = null;
 			 String sqladd_gm = null;
-			 sqladd_gm = "insert into genres_in_movies (genreId, movieId) value(?,?)";
+			 sqladd_gm = "insert into genres_in_movies (genreId, movieId) "
+			 		+ "value((select id from genres where id like ?),(select id from movies where id like ?))";
 			 add_gm = dbcon.prepareStatement(sqladd_gm);
 			 
 			
@@ -90,26 +96,32 @@ public class parsingtesting {
 								
 								String query = "";
 								
-		
-								query = "SELECT check_movie(\"" + til +"\");";
+								
+								query = "SELECT check_movie(\"" + til +"\",\""+ fid + "\");";
 						    	// Perform the query
 					        	ResultSet rs = statement.executeQuery(query);
 					        	rs.next();
-				        		if(rs.getString(1).equals("0"))
+					        	
+				        		if(rs.getString(1).equals("0") && new_list.contains(fid) == false)
 				        		{
+				        		
 				        			add_movie.setString(1,fid);
 				        			add_movie.setString(2, til);
 				        			add_movie.setInt(3,  Integer.parseInt(year));
 				        			add_movie.setString(4, dir_name);
 				        			add_movie.addBatch();
+				        			new_list.add(fid);
 				        		}
 				        		else
 				        		{
 				        			query = "SELECT * from movies where title LIKE \"" + til + "\";";
 				        			rs = statement.executeQuery(query);
-				        			rs.next();
-				        			fid = rs.getString("id");
+				        			if(rs.next())
+				        			{
+				        				fid = rs.getString("id");
+				        			}
 				        		}
+				        		
 				        		rs.close();
 				        		
 				        		if(!cats.equals(""))
@@ -123,18 +135,12 @@ public class parsingtesting {
 				             			   + "VALUES ('" + cats + "');");
 			        				}
 			        				gs = statement.executeQuery("SELECT * from genres where name LIKE \""+ cats + "\";");
-			        				gs.next();
-			        				g_id = gs.getString("id");
+			    					gs.next();
+			    					g_id = gs.getString("id");
+			    					
+			        				mid_list.add(fid);
+			        				gid_list.add(g_id);
 			        				
-			        				query = "SELECT check g_in_m(" + g_id +",\"" + fid  +"\");";
-			        				gs = statement.executeQuery(query);
-			        				gs.next();
-			        				if(gs.getString(1).equals("0"))
-			        				{
-			        					add_gm.setInt(1, Integer.parseInt(g_id));
-			        					add_gm.setString(2,fid);
-			        					add_gm.addBatch();
-			        				}
 			        				gs.close();
 			        			
 			        			}
@@ -146,8 +152,28 @@ public class parsingtesting {
 					}
 					
 				}
-				add_gm.executeBatch();
+				
+				for(int g = 0; g < mid_list.size();g++)
+				{
+					String qq = "";
+					ResultSet ss = null;
+					
+					
+					qq = "SELECT check_g_in_m(" + gid_list.get(g) +",\"" + mid_list.get(g)  +"\");";
+					ss = statement.executeQuery(qq);
+					ss.next();
+					if(ss.getString(1).equals("0"))
+					{
+						add_gm.setInt(1, Integer.parseInt(gid_list.get(g)));
+						add_gm.setString(2,mid_list.get(g));
+						add_gm.addBatch();
+					}
+				}
+				
+			
 				add_movie.executeBatch();
+				dbcon.commit();
+				add_gm.executeBatch();
 				dbcon.commit();
 			}
 			
