@@ -19,17 +19,8 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class metadata
  */
-@WebServlet("/metadata")
 public class metadata extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public metadata() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
