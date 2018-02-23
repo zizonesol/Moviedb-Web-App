@@ -63,6 +63,10 @@ public class movieinfo extends HttpServlet {
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
         		"</form>\r\n" + 
         		"</div>");
+        out.println("<div align=\"right\"><form action=\"/project3/servlet/dLoginpage\">\r\n" + 
+        		"<input type=\"submit\" value=\"Dashboard\" />\r\n" + 
+        		"</form>\r\n" + 
+        		"</div>");
         out.println("<BODY><H1>Movie Information</H1>");
 		
         
