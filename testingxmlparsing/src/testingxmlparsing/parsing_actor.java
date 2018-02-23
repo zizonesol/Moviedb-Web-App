@@ -52,8 +52,19 @@ public class parsing_actor {
 			 add_star = dbcon.prepareStatement(sqladd_star);
 			 
 			
+			 ResultSet rs = statement.executeQuery("select max(id) from stars\r\n" + 
+						"where id like \"aa%\";");
+				
 			String idf = "aa";
 			Integer idb = 0;
+			if(rs.next())
+			{
+				String ts = rs.getString(1);
+				if(ts.substring(0, 2).equals("aa"))
+				{
+					idb = Integer.parseInt(ts.substring(2));
+				}
+			}
 
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
@@ -74,7 +85,7 @@ public class parsing_actor {
 					System.out.println(name);
 					name = name.replaceAll("\"", "");
 					String query = "SELECT check_star(\"" + name +"\" );";
-					ResultSet rs = statement.executeQuery(query);
+					rs = statement.executeQuery(query);
 					rs.next();
 					
 					if(rs.getString(1).equals("0"))
