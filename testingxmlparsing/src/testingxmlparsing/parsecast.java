@@ -76,12 +76,20 @@ public class parsecast {
 					Element el = (Element) nl.item(i);
 					
 					String name = el.getElementsByTagName("stagename").item(0).getTextContent();
+					String dob = "";
 					
-					String dab = el.getElementsByTagName("dob").item(0).getTextContent();
+					if(el.getElementsByTagName("dob").getLength() > 0)
+					{
+						String dd = el.getElementsByTagName("dob").item(0).getTextContent();
+						if(!dd.equals(""))
+						{
+							dob = dd;
+						}
+					}
 					
 					if(name != null)
 					{
-						System.out.println(dab);
+						System.out.println(dob);
 						System.out.println(name);
 					}
 				}
