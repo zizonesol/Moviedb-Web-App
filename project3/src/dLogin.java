@@ -48,7 +48,7 @@ public class dLogin extends HttpServlet {
         		String em = request.getParameter("eemail");
         		String passw = request.getParameter("epassword");
         		
-        		String query = "SELECT * from employees where email = \"" + em + "\";";
+        		String query = "SELECT * from employees where email like \"" + em + "\";";
         		
         		// Perform the query
         		ResultSet rs = statement.executeQuery(query);
@@ -56,6 +56,7 @@ public class dLogin extends HttpServlet {
         		if (rs.next())
         		{
         			String pw = rs.getString("password");
+        			System.out.println(pw);
         			if(pw.equals(passw))
         			{
         				HttpSession session = request.getSession(true);
@@ -74,7 +75,7 @@ public class dLogin extends HttpServlet {
         					+ "VALUES ('" + em + "', '" + passw + "', \"CS 122B TA\")");
         			HttpSession session = request.getSession(true);
         			session.setAttribute("employsuss", "yes");
-        			response.sendRedirect("/project3/servlet/dLoginpage");
+        			response.sendRedirect("/project3/servlet/dashboard");
         		}
         		
         		rs.close();
