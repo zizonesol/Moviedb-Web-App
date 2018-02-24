@@ -37,21 +37,6 @@ public class dLogin extends HttpServlet {
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
         
-        HttpSession se = request.getSession(true);
-        if(se.isNew())
-        {
-        		se.setAttribute("loginsuss", "no");
-        		response.sendRedirect("/project3/servlet/dLoginpage");
-        	
-        }
-        else
-        {
-	        	if(se.getAttribute("loginsuss").equals("no"))
-	        	{
-	        		response.sendRedirect("/project3/servlet/dLoginpage");
-	        	}
-        }
-        
         try
         {
         		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -60,8 +45,8 @@ public class dLogin extends HttpServlet {
         		// Declare our statement
         		Statement statement = dbcon.createStatement();
         		
-        		String em = request.getParameter("email");
-        		String passw = request.getParameter("password");
+        		String em = request.getParameter("eemail");
+        		String passw = request.getParameter("epassword");
         		
         		String query = "SELECT * from employees where email = \"" + em + "\";";
         		
@@ -74,7 +59,7 @@ public class dLogin extends HttpServlet {
         			if(pw.equals(passw))
         			{
         				HttpSession session = request.getSession(true);
-        				session.setAttribute("loginsuss", "yes");
+        				session.setAttribute("employsuss", "yes");
         				//session.setAttribute("fullname", rs.getString(""));
         				response.sendRedirect("/project3/servlet/dashboard");
         			}
@@ -86,9 +71,9 @@ public class dLogin extends HttpServlet {
         		else
         		{
         			statement.executeUpdate("INSERT INTO employees (email, password, fullname) \r\n"
-        					+ "VALUES ('" + em + "', '" + passw + "', CS 122B TA)");
+        					+ "VALUES ('" + em + "', '" + passw + "', \"CS 122B TA\")");
         			HttpSession session = request.getSession(true);
-        			session.setAttribute("loginsuss", "yes");
+        			session.setAttribute("employsuss", "yes");
         			response.sendRedirect("/project3/servlet/dLoginpage");
         		}
         		

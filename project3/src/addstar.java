@@ -37,20 +37,20 @@ public class addstar extends HttpServlet {
 			throws ServletException, IOException 
 	{
 		String loginUser = "mytestuser";
-		String loginPasswd = "mypasswd";
+		String loginPasswd = "mypassword";
 		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
 		HttpSession session = request.getSession(true);
 		if (session.isNew())
 		{
-			session.setAttribute("loginsuss", "no");
-			response.sendRedirect("/project3/servlet/welcome");
+			session.setAttribute("employsuss", "no");
+			response.sendRedirect("/project3/servlet/dLoginpage");
 		}
 		else
 		{
-			if(session.getAttribute("loginsuss").equals("no"))
+			if(session.getAttribute("employsuss").equals("no"))
 			{
-				response.sendRedirect("/project3/servlet/welcome");
+				response.sendRedirect("/project3/servlet/dLoginPage");
 			}
 		}
 		
@@ -68,40 +68,75 @@ public class addstar extends HttpServlet {
 			Statement statement = dbcon.createStatement();
 			
 			String star = request.getParameter("star_name");
-
-			// Get the unique id number;
-			String idQuery = "SELECT MAX(id) FROM stars;\n";
-			ResultSet rs = statement.executeQuery(idQuery);
-
-			int id = ((Number) rs.getObject(1)).intValue() + 1;
-			
-			String queryS = "INSERT INTO stars (id, name) VALUES(" + id + ", '" + star + ");";
-			
-			int insertS = statement.executeUpdate(queryS);
-			
-			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
-					"<HTML>\r\n" + 
-					"<HEAD>\r\n" + 
-					"  <TITLE>Add Star Success</TITLE>\r\n" + 
-					"</HEAD>\r\n" + 
-					"\r\n" + 
-					"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
-					"<H1 ALIGN=\"CENTER\">Star Added</H1>\r\n" + 
-					"\r\n" + 
-					"<FORM ACTION=\"/project3/servlet/_dashboard\"\r\n" + 
-					"      METHOD=\"POST\">\r\n" + 
-					"  <CENTER>\r\n" + 
-					"    <INPUT TYPE=\"SUBMIT\" VALUE=\"Go Back\">\r\n" + 
-					"  </CENTER>\r\n" + 
-					"</FORM>\r\n" + 
-					"\r\n" + 
-					"</BODY>\r\n" + 
-					"</HTML>\r\n" + 
-					"");
-			
+			ResultSet rs = statement.executeQuery("select * from stars where name like \""+ star + "\";");
+			if(!rs.next())
+			{
+				// Get the unique id number;
+				rs = statement.executeQuery("select max(id) from stars\r\n" + 
+						"where id like \"aa%\";");
+				
+				String idf = "aa";
+				Integer idb = 0;
+				if(rs.next())
+				{
+					String ts = rs.getString(1);
+					if(ts.substring(0, 2).equals("aa"))
+					{
+						idb = Integer.parseInt(ts.substring(2));
+						idb++;
+					}
+				}
+				String sid = idf + String.format("%07d", idb);
+				
+				String queryS = "INSERT INTO stars (id, name) VALUES(\"" + sid + "\", \"" + star + "\");";
+				
+				statement.executeUpdate(queryS);
+				
+				out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
+						"<HTML>\r\n" + 
+						"<HEAD>\r\n" + 
+						"  <TITLE>Add Star Success</TITLE>\r\n" + 
+						"</HEAD>\r\n" + 
+						"\r\n" + 
+						"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
+						"<H1 ALIGN=\"CENTER\">Star Added</H1>\r\n" + 
+						"\r\n" + 
+						"<FORM ACTION=\"/project3/servlet/dashboard\"\r\n" + 
+						"      METHOD=\"POST\">\r\n" + 
+						"  <CENTER>\r\n" + 
+						"    <INPUT TYPE=\"SUBMIT\" VALUE=\"Go Back\">\r\n" + 
+						"  </CENTER>\r\n" + 
+						"</FORM>\r\n" + 
+						"\r\n" + 
+						"</BODY>\r\n" + 
+						"</HTML>\r\n" + 
+						"");
+				}
+				else
+				{
+					out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
+							"<HTML>\r\n" + 
+							"<HEAD>\r\n" + 
+							"  <TITLE>Add Star Unsuccess</TITLE>\r\n" + 
+							"</HEAD>\r\n" + 
+							"\r\n" + 
+							"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
+							"<H1 ALIGN=\"CENTER\">Star already exist in database.</H1>\r\n" + 
+							"\r\n" + 
+							"<FORM ACTION=\"/project3/servlet/dashboard\"\r\n" + 
+							"      METHOD=\"POST\">\r\n" + 
+							"  <CENTER>\r\n" + 
+							"    <INPUT TYPE=\"SUBMIT\" VALUE=\"Go Back\">\r\n" + 
+							"  </CENTER>\r\n" + 
+							"</FORM>\r\n" + 
+							"\r\n" + 
+							"</BODY>\r\n" + 
+							"</HTML>\r\n" + 
+							"");
+				}
 			statement.close();
 			dbcon.close();
-			rs.close();
+			
 		}
 		catch (SQLException ex)
 		{

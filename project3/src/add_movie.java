@@ -22,20 +22,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/add_movie")
 public class add_movie extends HttpServlet 
 {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public add_movie() 
-    {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
@@ -46,14 +33,14 @@ public class add_movie extends HttpServlet
 		HttpSession session = request.getSession(true);
 		if (session.isNew())
 		{
-			session.setAttribute("loginsuss", "no");
-			response.sendRedirect("/project3/servlet/welcome");
+			session.setAttribute("employsuss", "no");
+			response.sendRedirect("/project3/servlet/dLoginpage");
 		}
 		else
 		{
-			if(session.getAttribute("loginsuss").equals("no"))
+			if(session.getAttribute("employsuss").equals("no"))
 			{
-				response.sendRedirect("/project3/servlet/welcome");
+				response.sendRedirect("/project3/servlet/dLoginpage");
 			}
 		}
 		
@@ -70,36 +57,13 @@ public class add_movie extends HttpServlet
 			// Declare our statement
 			Statement statement = dbcon.createStatement();
 			
-			
-			// Get the unique star id number;
-			String sidQuery = "SELECT MAX(id) FROM stars;\n";
-			ResultSet rsstar = statement.executeQuery(sidQuery);
-			int sid = ((Number) rsstar.getObject(1)).intValue() + 1;
-			
-			// Get the unique star id number;
-			String gidQuery = "SELECT MAX(id) FROM genres;\n";
-			ResultSet rsgenre = statement.executeQuery(gidQuery);
-			int gid = ((Number) rsgenre.getObject(1)).intValue() + 1;
-						
-			// Get the unique star id number;
-			String midQuery = "SELECT MAX(id) FROM stars;\n";
-			ResultSet rsmovie = statement.executeQuery(midQuery);
-			int mid = ((Number) rsmovie.getObject(1)).intValue() + 1;
-						
-			
 			String movie = request.getParameter("movie_title");
 			String star = request.getParameter("star_name");
 			String genre = request.getParameter("genre");
 			String director = request.getParameter("director");
 			String year = request.getParameter("year");
 			
-			String queryM = "INSERT INTO movies VALUES(" + mid + ",'" + movie + "', " + year + ", '" + director + "');";
-			String queryS = "INSERT INTO stars(id, name) VALUES(" + sid  + ", '" + star + "');";
-			String queryG = "INSERT INTO genres VALUES(" + gid + ", '" + genre + "');";
-			
-			int insertM = statement.executeUpdate(queryM);
-			int insertS = statement.executeUpdate(queryS);
-			int insertG = statement.executeUpdate(queryG);
+			statement.executeQuery("CALL add_movie(\""+ movie +"\","+ year +",\"" + director +"\", \""+ star +"\",\""+ genre +"\");");
 			
 			
 			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
@@ -111,7 +75,7 @@ public class add_movie extends HttpServlet
 					"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
 					"<H1 ALIGN=\"CENTER\">Movie Added</H1>\r\n" + 
 					"\r\n" + 
-					"<FORM ACTION=\"/project3/servlet/_dashboard\"\r\n" + 
+					"<FORM ACTION=\"/project3/servlet/dashboard\"\r\n" + 
 					"      METHOD=\"POST\">\r\n" + 
 					"  <CENTER>\r\n" + 
 					"    <INPUT TYPE=\"SUBMIT\" VALUE=\"Go Back\">\r\n" + 
@@ -122,9 +86,6 @@ public class add_movie extends HttpServlet
 					"</HTML>\r\n" + 
 					"");
 			
-			rsstar.close();
-			rsmovie.close();
-			rsgenre.close();
 			statement.close();
 			dbcon.close();
 		}

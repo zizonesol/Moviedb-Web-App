@@ -35,14 +35,14 @@ public class metadata extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		if (session.isNew())
 		{
-			session.setAttribute("loginsuss", "no");
-			response.sendRedirect("/project3/servlet/welcome");
+			session.setAttribute("employsuss", "no");
+			response.sendRedirect("/project3/servlet/dLoginpage");
 		}
 		else
 		{
-			if(session.getAttribute("loginsuss").equals("no"))
+			if(session.getAttribute("employsuss").equals("no"))
 			{
-				response.sendRedirect("/project3/servlet/welcome");
+				response.sendRedirect("/project3/servlet/dLoginpage");
 			}
 		}
 		
@@ -51,7 +51,7 @@ public class metadata extends HttpServlet {
 		// Output stream to STDOUT
 		PrintWriter out = response.getWriter();
 		
-		out.println("<HTML><HEAD><TITLE>Metadata</TITLE></HEAD>");
+		out.println("<HTML><HEAD><TITLE>Metadata</TITLE></HEAD><center><body>");
 		
 		try
 		{
@@ -71,11 +71,11 @@ public class metadata extends HttpServlet {
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
 
-			out.println("<TABLE border>");
+			out.println("<H1>Metadata</H1><TABLE border>");
 
 			// Iterate through each row of rs
-			out.println("<tr>" + "</td>" + "Table Name" + "</td>" + "<td>"+ "Column Name" + "</td>" 
-						+ "<td>" + "Data Type" + "</td>" + "<td>" + "Column Type" + "</td>" + "</tr>");
+			out.println("<tr>" + "<td>" + "Table name"  +"</td>" + "<td>"+ "Attribute Name" + "</td>" 
+						+ "<td>" + "Attribute Type" + "</td>" + "<td>" + "Attribute Type" + "</td>" + "</tr>");
 			while (rs.next()) {
 				String tName = rs.getString("table_name");
 				String cName = rs.getString("column_name");
@@ -86,7 +86,7 @@ public class metadata extends HttpServlet {
 						+ "</td>" + "<td>" + ctype + "</td>" + "</tr>");
 			}
 
-			out.println("</TABLE></BODY></CENTER>");
+			out.println("</TABLE></BODY></CENTER></html>");
 
 			rs.close();
 			statement.close();

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class _dashboard
  */
-@WebServlet("/_dashboard")
+@WebServlet("/dashboard")
 public class _dashboard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -52,7 +52,7 @@ public class _dashboard extends HttpServlet {
 				+ "\r\n"
 				+ "<A HREF=\"/project3/addmoviepage.html\">Add Movie</A> <BR/>\r\n"
 				+ "\r\n"
-				+ "<A HREF=\"/project3/getmetadata.html\">Get Metadata</A> <BR/>\r\n"
+				+ "<A HREF=\"/project3/servlet/metadata\">Get Metadata</A> <BR/>\r\n"
 				+ "\r\n"
 				+ "</BODY>\r\n"
 				+ "</HTML>\r\n"
