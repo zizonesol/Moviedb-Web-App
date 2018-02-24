@@ -45,5 +45,6 @@
         </configuration>
       </plugin>
     </plugins>
+    <finalName>project3</finalName>
   </build>
 </project>
