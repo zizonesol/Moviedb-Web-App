@@ -29,7 +29,7 @@ BEGIN
 			set p1 = "aa";
 			set x = cast(substr(ts,3,7) as UNSIGNED INTEGER);
             set x = x + 1;
-            set sid = concat(p1,x);
+            set sid = concat(p1,LPAD(x, 7, '0'));
 		else
 			set sid = "aa0000000";
 		end if;

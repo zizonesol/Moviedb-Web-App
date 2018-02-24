@@ -31,18 +31,21 @@ public class add_movie extends HttpServlet
         String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
 		
 		HttpSession session = request.getSession(true);
-		if (session.isNew())
+		if(session.isNew())
 		{
 			session.setAttribute("employsuss", "no");
 			response.sendRedirect("/project3/servlet/dLoginpage");
 		}
+		else if(session.getAttribute("employsuss") == null)
+		{
+			response.sendRedirect("/project3/servlet/dLoginpage");
+		}
+		else if(session.getAttribute("employsuss").equals("no"))
+		{
+			response.sendRedirect("/project3/servlet/dLoginpage");
+		}
 		else
 		{
-			if(session.getAttribute("employsuss").equals("no"))
-			{
-				response.sendRedirect("/project3/servlet/dLoginpage");
-			}
-		}
 		
 		response.setContentType("text/html");
 		
@@ -104,7 +107,7 @@ public class add_movie extends HttpServlet
 		
 		// Terminate the STDOUT
 		out.close();
-	}
+	}}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
