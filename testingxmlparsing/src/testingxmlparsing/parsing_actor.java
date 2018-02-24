@@ -55,14 +55,18 @@ public class parsing_actor {
 			 ResultSet rs = statement.executeQuery("select max(id) from stars\r\n" + 
 						"where id like \"aa%\";");
 				
-			String idf = "aa";
+			 String idf = "aa";
 			Integer idb = 0;
 			if(rs.next())
 			{
 				String ts = rs.getString(1);
-				if(ts.substring(0, 2).equals("aa"))
-				{
-					idb = Integer.parseInt(ts.substring(2));
+				if(ts != null)
+				{	
+					if(ts.substring(0, 2).equals("aa"))
+					{
+						idb = Integer.parseInt(ts.substring(2));
+						idb++;
+					}
 				}
 			}
 

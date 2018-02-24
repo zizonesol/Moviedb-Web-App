@@ -36,9 +36,9 @@ public class addstar extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
-		String loginUser = "mytestuser";
-		String loginPasswd = "mypassword";
-		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+		String loginUser = "lihengz2";
+        String loginPasswd = "as499069589";
+        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
 		
 		HttpSession session = request.getSession(true);
 		if (session.isNew())
@@ -69,23 +69,29 @@ public class addstar extends HttpServlet {
 			
 			String star = request.getParameter("star_name");
 			ResultSet rs = statement.executeQuery("select * from stars where name like \""+ star + "\";");
+			
 			if(!rs.next())
 			{
 				// Get the unique id number;
 				rs = statement.executeQuery("select max(id) from stars\r\n" + 
 						"where id like \"aa%\";");
 				
+				
 				String idf = "aa";
 				Integer idb = 0;
 				if(rs.next())
 				{
 					String ts = rs.getString(1);
-					if(ts.substring(0, 2).equals("aa"))
-					{
-						idb = Integer.parseInt(ts.substring(2));
-						idb++;
+					if(ts != null)
+					{	
+						if(ts.substring(0, 2).equals("aa"))
+						{
+							idb = Integer.parseInt(ts.substring(2));
+							idb++;
+						}
 					}
 				}
+				
 				String sid = idf + String.format("%07d", idb);
 				
 				String queryS = "INSERT INTO stars (id, name) VALUES(\"" + sid + "\", \"" + star + "\");";
@@ -145,11 +151,17 @@ public class addstar extends HttpServlet {
 				System.out.println("SQL Exception: " + ex.getMessage());
 				ex = ex.getNextException();
 			}
-		}
-		catch(java.lang.Exception ex)
-		{
-			return;
-		}
+		} catch(java.lang.Exception ex)
+        {
+            out.println("<HTML>" +
+                        "<HEAD><TITLE>" +
+                        "MovieDB: Error" +
+                        "</TITLE></HEAD>\n<BODY>" +
+                        "<P>SQL error in doGet: " +
+                        ex.getMessage() + "</P></BODY></HTML>");
+            return;
+        }
+		
 		
 		// Terminate the STDOUT
 		out.close();
