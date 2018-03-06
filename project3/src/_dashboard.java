@@ -52,7 +52,9 @@ public class _dashboard extends HttpServlet {
 				+ "\r\n"
 				+ "<A HREF=\"/project3/addmoviepage.html\">Add Movie</A> <BR/>\r\n"
 				+ "\r\n"
+
 				+ "<A HREF=\"/project3/servlet/metadata\">Get Metadata</A> <BR/>\r\n"
+
 				+ "\r\n"
 				+ "</BODY>\r\n"
 				+ "</HTML>\r\n"

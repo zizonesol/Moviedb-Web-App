@@ -33,9 +33,11 @@ public class dLogin extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
+
 		String loginUser = "lihengz2";
         String loginPasswd = "as499069589";
         String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
+
         
         try
         {
@@ -45,10 +47,12 @@ public class dLogin extends HttpServlet {
         		// Declare our statement
         		Statement statement = dbcon.createStatement();
         		
+
         		String em = request.getParameter("eemail");
         		String passw = request.getParameter("epassword");
         		
         		String query = "SELECT * from employees where email like \"" + em + "\";";
+
         		
         		// Perform the query
         		ResultSet rs = statement.executeQuery(query);
@@ -56,11 +60,13 @@ public class dLogin extends HttpServlet {
         		if (rs.next())
         		{
         			String pw = rs.getString("password");
+
         			System.out.println(pw);
         			if(pw.equals(passw))
         			{
         				HttpSession session = request.getSession(true);
         				session.setAttribute("employsuss", "yes");
+
         				//session.setAttribute("fullname", rs.getString(""));
         				response.sendRedirect("/project3/servlet/dashboard");
         			}
@@ -72,10 +78,12 @@ public class dLogin extends HttpServlet {
         		else
         		{
         			statement.executeUpdate("INSERT INTO employees (email, password, fullname) \r\n"
+
         					+ "VALUES ('" + em + "', '" + passw + "', \"CS 122B TA\")");
         			HttpSession session = request.getSession(true);
         			session.setAttribute("employsuss", "yes");
         			response.sendRedirect("/project3/servlet/dashboard");
+
         		}
         		
         		rs.close();

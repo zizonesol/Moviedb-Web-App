@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class metadata
  */
+
 public class metadata extends HttpServlet {
 
 
@@ -28,6 +29,7 @@ public class metadata extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
+
 		String loginUser = "lihengz2";
         String loginPasswd = "as499069589";
         String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
@@ -48,13 +50,16 @@ public class metadata extends HttpServlet {
 		}
 		else
 		{
+
 		
 		response.setContentType("text/html");
 		
 		// Output stream to STDOUT
 		PrintWriter out = response.getWriter();
 		
+
 		out.println("<HTML><HEAD><TITLE>Metadata</TITLE></HEAD><center><body>");
+
 		
 		try
 		{
@@ -63,6 +68,7 @@ public class metadata extends HttpServlet {
 			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
 			Statement statement = dbcon.createStatement();
+
 			
 			String table = request.getParameter("table_name");
 
@@ -71,8 +77,10 @@ public class metadata extends HttpServlet {
 					"WHERE (table_schema='moviedb')\r\n" + 
 					"order by table_name;\r\n";
 
+
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
+
 
 			out.println("<H1>Metadata</H1><TABLE border>");
 
@@ -90,6 +98,7 @@ public class metadata extends HttpServlet {
 			}
 
 			out.println("</TABLE></BODY></CENTER></html>");
+
 
 			rs.close();
 			statement.close();
@@ -114,7 +123,9 @@ public class metadata extends HttpServlet {
             return;
         }
 		out.close();
+
 	}}
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

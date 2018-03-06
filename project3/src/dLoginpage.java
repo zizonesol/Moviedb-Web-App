@@ -35,7 +35,9 @@ public class dLoginpage extends HttpServlet {
 		
 		if (session.isNew())
 		{
+
 			session.setAttribute("employsuss", "no");
+
 			response.setContentType("text/html");
 			PrintWriter out = response.getWriter();
 			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n"
@@ -50,8 +52,10 @@ public class dLoginpage extends HttpServlet {
 					+ "<FORM ACTION=\"/project3/servlet/dLogin\"\r\n"
 					+ "		METHOD=\"POST\">\r\n"
 					+ "		\r\n"
+
 					+ "		Email: <input type = \"text\" name = \"eemail\"><br>\r\n"
 					+ "		Password: <input tyep = \"text\" name = \"epassword\"<br>\r\n"
+
 					+ "		\r\n"
 					+ "	<CENTER>\r\n"
 					+ "		<INPUT TYPE=\"SUBMIT\" VALUE=\"Submit Order\">\r\n"
@@ -65,6 +69,7 @@ public class dLoginpage extends HttpServlet {
 		}
 		else 
 		{
+
 			if (!(session.getAttribute("employsuss") == null))
 			{
 				if(session.getAttribute("employsuss").equals("yes"))
@@ -100,6 +105,7 @@ public class dLoginpage extends HttpServlet {
 							+ "");
 					out.close();
 				}
+
 			}
 			else
 			{
@@ -117,8 +123,10 @@ public class dLoginpage extends HttpServlet {
 						+ "<FORM ACTION=\"/project3/servlet/dLogin\"\r\n"
 						+ "		METHOD=\"POST\">\r\n"
 						+ "		\r\n"
+
 						+ "		Email: <input type = \"text\" name = \"eemail\"><br>\r\n"
 						+ "		Password: <input tyep = \"text\" name = \"epassword\"<br>\r\n"
+
 						+ "		\r\n"
 						+ "	<CENTER>\r\n"
 						+ "		<INPUT TYPE=\"SUBMIT\" VALUE=\"Submit Order\">\r\n"

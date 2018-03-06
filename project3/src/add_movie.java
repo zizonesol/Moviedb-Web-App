@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
 public class add_movie extends HttpServlet 
 {
 
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
@@ -46,6 +47,7 @@ public class add_movie extends HttpServlet
 		}
 		else
 		{
+
 		
 		response.setContentType("text/html");
 		
@@ -66,7 +68,9 @@ public class add_movie extends HttpServlet
 			String director = request.getParameter("director");
 			String year = request.getParameter("year");
 			
+
 			statement.executeQuery("CALL add_movie(\""+ movie +"\","+ year +",\"" + director +"\", \""+ star +"\",\""+ genre +"\");");
+
 			
 			
 			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
@@ -78,7 +82,9 @@ public class add_movie extends HttpServlet
 					"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
 					"<H1 ALIGN=\"CENTER\">Movie Added</H1>\r\n" + 
 					"\r\n" + 
+
 					"<FORM ACTION=\"/project3/servlet/dashboard\"\r\n" + 
+
 					"      METHOD=\"POST\">\r\n" + 
 					"  <CENTER>\r\n" + 
 					"    <INPUT TYPE=\"SUBMIT\" VALUE=\"Go Back\">\r\n" + 
@@ -107,7 +113,9 @@ public class add_movie extends HttpServlet
 		
 		// Terminate the STDOUT
 		out.close();
+
 	}}
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

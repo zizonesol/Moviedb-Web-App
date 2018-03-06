@@ -129,6 +129,7 @@
     <servlet-name>metadata</servlet-name>
     <url-pattern>/servlet/metadata</url-pattern>
   </servlet-mapping>
+
 <security-constraint>
  <web-resource-collection>
     <web-resource-name>HTTPSOnly</web-resource-name>
@@ -138,4 +139,5 @@
     <transport-guarantee>CONFIDENTIAL</transport-guarantee>
  </user-data-constraint>
 </security-constraint>
+
 </web-app>
