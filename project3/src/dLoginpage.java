@@ -35,7 +35,9 @@ public class dLoginpage extends HttpServlet {
 		
 		if (session.isNew())
 		{
-			session.setAttribute("loginsuss", "no");
+
+			session.setAttribute("employsuss", "no");
+
 			response.setContentType("text/html");
 			PrintWriter out = response.getWriter();
 			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n"
@@ -50,8 +52,10 @@ public class dLoginpage extends HttpServlet {
 					+ "<FORM ACTION=\"/project3/servlet/dLogin\"\r\n"
 					+ "		METHOD=\"POST\">\r\n"
 					+ "		\r\n"
-					+ "		Email: <input type = \"text\" name = \"email\"><br>\r\n"
-					+ "		Password: <input tyep = \"text\" name = \"password\"<br>\r\n"
+
+					+ "		Email: <input type = \"text\" name = \"eemail\"><br>\r\n"
+					+ "		Password: <input tyep = \"text\" name = \"epassword\"<br>\r\n"
+
 					+ "		\r\n"
 					+ "	<CENTER>\r\n"
 					+ "		<INPUT TYPE=\"SUBMIT\" VALUE=\"Submit Order\">\r\n"
@@ -65,9 +69,43 @@ public class dLoginpage extends HttpServlet {
 		}
 		else 
 		{
-			if (session.getAttribute("loginsuss").equals("yes"))
+
+			if (!(session.getAttribute("employsuss") == null))
 			{
-				response.sendRedirect("/project3/servlet/dashboard");
+				if(session.getAttribute("employsuss").equals("yes"))
+				{
+					response.sendRedirect("/project3/servlet/dashboard");
+				}
+				else
+				{
+					response.setContentType("text/html");
+					PrintWriter out = response.getWriter();
+					out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n"
+							+ "<HTML>\r\n"
+							+ "<HEAD>\r\n"
+							+ "	<TITLE>dLoginpage</TITLE>\r\n"
+							+ "</HEAD>\r\n"
+							+ "\r\n"
+							+ "<BODY BGCOLOR=\"#FDF5E6\">\r\n"
+							+ "<H1 ALIGN=\"CENTER\">Dashboard Login</H1>\r\n"
+							+ "\r\n"
+							+ "<FORM ACTION=\"/project3/servlet/dLogin\"\r\n"
+							+ "		METHOD=\"POST\">\r\n"
+							+ "		\r\n"
+							+ "		Email: <input type = \"text\" name = \"eemail\"><br>\r\n"
+							+ "		Password: <input tyep = \"text\" name = \"epassword\"<br>\r\n"
+							+ "		\r\n"
+							+ "	<CENTER>\r\n"
+							+ "		<INPUT TYPE=\"SUBMIT\" VALUE=\"Submit Order\">\r\n"
+							+ "	</CENTER>\r\n"
+							+ "</FORM>\r\n"
+							+ "\r\n"
+							+ "</BODY>\r\n"
+							+ "</HTML>\r\n"
+							+ "");
+					out.close();
+				}
+
 			}
 			else
 			{
@@ -85,8 +123,10 @@ public class dLoginpage extends HttpServlet {
 						+ "<FORM ACTION=\"/project3/servlet/dLogin\"\r\n"
 						+ "		METHOD=\"POST\">\r\n"
 						+ "		\r\n"
-						+ "		Email: <input type = \"text\" name = \"email\"><br>\r\n"
-						+ "		Password: <input tyep = \"text\" name = \"password\"<br>\r\n"
+
+						+ "		Email: <input type = \"text\" name = \"eemail\"><br>\r\n"
+						+ "		Password: <input tyep = \"text\" name = \"epassword\"<br>\r\n"
+
 						+ "		\r\n"
 						+ "	<CENTER>\r\n"
 						+ "		<INPUT TYPE=\"SUBMIT\" VALUE=\"Submit Order\">\r\n"

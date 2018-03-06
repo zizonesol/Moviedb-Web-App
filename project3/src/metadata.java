@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class metadata
  */
-@WebServlet("/metadata")
+
 public class metadata extends HttpServlet {
 
 
@@ -29,30 +29,37 @@ public class metadata extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
-		String loginUser = "mytestuser";
-		String loginPasswd = "mypassword";
-		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
+		String loginUser = "lihengz2";
+        String loginPasswd = "as499069589";
+        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
 		
 		HttpSession session = request.getSession(true);
-		if (session.isNew())
+		if(session.isNew())
 		{
-			session.setAttribute("loginsuss", "no");
-			response.sendRedirect("/project3/servlet/welcome");
+			session.setAttribute("employsuss", "no");
+			response.sendRedirect("/project3/servlet/dLoginpage");
+		}
+		else if(session.getAttribute("employsuss") == null)
+		{
+			response.sendRedirect("/project3/servlet/dLoginpage");
+		}
+		else if(session.getAttribute("employsuss").equals("no"))
+		{
+			response.sendRedirect("/project3/servlet/dLoginpage");
 		}
 		else
 		{
-			if(session.getAttribute("loginsuss").equals("no"))
-			{
-				response.sendRedirect("/project3/servlet/welcome");
-			}
-		}
+
 		
 		response.setContentType("text/html");
 		
 		// Output stream to STDOUT
 		PrintWriter out = response.getWriter();
 		
-		out.println("<HTML><HEAD><TITLE>Metadata</TITLE></HEAD>");
+
+		out.println("<HTML><HEAD><TITLE>Metadata</TITLE></HEAD><center><body>");
+
 		
 		try
 		{
@@ -62,36 +69,36 @@ public class metadata extends HttpServlet {
 			// Declare our statement
 			Statement statement = dbcon.createStatement();
 
-			String query = "select * , r.rating from\r\n"
-					+ "	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n"
-					+ "	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n"
-					+ "	where gs.id = gm.genreId\r\n" + "		AND gm.movieId = s.id\r\n"
-					+ "		AND ss.id = sm.starId\r\n" + "        AND sm.movieId = s.id\r\n"
-					+ "	Group by s.id) as masterp , ratings r , movies m\r\n" + "    where m.title = masterp.title\r\n"
-					+ "    AND m.id = r.movieId\r\n" + "order by r.rating DESC\r\n" + "limit 20;";
+			
+			String table = request.getParameter("table_name");
+
+			String query = "SELECT table_name, column_name, data_type, column_type  \r\n" + 
+					"FROM information_schema.columns \r\n" + 
+					"WHERE (table_schema='moviedb')\r\n" + 
+					"order by table_name;\r\n";
+
 
 			// Perform the query
 			ResultSet rs = statement.executeQuery(query);
 
-			out.println("<TABLE border>");
+
+			out.println("<H1>Metadata</H1><TABLE border>");
 
 			// Iterate through each row of rs
-			out.println("<tr>" + "<td>" + "Movie Title" + "</td>" + "<td>" + "Released Year" + "</td>" + "<td>"
-					+ "Movie Director" + "</td>" + "<td>" + "List of Stars" + "</td>" + "<td>" + "List of Genres"
-					+ "</td>" + "<td>" + "Rating" + "</td>" + "</tr>");
+			out.println("<tr>" + "<td>" + "Table name"  +"</td>" + "<td>"+ "Attribute Name" + "</td>" 
+						+ "<td>" + "Attribute Type" + "</td>" + "<td>" + "Attribute Type" + "</td>" + "</tr>");
 			while (rs.next()) {
-				String m_title = rs.getString("title");
-				Integer m_year = rs.getInt("year");
-				Float m_rating = rs.getFloat("rating");
-				String m_director = rs.getString("director");
-				String m_stars = (rs.getString("Stars_Appear")).replace(",", ", ");
-				String m_genres = (rs.getString("geners_list")).replace(",", ", ");
-				out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_director
-						+ "</td>" + "<td>" + m_stars + "</td>" + "<td>" + m_genres + "</td>" + "<td>" + m_rating
-						+ "</td>" + "</tr>");
+				String tName = rs.getString("table_name");
+				String cName = rs.getString("column_name");
+				String dtype = (rs.getString("data_type"));
+				String ctype = rs.getString("column_type");
+				
+				out.println("<tr>" + "<td>" + tName + "</td>" + "<td>" + cName + "</td>" + "<td>" + dtype
+						+ "</td>" + "<td>" + ctype + "</td>" + "</tr>");
 			}
 
-			out.println("</TABLE></BODY></CENTER>");
+			out.println("</TABLE></BODY></CENTER></html>");
+
 
 			rs.close();
 			statement.close();
@@ -116,7 +123,9 @@ public class metadata extends HttpServlet {
             return;
         }
 		out.close();
-	}
+
+	}}
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

@@ -75,9 +75,13 @@ public class parsing_casts {
 			if(rs.next())
 			{
 				String ts = rs.getString(1);
-				if(ts.substring(0, 2).equals("aa"))
-				{
-					idb = Integer.parseInt(ts.substring(2));
+				if(ts != null)
+				{	
+					if(ts.substring(0, 2).equals("aa"))
+					{
+						idb = Integer.parseInt(ts.substring(2));
+						idb++;
+					}
 				}
 			}
 
