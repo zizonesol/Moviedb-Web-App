@@ -18,6 +18,14 @@
     <url-pattern>/servlet/searchpage</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>appsearchpage</servlet-name>
+    <servlet-class>search_page_app</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>appsearchpage</servlet-name>
+    <url-pattern>/servlet/searchpageapp</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>movieinfo</servlet-name>
     <servlet-class>movieinfo</servlet-class>
   </servlet>
@@ -129,13 +137,5 @@
     <servlet-name>metadata</servlet-name>
     <url-pattern>/servlet/metadata</url-pattern>
   </servlet-mapping>
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>HTTPSOnly</web-resource-name>
-      <url-pattern>/*</url-pattern>
-    </web-resource-collection>
-    <user-data-constraint>
-      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>
-  </security-constraint>
+
 </web-app>
