@@ -21,6 +21,12 @@
     <activity
         android:name=".search_page"
         android:label="Search Page" />
+    <activity
+        android:name=".result_page"
+        android:label="Result Page" />
+
+
+
 
 
 

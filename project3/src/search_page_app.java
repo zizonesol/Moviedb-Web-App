@@ -60,12 +60,13 @@ public class search_page_app extends HttpServlet {
 			String query = "select title, year, director,GROUP_CONCAT(DISTINCT sname) as Stars_Appear,group_concat(DISTINCT gname) as geners_list\r\n" + 
 					"	from\r\n" + 
 					"(select sel.id, sel.title, sel.year, sel.director, s.name as sname , g.name as gname from \r\n" + 
-					"		((select * from movies where title like \"%good%\") as sel\r\n" + 
+					"		((select * from movies where "+ srq +") as sel\r\n" + 
 					"		left join stars_in_movies sm on sm.movieId=sel.id\r\n" + 
 					"		left join stars s on sm.starId=s.id\r\n" + 
 					"		left join genres_in_movies gm on gm.movieId=sel.id\r\n" + 
 					"		left join genres g on g.id=gm.genreId)) as re\r\n" + 
-					"group by re.id;";
+					"group by re.id\r\n"
+					+ "limit 10;";
 			ResultSet rs = statement.executeQuery(query);
 			
 			JSONObject jout = new JSONObject();
@@ -83,11 +84,11 @@ public class search_page_app extends HttpServlet {
 				if(m_stars != null) {
 					String sstar = m_stars.replaceAll(",", ", ");
 					sstar = sstar.substring(0,sstar.length()-2);
-					jj.put("all_star", sstar);
+					jj.put("allstar", sstar);
 				}
 				else
 				{
-					jj.put("all_star", "None");
+					jj.put("allstar", "None");
 				}
 				
 				if(m_year == 0)
@@ -116,7 +117,7 @@ public class search_page_app extends HttpServlet {
 				ja.put(jj);
 			}
 			
-			jout.put("all_movie",ja);
+			jout.put("mlist",ja);
 			out.print(jout.toString());
 			
 			rs.close();
