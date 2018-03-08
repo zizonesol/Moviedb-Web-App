@@ -40,46 +40,16 @@ public class search_page extends AppCompatActivity{
 
     public void search_movie(View view)
     {
-        final Map<String, String> params = new HashMap<String, String>();
 
         String msg = ((EditText)findViewById(R.id.movie_title)).getText().toString();
 
         if(msg.equals("") != true) {
             msg.replace(" ", "+");
-            // no user is logged in, so we must connect to the server
-            RequestQueue queue = Volley.newRequestQueue(this);
 
-            final Context context = this;
-            String url = "http://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:8080/project3/servlet/searchpageapp?movie_title=" + msg;
-            final Intent goToIntent = new Intent(this, result_page.class);
-            StringRequest postRequest = new StringRequest(Request.Method.GET, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            System.out.println(response);
-                            Log.d("response", response);
-
-                            goToIntent.putExtra("result", response);
-                            startActivity(goToIntent);
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // error
-                            Log.d("security.error", error.toString());
-                        }
-                    }
-
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    return params;
-                }
-
-
-            };
-            queue.add(postRequest);
+            Intent goToIntent = new Intent(this, result_page.class);
+            goToIntent.putExtra("page","0");
+            goToIntent.putExtra("search", msg);
+            startActivity(goToIntent);
 
         }
         else

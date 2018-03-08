@@ -61,23 +61,6 @@
             android:text="Login"
             android:onClick="check_mysql"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Next"
-            android:onClick="go_next"/>
-
-        <TextView
-            android:text="HTTP Response:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:id="@+id/http_response"/>
 
 
     </LinearLayout>

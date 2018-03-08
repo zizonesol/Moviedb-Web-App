@@ -25,62 +25,72 @@ import com.android.volley.toolbox.Volley;
 
 public class launch_login extends AppCompatActivity{
 
-    @Override
+
+
     protected void onCreate(Bundle savedInstanceState)
     {
         super .onCreate(savedInstanceState);
         setContentView(R.layout.loginpage);
 
-
     }
 
-    public void go_next(View view)
+    private void acc(String re)
     {
-        Intent goToIntent = new Intent(this, search_page.class);
-
-        startActivity(goToIntent);
-
+        if(re.equals("1"))
+        {
+            Intent goToIntent = new Intent(this, search_page.class);
+            startActivity(goToIntent);
+        }
+        else
+        {
+            Toast.makeText(this, "Username/Password is incorrect.", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void check_mysql(View view) {
-        final Map<String, String> params = new HashMap<String, String>();
 
 
-        // no user is logged in, so we must connect to the server
-        RequestQueue queue = Volley.newRequestQueue(this);
+        String us = ((EditText)findViewById(R.id.login_id)).getText().toString();
+        String pw = ((EditText)findViewById(R.id.login_pw)).getText().toString();
 
-        final Context context = this;
-        String url = "http://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:8080/TomcatTest/servlet/TomcatTest";
+        if(!us.equals("") && !pw.equals("")) {
+            final Map<String, String> params = new HashMap<String, String>();
+            RequestQueue queue = Volley.newRequestQueue(this);
 
-        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println(response);
-                        Log.d("response", response);
-                        ((TextView) findViewById(R.id.http_response)).setText(response);
+            final Context context = this;
+            String url = "http://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:8080/project3/servlet/loginapp?email=" + us + "&password=" + pw;
 
+            StringRequest postRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("response", response);
+                            acc(response);
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                            Log.d("security.error", error.toString());
+                        }
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("security.error", error.toString());
-                    }
+
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    return params;
                 }
 
-        )
+            };
+            queue.add(postRequest);
+
+        }
+        else
         {
-            @Override
-            protected Map<String, String> getParams() {
-                return params;
-            }
-
-
-        };
-        queue.add(postRequest);
-
+            Toast.makeText(this, "Username/Password cannot be empty.", Toast.LENGTH_LONG).show();
+        }
 
         return ;
 

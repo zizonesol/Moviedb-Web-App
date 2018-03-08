@@ -45,12 +45,24 @@ public class result_page extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        String msg = bundle.getString("result");
-        if(msg != null && !"".equals(msg)){
+        String sr = bundle.getString("search");
+        String pg = bundle.getString("page");
 
-            Gson gson = new GsonBuilder().create();
-            Movie_List list_movie = gson.fromJson(msg,Movie_List.class);
-            TableLayout tl = (TableLayout) findViewById(R.id.result_table);
+        get_result(sr,pg);
+
+    }
+
+    private void make_table(String msg)
+    {
+        Gson gson = new GsonBuilder().create();
+        Movie_List list_movie = gson.fromJson(msg,Movie_List.class);
+        TableLayout tl = (TableLayout) findViewById(R.id.result_table);
+        if(list_movie.mlist.size() == 0)
+        {
+            no_result();
+        }
+        else
+        {
             for(int i = 0; i < list_movie.mlist.size(); i++)
             {
                 TableRow row = new TableRow(this);
@@ -65,7 +77,7 @@ public class result_page extends AppCompatActivity {
                 TextView year = new TextView(this);
                 year.setText(list_movie.mlist.get(i).getYear());
                 year.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT,1));
-
+    
                 TextView dir = new TextView(this);
                 dir.setText(list_movie.mlist.get(i).getDirector());
                 dir.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT,1));
@@ -85,13 +97,45 @@ public class result_page extends AppCompatActivity {
                 row.addView(genre);
                 tl.addView(row);
             }
-
-
         }
-        else
-        {
-            ((TextView) findViewById(R.id.http_response)).setText(msg);
-        }
+    }
+
+    private void no_result()
+    {
+        Toast.makeText(this, "Not like this.", Toast.LENGTH_LONG).show();
+    }
+
+    private void get_result(String sr,String pg)
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        final Map<String, String> params = new HashMap<String, String>();
+
+        String url = "http://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:8080/project3/servlet/searchpageapp?movie_title="+ sr+"&pgnum="+pg;
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response);
+                        make_table(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("security.error", error.toString());
+                    }
+                }
+
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                return params;
+            }
+        };
+        queue.add(postRequest);
+
+        return ;
     }
 
 }

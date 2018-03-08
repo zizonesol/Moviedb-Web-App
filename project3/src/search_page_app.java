@@ -41,6 +41,11 @@ public class search_page_app extends HttpServlet {
 			Statement statement = dbcon.createStatement();
 			
 			String name = request.getParameter("movie_title");
+			String pg = request.getParameter("pgnum");
+			
+			Integer of = Integer.parseInt(pg)*10;
+			
+			pg = Integer.toString(of);
 			
 			String[] sear = name.split(" ");
 			String srq = "title LIKE \"%" + name + "%\"";
@@ -66,7 +71,8 @@ public class search_page_app extends HttpServlet {
 					"		left join genres_in_movies gm on gm.movieId=sel.id\r\n" + 
 					"		left join genres g on g.id=gm.genreId)) as re\r\n" + 
 					"group by re.id\r\n"
-					+ "limit 10;";
+					+ "limit 10\r\n"
+					+ "offset "+pg+";";
 			ResultSet rs = statement.executeQuery(query);
 			
 			JSONObject jout = new JSONObject();
