@@ -48,7 +48,7 @@ public class search_page extends AppCompatActivity{
 
             Intent goToIntent = new Intent(this, result_page.class);
             goToIntent.putExtra("page","0");
-            goToIntent.putExtra("search", msg);
+            goToIntent.putExtra("search", msg.toLowerCase());
             startActivity(goToIntent);
 
         }
