@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -58,17 +59,30 @@ public class search_page_app extends HttpServlet {
 			
 			String[] sear = name.split(" ");
 			String srq = "title LIKE \"%" + name + "%\"";
+			Integer stopc = 0;
+			String zz = "match(title) against(\"";
 			if(sear.length > 1)
 			{
-				String zz = "match(title) against(\"";
 				for (int z = 0; z < sear.length ; z++)
 				{
-					zz = zz + "+" +sear[z] + "*,";
+					
+					if(Arrays.asList(stopw).contains(sear[z]))
+					{
+						stopc++;
+					}
+					else
+					{
+						zz = zz + "+" +sear[z] + "*,";
+					}
 				}
 				zz = zz.substring(0,zz.length()-1);
 				zz = zz + "\" in boolean mode)";
-				srq = zz;
+				if(sear.length != stopc)
+				{
+					srq = zz;
+				}
 			}
+			
 			
 			
 			String query = "select title, year, director,GROUP_CONCAT(DISTINCT sname) as Stars_Appear,group_concat(DISTINCT gname) as geners_list\r\n" + 
