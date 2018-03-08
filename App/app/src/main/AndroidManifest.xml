@@ -23,12 +23,8 @@
         android:label="Search Page" />
     <activity
         android:name=".result_page"
-        android:label="Result Page" />
-
-
-
-
-
-
+        android:label="Result Page"
+        android:parentActivityName=".search_page"/>
+        
     </application>
 </manifest>

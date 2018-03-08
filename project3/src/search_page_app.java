@@ -23,6 +23,15 @@ import org.json.JSONObject;
  */
 @WebServlet("/search_page_app")
 public class search_page_app extends HttpServlet {
+	
+	String[] stopw = {"a","about","an","are"
+	                  ,"as","at","be","by","com"
+	                  ,"de","en","for","from"
+	                  ,"how","i","in","is","it"
+	                  ,"la","of","on",
+	                  "or","that","the","this","to"
+	                  ,"was","what","when","where"
+	                  ,"who","will","with","und","the","www"};
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	

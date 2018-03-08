@@ -38,15 +38,20 @@ import java.util.Map;
 
 public class result_page extends AppCompatActivity {
 
+    private String sr;
+    private String pg;
+
     protected void onCreate(Bundle savedInstanceState)
     {
         super .onCreate(savedInstanceState);
         setContentView(R.layout.result_page);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Bundle bundle = getIntent().getExtras();
 
-        String sr = bundle.getString("search");
-        String pg = bundle.getString("page");
+        sr = bundle.getString("search");
+        pg = bundle.getString("page");
 
         get_result(sr,pg);
 
@@ -77,7 +82,7 @@ public class result_page extends AppCompatActivity {
                 TextView year = new TextView(this);
                 year.setText(list_movie.mlist.get(i).getYear());
                 year.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT,1));
-    
+
                 TextView dir = new TextView(this);
                 dir.setText(list_movie.mlist.get(i).getDirector());
                 dir.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT,1));
@@ -102,7 +107,7 @@ public class result_page extends AppCompatActivity {
 
     private void no_result()
     {
-        Toast.makeText(this, "Not like this.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "No result.", Toast.LENGTH_LONG).show();
     }
 
     private void get_result(String sr,String pg)
@@ -136,6 +141,37 @@ public class result_page extends AppCompatActivity {
         queue.add(postRequest);
 
         return ;
+    }
+
+    public void prev_button(View view)
+    {
+        if(pg.equals("0"))
+        {
+            Toast.makeText(this, "This is the first page.", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Intent goToIntent = new Intent(this, result_page.class);
+
+            Integer of = Integer.parseInt(pg);
+            pg = Integer.toString(of-1);
+            goToIntent.putExtra("page",pg);
+            goToIntent.putExtra("search", sr);
+            startActivity(goToIntent);
+        }
+    }
+
+    public void next_button(View view)
+    {
+
+        Intent goToIntent = new Intent(this, result_page.class);
+
+        Integer of = Integer.parseInt(pg);
+        pg = Integer.toString(of+1);
+        goToIntent.putExtra("page",pg);
+        goToIntent.putExtra("search", sr);
+        startActivity(goToIntent);
+
     }
 
 }
