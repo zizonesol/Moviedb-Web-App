@@ -10,6 +10,14 @@
     <url-pattern>/servlet/login</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>loginappp</servlet-name>
+    <servlet-class>loginapp</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>loginapp</servlet-name>
+    <url-pattern>/servlet/loginapp</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>searchpage</servlet-name>
     <servlet-class>searchpage</servlet-class>
   </servlet>
@@ -137,5 +145,4 @@
     <servlet-name>metadata</servlet-name>
     <url-pattern>/servlet/metadata</url-pattern>
   </servlet-mapping>
-
 </web-app>
