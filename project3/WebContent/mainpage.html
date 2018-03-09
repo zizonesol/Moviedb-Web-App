@@ -2,23 +2,37 @@
 <HTML>
 <HEAD>
   <TITLE>Main Page</TITLE>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- include jquery autocomplete JS  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.min.js"></script>
+	<link rel="stylesheet" href="style.css">
 </HEAD>
 
 <BODY BGCOLOR="#FDF5E6">
 <H1 ALIGN="CENTER">Main Page</H1>
 
-<div align="center"><form action="/project3/servlet/shoppingcart">
-<input type="submit" value="Checkout" />
-</form>
-</div>
 <div align="right"><form action="/project3/servlet/dLoginpage">
 <input type="submit" value="Dashboard" />
 </form>
 </div>
 
-<a href="/project3/searchpage.html">Search for Movie</a> <br />
+<div align="center">
+	<input type="text" name="movie" id="autocomplete"/>
+    <script src="autocomplete.js">
+    </script>
+	
+</div>
 
+<a href="/project3/searchpage.html">Advanced Search</a> <br />
 <a href="/project3/browsingpage.html">Browse Movie</a>
+
+
+<div align="center"><form action="/project3/servlet/shoppingcart">
+<input type="submit" value="Checkout" />
+</form>
+</div>
 
 </BODY>
 </HTML>
