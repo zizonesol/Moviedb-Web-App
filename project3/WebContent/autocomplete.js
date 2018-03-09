@@ -1,4 +1,4 @@
-/**
+/*
  * 
  */
 
@@ -48,6 +48,7 @@ function handleLookupAjaxSuccess(data, query, doneCallback)
 	
 	// TODO: if you want to cache the result into a global variable you can do it here
 	
+	
 	// call the callback function provided by the autocomplete library
 	// add "{suggestions: jsonData}" to satisfy the library response format according to
 	// 	the "Response Format" section is documentation
@@ -64,8 +65,8 @@ function handleSelectSuggestion(suggestion)
 {
 	// TODO: jump to the specific result page based on the selected suggestion
 	
-	console.log("you seelc " + suggestion["value"])
-	var url = suggestion["data"]["category"] + "?id" + suggestion["data"]["movieId"]
+	console.log("you select " + suggestion["value"])
+	var url = "/project3/servlet/searchpage?title=" + suggestion["data"]["title"]
 	console.log(url)
 }
 
@@ -79,10 +80,11 @@ function handleSelectSuggestion(suggestion)
  */
 // $('#autocomplete') is to find element by the ID "autocomplete"
 $('#autocomplete').autocomplete
-({
+({	
 	// documentation of the lookup function can be found under the "Custom lookup function" section
 	lookup: function(query, doneCallback)
 	{
+		highlight = true;
 		handleLookup(query, doneCallback)
 	},
 	onSelect: function(suggestion)
@@ -95,7 +97,22 @@ $('#autocomplete').autocomplete
 	deferRequestBy:300,
 	// there are some other parameters that you might want to use to satisfy all the requirements
 	// TODO: add other parameters, such as minimum characters
+	minChars: 3,
+	max: 10,
+	cacheLength: 1,
+	scroll: true,
+	delay: 100,
+	highlight: false,
 	
+	onFocus: function(query)
+	{
+		var that = this;
+		
+		if (query.length >= 3)
+		{
+			that.lookup(query, doneCallback)
+		}
+	}
 })
 
 /*
@@ -105,18 +122,32 @@ function handleNormalSearch(query)
 {
 	console.log("doing normal search with query: " + query)
 	// TODO: you should do normal search here
+	
 }
 
 // bind pressing enter key to a handler function
 $('#autocomplete').keypress(function(event)
 {
 	// keyCode 13 is the enter key
+	// keyCode 38 is the scroll up
+	// keyCode 40 is the scroll down
 	if (event.keyCode==13)
 	{
 		// pass the value of the input box to the handler function
 		handleNormalSearch($('#autocomplete').val())
 	}
+	if (event.keyCode==38)
+	{
+		
+	}
+	if (event.keyCode==40)
+	{
+		
+	}
 })
+
+
+
 
 
 
