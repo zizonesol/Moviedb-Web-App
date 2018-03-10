@@ -26,9 +26,9 @@ function handleLookup(query, doneCallback) {
 	var notfound = true;
 	var y = query;
 	var z;
-	y.replace(" ","+");
-
 	
+
+	console.log(y);
 	if(!(jdict.hasOwnProperty(y)))
 		{
 			// sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
@@ -70,7 +70,7 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
 	var jsonData = JSON.parse(data);
 	console.log(jsonData);
 	var z = query;
-	jdict[z.replace(" ","+")] = jsonData;
+	jdict[z] = jsonData;
 	console.log(jdict);
 	
 	// TODO: if you want to cache the result into a global variable you can do it here
@@ -97,12 +97,12 @@ function handleSelectSuggestion(suggestion) {
 	
 	if(suggestion["data"]["category"] == "movie")
 		{
-			window.location.replace("http://localhost:8080/project3/servlet/movieinfo?movie_title="+suggestion["value"]);
+			window.location.replace("http://http://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:8080/project3/servlet/movieinfo?movie_title="+suggestion["value"]);
 			console.log("http://localhost:8080/project3/servlet/movieinfo?movie_title="+suggestion["value"])
 		}
 	else
 		{
-			window.location.replace("http://localhost:8080/project3/servlet/starinfo?star_name="+suggestion["value"]);
+			window.location.replace("http://http://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:8080/project3/servlet/starinfo?star_name="+suggestion["value"]);
 			console.log("http://localhost:8080/project3/servlet/starinfo?star_name="+suggestion["value"])
 		}
 	
@@ -144,7 +144,7 @@ function handleNormalSearch(query) {
 	console.log("doing normal search with query: " + query);
 	var x = query;
 	x.replace(" ","+")
-	window.location.replace("http://localhost:8080/project3/servlet/searchpage?title="+x)
+	window.location.replace("http://http://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:8080/project3/servlet/searchpage?title="+x)
 	// TODO: you should do normal search here
 }
 
