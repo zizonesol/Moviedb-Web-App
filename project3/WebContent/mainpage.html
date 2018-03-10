@@ -19,10 +19,14 @@
 </div>
 
 <div align="center">
-	<input type="text" name="movie" id="autocomplete"/>
+Search for Movie
+	<FORM ACTION="/project3/servlet/searchpage"
+      METHOD="GET">
+	<input type="text" name="title" id="autocomplete"/>
     <script src="autocomplete.js">
     </script>
-	
+    <INPUT TYPE="SUBMIT" VALUE="Search"><br>
+	</FORM>
 </div>
 
 <a href="/project3/searchpage.html">Advanced Search</a> <br />

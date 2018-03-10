@@ -10,6 +10,7 @@
  * 
  */
 
+var jdict = {};
 
 /*
  * This function is called by the library when it needs to lookup a query.
@@ -22,24 +23,36 @@ function handleLookup(query, doneCallback) {
 	console.log("autocomplete initiated")
 	console.log("sending AJAX request to backend Java Servlet")
 	
-	// TODO: if you want to check past query results first, you can do it here
+	var notfound = true;
 	
-	// sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
-	// with the query data
-	jQuery.ajax({
-		"method": "GET",
-		// generate the request url from the query.
-		// escape the query string to avoid errors caused by special characters 
-		"url": "movie_suggestion?query=" + escape(query),
-		"success": function(data) {
-			// pass the data, query, and doneCallback function into the success handler
-			handleLookupAjaxSuccess(data, query, doneCallback) 
-		},
-		"error": function(errorData) {
-			console.log("lookup ajax error")
-			console.log(errorData)
+	for(var key in jdict )
+		{
+			if(key.include(query))
+				{
+					doneCallback( { suggestions: jdict[key] } );
+					notfound = false;
+				}
 		}
-	})
+	
+	if(notfound)
+		{
+			// sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
+			// with the query data
+			jQuery.ajax({
+				"method": "GET",
+				// generate the request url from the query.
+				// escape the query string to avoid errors caused by special characters 
+				"url": "movie_suggestion?query=" + escape(query),
+				"success": function(data) {
+					
+					handleLookupAjaxSuccess(data, query, doneCallback) 
+				},
+				"error": function(errorData) {
+					console.log("lookup ajax error")
+					console.log(errorData)
+				}
+			})
+		}
 }
 
 
@@ -56,6 +69,8 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
 	// parse the string into JSON
 	var jsonData = JSON.parse(data);
 	console.log(jsonData)
+	
+	jdict[query] = jsonData;
 	
 	// TODO: if you want to cache the result into a global variable you can do it here
 
@@ -78,6 +93,16 @@ function handleSelectSuggestion(suggestion) {
 	console.log("you select " + suggestion["value"])
 	var url = suggestion["data"]["category"] + "-movie" + "?id=";
 	console.log(url)
+	
+	if(suggestion["data"]["category"] == "movie")
+		{
+			window.location.replace("http://localhost:8080/project3/servlet/movieinfo?movie_title="+suggestion["value"]);
+		}
+	else
+		{
+			window.location.replace("http://localhost:8080/project3/servlet/starinfo?star_name="+suggestion["value"]);
+		}
+	
 }
 
 
@@ -114,6 +139,8 @@ $('#autocomplete').autocomplete({
  */
 function handleNormalSearch(query) {
 	console.log("doing normal search with query: " + query);
+	query.replace(" ","+")
+	window.location.replace("http://localhost:8080/project3/servlet/searchpage?title="+query)
 	// TODO: you should do normal search here
 }
 
