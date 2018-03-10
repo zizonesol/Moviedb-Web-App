@@ -41,10 +41,10 @@ public class login extends HttpServlet
     	    		return;
     		}
     	
-        String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
-        
+        String loginUser = "lihengz2";
+        String loginPasswd = "as499069589";
+        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
+		
         HttpSession se = request.getSession(true);
         if(se.isNew())
         {
