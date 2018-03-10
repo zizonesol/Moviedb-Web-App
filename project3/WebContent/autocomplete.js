@@ -24,17 +24,12 @@ function handleLookup(query, doneCallback) {
 	console.log("sending AJAX request to backend Java Servlet")
 	
 	var notfound = true;
+	var y = query;
+	var z;
+	y.replace(" ","+");
+
 	
-	for(var key in jdict )
-		{
-			if(key.include(query))
-				{
-					doneCallback( { suggestions: jdict[key] } );
-					notfound = false;
-				}
-		}
-	
-	if(notfound)
+	if(!(jdict.hasOwnProperty(y)))
 		{
 			// sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
 			// with the query data
@@ -42,9 +37,9 @@ function handleLookup(query, doneCallback) {
 				"method": "GET",
 				// generate the request url from the query.
 				// escape the query string to avoid errors caused by special characters 
-				"url": "movie_suggestion?query=" + escape(query),
+				"url": "movie_suggestion?query=" + escape(y),
 				"success": function(data) {
-					
+					console.log("look up from ajax")
 					handleLookupAjaxSuccess(data, query, doneCallback) 
 				},
 				"error": function(errorData) {
@@ -52,6 +47,11 @@ function handleLookup(query, doneCallback) {
 					console.log(errorData)
 				}
 			})
+		}
+	else
+		{
+		console.log("look up from cache");
+		doneCallback( { suggestions: jdict[y] } );
 		}
 }
 
@@ -68,9 +68,10 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
 	
 	// parse the string into JSON
 	var jsonData = JSON.parse(data);
-	console.log(jsonData)
-	
-	jdict[query] = jsonData;
+	console.log(jsonData);
+	var z = query;
+	jdict[z.replace(" ","+")] = jsonData;
+	console.log(jdict);
 	
 	// TODO: if you want to cache the result into a global variable you can do it here
 
@@ -92,15 +93,17 @@ function handleSelectSuggestion(suggestion) {
 	
 	console.log("you select " + suggestion["value"])
 	var url = suggestion["data"]["category"] + "-movie" + "?id=";
-	console.log(url)
+	
 	
 	if(suggestion["data"]["category"] == "movie")
 		{
 			window.location.replace("http://localhost:8080/project3/servlet/movieinfo?movie_title="+suggestion["value"]);
+			console.log("http://localhost:8080/project3/servlet/movieinfo?movie_title="+suggestion["value"])
 		}
 	else
 		{
 			window.location.replace("http://localhost:8080/project3/servlet/starinfo?star_name="+suggestion["value"]);
+			console.log("http://localhost:8080/project3/servlet/starinfo?star_name="+suggestion["value"])
 		}
 	
 }
@@ -139,8 +142,9 @@ $('#autocomplete').autocomplete({
  */
 function handleNormalSearch(query) {
 	console.log("doing normal search with query: " + query);
-	query.replace(" ","+")
-	window.location.replace("http://localhost:8080/project3/servlet/searchpage?title="+query)
+	var x = query;
+	x.replace(" ","+")
+	window.location.replace("http://localhost:8080/project3/servlet/searchpage?title="+x)
 	// TODO: you should do normal search here
 }
 
