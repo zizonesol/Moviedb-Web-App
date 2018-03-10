@@ -3,11 +3,19 @@
 <HEAD>
   <TITLE>Main Page</TITLE>
   
+<<<<<<< HEAD
   <!-- Using jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   
   <!-- include jquery autocomplete JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.min.js"></script>
+=======
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- include jquery autocomplete JS  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.min.js"></script>
+	<link rel="stylesheet" href="style.css">
+>>>>>>> d9319cad1f061e35fb8b6d4091d0aeb6778d3554
 </HEAD>
 
 <BODY BGCOLOR="#FDF5E6">
@@ -18,6 +26,7 @@
 </form>
 </div>
 
+<<<<<<< HEAD
 <div align="center"><form action="/project3/servlet/searchpage"
 	method="GET">
 	<input type="text" placeholder="Seach Movies" name="movie_title"
@@ -29,7 +38,20 @@
 	<a href="/project3/searchpage.html">Advanced Search</a>
 </div>
 
+=======
+<div align="center">
+Search for Movie
+	<FORM ACTION="/project3/servlet/searchpage"
+      METHOD="GET">
+	<input type="text" name="title" id="autocomplete"/>
+    <script src="autocomplete.js">
+    </script>
+    <INPUT TYPE="SUBMIT" VALUE="Search"><br>
+	</FORM>
+</div>
+>>>>>>> d9319cad1f061e35fb8b6d4091d0aeb6778d3554
 
+<a href="/project3/searchpage.html">Advanced Search</a> <br />
 <a href="/project3/browsingpage.html">Browse Movie</a>
 
 

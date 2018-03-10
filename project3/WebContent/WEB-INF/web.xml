@@ -145,4 +145,12 @@
     <servlet-name>metadata</servlet-name>
     <url-pattern>/servlet/metadata</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>moviesuggestion</servlet-name>
+    <servlet-class>movie_suggestion</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>moviesuggestion</servlet-name>
+    <url-pattern>/servlet/movie_suggestion</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -34,9 +34,9 @@ public class starinfo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+		String loginUser = "lihengz2";
+        String loginPasswd = "as499069589";
+        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
 
         
         HttpSession session = request.getSession(true);
@@ -60,6 +60,10 @@ public class starinfo extends HttpServlet {
 
         out.println("<HTML><HEAD><TITLE>Star Information</TITLE></HEAD>");
         out.println("<BODY><H1>Star Information</H1>");
+        out.println("<div align=\"right\"><form action=\"/project3/mainpage.html\">\r\n" + 
+           		"<input type=\"submit\" value=\"Back\" />\r\n" + 
+           		"</form>\r\n" + 
+           		"</div>");
 		
         out.println("<div align=\"center\"><form action=\"/project3/servlet/shoppingcart\">\r\n" + 
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 

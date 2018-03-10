@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,14 +22,23 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet("/searchpage")
 public class searchpage extends HttpServlet {
+	
+	String[] stopw = {"a","about","an","are"
+            ,"as","at","be","by","com"
+            ,"de","en","for","from"
+            ,"how","i","in","is","it"
+            ,"la","of","on",
+            "or","that","the","this","to"
+            ,"was","what","when","where"
+            ,"who","will","with","und","the","www"};
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
-        
+		String loginUser = "lihengz2";
+        String loginPasswd = "as499069589";
+        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
+		
         
         HttpSession session = request.getSession(true);
         if(session.isNew())
@@ -52,7 +62,7 @@ public class searchpage extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         out.println("<HTML><HEAD><TITLE>Seach Result</TITLE></HEAD>");
-        out.println("<div align=\"right\"><form action=\"/project3/searchpage.html\">\r\n" + 
+        out.println("<div align=\"right\"><form action=\"/project3/mainpage.html\">\r\n" + 
            		"<input type=\"submit\" value=\"Back\" />\r\n" + 
            		"</form>\r\n" + 
            		"</div>");
@@ -122,7 +132,7 @@ public class searchpage extends HttpServlet {
            {
         	   if(yearsort.equals("up"))
         	   {
-        		   qsort = "ORDER BY masterp.year ASC \r\n";
+        		   qsort = "ORDER BY final.year ASC \r\n";
         		   yhtmlicon = "&sorty=down" +"\">" + "Released Year&#9660";
         		   b10 = b10 + "&sorty=up";
         		   b25 = b25 + "&sorty=up";
@@ -132,7 +142,7 @@ public class searchpage extends HttpServlet {
         	   }
         	   else
         	   {
-        		   qsort = "ORDER BY masterp.year DESC \r\n";
+        		   qsort = "ORDER BY final.year DESC \r\n";
         		   yhtmlicon = "&sorty=up" +"\">" + "Released Year&#9650";
         		   b10 = b10 + "&sorty=down";
         		   b25 = b25 + "&sorty=down";
@@ -145,7 +155,7 @@ public class searchpage extends HttpServlet {
            {
         	   if(moviesort.equals("up"))
         	   {
-        		   qsort = "ORDER BY masterp.title ASC \r\n";
+        		   qsort = "ORDER BY final.title ASC \r\n";
         		   mhtmlicon = "&sortm=down" +"\">" + "Movie Title &#9660";
         		   b10 = b10 + "&sortm=up";
         		   b25 = b25 + "&sortm=up";
@@ -155,7 +165,7 @@ public class searchpage extends HttpServlet {
         	   }
         	   else
         	   {
-        		   qsort = "ORDER BY masterp.title DESC \r\n";
+        		   qsort = "ORDER BY final.title DESC \r\n";
         		   mhtmlicon = "&sortm=up" +"\">" + "Movie Title &#9650";
         		   b10 = b10 + "&sortm=down";
         		   b25 = b25 + "&sortm=down";
@@ -168,26 +178,57 @@ public class searchpage extends HttpServlet {
            if(request.getParameter("title") != null)
            {
         	   String title = request.getParameter("title");
-        	   query = "select * , r.rating from\r\n" + 
-	            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
-	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
-	            		"	where gs.id = gm.genreId\r\n" + 
-	            		"		AND gm.movieId = s.id\r\n" + 
-	            		"		AND ss.id = sm.starId\r\n" + 
-	            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '" + title + "%'\r\n" + 
-	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
-	            		"    where m.title = masterp.title\r\n" + 
-	            		"    AND m.id = r.movieId \r\n" + qsort +
-	            		"limit " + Numpp + "\r\n"+
-	            		"OFFSET " + os +";";
+        	   
+        	   String[] sear = title.split(" ");
+				String srq = "title LIKE \"%" + title + "%\"";
+				Integer stopc = 0;
+				String zz = "match(title) against(\"";
+				if(sear.length > 0)
+				{
+					for (int z = 0; z < sear.length ; z++)
+					{
+						System.out.println(sear[z]);
+						if(Arrays.asList(stopw).contains(sear[z]))
+						{
+							stopc++;
+						}
+						else
+						{
+							zz = zz + "+" +sear[z] + "*,";
+						}
+					}
+					zz = zz.substring(0,zz.length()-1);
+					zz = zz + "\" in boolean mode)";
+					if(sear.length != stopc)
+					{
+						srq = zz;
+					}
+				}
+        	   System.out.println(srq);
+        	   query = "select * from (select id, title, year, director,GROUP_CONCAT(DISTINCT sname) as Stars_Appear,group_concat(DISTINCT gname) as geners_list\r\n" + 
+   	          		"from\r\n" + 
+   	          		"	(select sel.id, sel.title, sel.year, sel.director, s.name as sname , g.name as gname from \r\n" + 
+   	          		"							((select * from movies where "+srq+") as sel\r\n" + 
+   	          		"							left join stars_in_movies sm on sm.movieId=sel.id\r\n" + 
+   	          		"							left join stars s on sm.starId=s.id\r\n" + 
+   	          		"							left join genres_in_movies gm on gm.movieId=sel.id\r\n" + 
+   	          		"							left join genres g on g.id=gm.genreId)) as re\r\n" + 
+   	          		"                            \r\n" + 
+   	          		"							group by re.id ) as final\r\n" + 
+   	          		"                            left join ratings r on r.movieId=final.id\r\n" + 
+   	          		"                            \r\n" + 
+   	          		                            qsort +
+   	          		"                            limit "+Numpp +"\r\n" + 
+   	          		"                            offset "+os+"\r\n" + 
+   	          		"							;";
         	   
         	   msortbutton = "<a href= \"/project3/servlet/searchpage?title=" + title  + mhtmlicon +"</a>";
         	   ysortbutton= "<a href= \"/project3/servlet/searchpage?title=" + title + yhtmlicon +"</a>";
-        	   b10 = b10 + "&title=\"" + title + "\">"+ "10</a>";
-    		   b25 = b25 + "&title=\"" + title + "\">"+ "25</a>";
-    		   b50 = b50 + "&title=\"" + title + "\">"+ "50</a>";
-    		   backbutton = backbutton + "&title=\"" + title;
-    		   nextbutton = nextbutton + "&title=\"" + title;
+        	   b10 = b10 + "&title=" + title + "\">"+ "10</a>";
+    		   b25 = b25 + "&title=" + title + "\">"+ "25</a>";
+    		   b50 = b50 + "&title=" + title + "\">"+ "50</a>";
+    		   backbutton = backbutton + "&title=" + title;
+    		   nextbutton = nextbutton + "&title=" + title;
     		   
         	   
            }
@@ -198,18 +239,50 @@ public class searchpage extends HttpServlet {
 	          String director = request.getParameter("director");
 	          String star_name = request.getParameter("star_name");
 	          
-	          query = "select * , r.rating from\r\n" + 
-	            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
-	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
-	            		"	where gs.id = gm.genreId\r\n" + 
-	            		"		AND gm.movieId = s.id\r\n" + 
-	            		"		AND ss.id = sm.starId\r\n" + 
-	            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '%" + name + "%'AND s.director LIKE '%" + director + "%' AND s.year LIKE '%" + year+"%'\r\n" + 
-	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
-	            		"    where m.title = masterp.title\r\n" + 
-	            		"    AND m.id = r.movieId AND masterp.Stars_Appear LIKE '%" + star_name + "%'\r\n" + qsort +
-	            		"limit "+ Numpp + "\r\n"+
-	            		"OFFSET " + os +";";
+	          String[] sear = name.split(" ");
+				String srq = "title LIKE \"%" + name + "%\"";
+				Integer stopc = 0;
+				String zz = "match(title) against(\"";
+				if(sear.length > 0)
+				{
+					for (int z = 0; z < sear.length ; z++)
+					{
+						
+						if(Arrays.asList(stopw).contains(sear[z]))
+						{
+							stopc++;
+						}
+						else
+						{
+							zz = zz + "+" +sear[z] + "*,";
+						}
+					}
+					zz = zz.substring(0,zz.length()-1);
+					zz = zz + "\" in boolean mode)";
+					if(sear.length != stopc)
+					{
+						srq = zz;
+					}
+				}
+	          
+	      
+	       
+	          query = "select * from (select id, title, year, director,GROUP_CONCAT(DISTINCT sname) as Stars_Appear,group_concat(DISTINCT gname) as geners_list\r\n" + 
+	          		"from\r\n" + 
+	          		"	(select sel.id, sel.title, sel.year, sel.director, s.name as sname , g.name as gname from \r\n" + 
+	          		"							((select * from movies where "+srq+") as sel\r\n" + 
+	          		"							left join stars_in_movies sm on sm.movieId=sel.id\r\n" + 
+	          		"							left join stars s on sm.starId=s.id\r\n" + 
+	          		"							left join genres_in_movies gm on gm.movieId=sel.id\r\n" + 
+	          		"							left join genres g on g.id=gm.genreId)) as re\r\n" + 
+	          		"                            \r\n" + 
+	          		"							group by re.id ) as final\r\n" + 
+	          		"                            left join ratings r on r.movieId=final.id\r\n" + 
+	          		"                            \r\n" + 
+	          		"                            where final.director LIKE \"%"+ director +"%\" AND final.Stars_Appear like \"%"+star_name +"%\" and final.year like \"%"+ year+"%\"\r\n" + qsort +
+	          		"                            limit "+Numpp +"\r\n" + 
+	          		"                            offset "+os+"\r\n" + 
+	          		"							;";
 	          
 	          msortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + mhtmlicon +"</a>";
 	          ysortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + yhtmlicon +"</a>";
@@ -220,6 +293,7 @@ public class searchpage extends HttpServlet {
  		   nextbutton = nextbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name;
            }
            // Perform the query
+           
            ResultSet rs = statement.executeQuery(query);
 
            out.println("<div align=\"right\">Number of Movie per page:"+ b10 + ", " + b25 + ", " + b50 +"</div>");
@@ -231,11 +305,15 @@ public class searchpage extends HttpServlet {
            while (rs.next()) {
                String m_title = rs.getString("title");
                Integer m_year = rs.getInt("year");
-               Float m_rating = rs.getFloat("rating");
+               String m_rating = rs.getString("rating");
                String m_director = rs.getString("director");
                String m_stars = rs.getString("Stars_Appear");
                
-               
+               if(m_rating == null)
+               {
+            	   m_rating = "Unrated";
+               }
+               System.out.println("here");
                String m_hyperstars = "";
                String[] splitstar = m_stars.split(",");
                
@@ -245,7 +323,16 @@ public class searchpage extends HttpServlet {
                }
                m_hyperstars = m_hyperstars.substring(0, m_hyperstars.length()-2);
                
-               String m_genres = (rs.getString("geners_list")).replace(",", ", ");
+               
+               String m_genres = rs.getString("geners_list");
+               if(m_genres == null)
+               {
+            	   m_genres = "Unknown";
+               }
+               else
+               {
+            	   m_genres.replace(",", ", ");
+               }
                out.println("<tr>" + "<td>" + "<a href= \"/project3/servlet/movieinfo?movie_title=" + m_title.replace(" ","+") + "\">"+ m_title + "</a>" + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_director + "</td>"
                           + "<td>" + m_hyperstars + "</td>"+ "<td>" + m_genres + "</td>" + "<td>" + m_rating + "</td>" + "</tr>");
            }

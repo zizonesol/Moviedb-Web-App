@@ -61,7 +61,7 @@ public class search_page_app extends HttpServlet {
 			String srq = "title LIKE \"%" + name + "%\"";
 			Integer stopc = 0;
 			String zz = "match(title) against(\"";
-			if(sear.length > 1)
+			if(sear.length > 0)
 			{
 				for (int z = 0; z < sear.length ; z++)
 				{
