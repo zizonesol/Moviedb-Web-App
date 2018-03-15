@@ -187,7 +187,7 @@ public class searchpage extends HttpServlet {
 				{
 					for (int z = 0; z < sear.length ; z++)
 					{
-						System.out.println(sear[z]);
+						
 						if(Arrays.asList(stopw).contains(sear[z]))
 						{
 							stopc++;
@@ -204,7 +204,7 @@ public class searchpage extends HttpServlet {
 						srq = zz;
 					}
 				}
-        	   System.out.println(srq);
+        	   
         	   query = "select * from (select id, title, year, director,GROUP_CONCAT(DISTINCT sname) as Stars_Appear,group_concat(DISTINCT gname) as geners_list\r\n" + 
    	          		"from\r\n" + 
    	          		"	(select sel.id, sel.title, sel.year, sel.director, s.name as sname , g.name as gname from \r\n" + 
@@ -313,7 +313,7 @@ public class searchpage extends HttpServlet {
                {
             	   m_rating = "Unrated";
                }
-               System.out.println("here");
+               
                String m_hyperstars = "";
                String[] splitstar = m_stars.split(",");
                
