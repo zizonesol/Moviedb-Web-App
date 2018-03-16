@@ -16,6 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
+
 /**
  * Servlet implementation class shoppingcart
  */
@@ -97,10 +101,25 @@ public class shoppingcart extends HttpServlet {
         
         try
         {
+	        	Context initCtx = new InitialContext();
+	    		if (initCtx == null)
+	    			out.println("initCtx is NULL");
+	    		
+	    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+	    		if (envCtx == null)
+	    			out.println("envCtx is NULL");
+	    		
+	    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+	    		if (ds == null)
+	    			out.println("ds is NULL");
+	    		
+	    		Connection dbcon = ds.getConnection();
+	    		if (dbcon == null)
+	    			out.println("dbcon is NULL");
            //Class.forName("org.gjt.mm.mysql.Driver");
-           Class.forName("com.mysql.jdbc.Driver").newInstance();
+           //Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-           Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+           //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            Statement statement = dbcon.createStatement();
 
            out.println("<TABLE border>");

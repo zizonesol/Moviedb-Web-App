@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +18,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+import javax.naming.InitialContext;
+import javax.naming.Context;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -41,12 +47,27 @@ public class search_page_app extends HttpServlet {
 		
 		try {
 		
-			String loginUser = "lihengz2";
-	        String loginPasswd = "as499069589";
-	        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
+			String loginUser = "mytestuser";
+	        String loginPasswd = "mypassword";
+	        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 			        
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+	        Context initCtx = new InitialContext();
+	    		if (initCtx == null)
+	    			out.println("initCtx is NULL");
+	    		
+	    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+	    		if (envCtx == null)
+	    			out.println("envCtx is NULL");
+	    		
+	    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+	    		if (ds == null)
+	    			out.println("ds is NULL");
+	    		
+	    		Connection dbcon = ds.getConnection();
+	    		if (dbcon == null)
+	    			out.println("dbcon is NULL");
+			//Class.forName("com.mysql.jdbc.Driver").newInstance();
+			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            // Declare our statement
 			Statement statement = dbcon.createStatement();
 			
@@ -61,7 +82,7 @@ public class search_page_app extends HttpServlet {
 			String srq = "title LIKE \"%" + name + "%\"";
 			Integer stopc = 0;
 			String zz = "match(title) against(\"";
-			if(sear.length > 0)
+			if(sear.length > 1)
 			{
 				for (int z = 0; z < sear.length ; z++)
 				{
