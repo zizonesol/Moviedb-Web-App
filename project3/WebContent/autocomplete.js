@@ -158,4 +158,3 @@ $('#autocomplete').keypress(function(event) {
 })
 
 // TODO: if you have a "search" button, you may want to bind the onClick event as well of that button
-

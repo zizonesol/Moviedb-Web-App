@@ -1,5 +1,4 @@
 
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,14 +7,21 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
 
 /**
  * Servlet implementation class movie_suggestion
@@ -34,15 +40,33 @@ public class movie_suggestion extends HttpServlet {
             ,"was","what","when","where"
             ,"who","will","with","und","the","www"};
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
 		try {
 			
-			String loginUser = "lihengz2";
-	        String loginPasswd = "as499069589";
-	        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
+			String loginUser = "mytestuser";
+	        String loginPasswd = "mypassword";
+	        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 			        
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+	        Context initCtx = new InitialContext();
+	    		if (initCtx == null)
+	    			System.out.println("initCtx is NULL");
+	    		
+	    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+	    		if (envCtx == null)
+	    			System.out.println("envCtx is NULL");
+	    		
+	    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+	    		if (ds == null)
+	    			System.out.println("ds is NULL");
+	    		
+	    		Connection dbcon = ds.getConnection();
+	    		if (dbcon == null)
+	    			System.out.println("dbcon is NULL");
+	        
+	        
+			//Class.forName("com.mysql.jdbc.Driver").newInstance();
+			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            // Declare our statement
 			Statement statement = dbcon.createStatement();
 			

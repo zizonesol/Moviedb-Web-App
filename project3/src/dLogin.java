@@ -1,12 +1,9 @@
 
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.*;
+import java.net.*;
+import java.text.*;
+import java.sql.*;
+import java.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
 
 public class dLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -34,16 +34,32 @@ public class dLogin extends HttpServlet {
 			throws ServletException, IOException 
 	{
 
-		String loginUser = "lihengz2";
-        String loginPasswd = "as499069589";
-        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
+        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
         
         try
         {
-        		Class.forName("com.mysql.jdbc.Driver").newInstance();
+        		Context initCtx = new InitialContext();
+        		if (initCtx == null)
+        			System.out.println("initCtx is NULL");
+
+        		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+        		if (envCtx == null)
+        			System.out.println("envCtx is NULL");
         		
-        		Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+        		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+        		if (ds == null)
+        			System.out.println("ds is NULL");
+        		
+        		Connection dbcon = ds.getConnection();
+        		if (dbcon == null)
+        			System.out.println("dbcon is NULL");
+        		
+        		//Class.forName("com.mysql.jdbc.Driver").newInstance();
+        		
+        		//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
         		// Declare our statement
         		Statement statement = dbcon.createStatement();
         		
@@ -68,7 +84,7 @@ public class dLogin extends HttpServlet {
         				session.setAttribute("employsuss", "yes");
 
         				//session.setAttribute("fullname", rs.getString(""));
-        				response.sendRedirect("/project3/servlet/dashboard");
+        				response.sendRedirect("/project3/servlet/_dashboard");
         			}
         			else
         			{
@@ -82,7 +98,7 @@ public class dLogin extends HttpServlet {
         					+ "VALUES ('" + em + "', '" + passw + "', \"CS 122B TA\")");
         			HttpSession session = request.getSession(true);
         			session.setAttribute("employsuss", "yes");
-        			response.sendRedirect("/project3/servlet/dashboard");
+        			response.sendRedirect("/project3/servlet/_dashboard");
 
         		}
         		

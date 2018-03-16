@@ -1,13 +1,9 @@
 
-
-import java.io.IOException;
-
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.*;
+import java.net.*;
+import java.text.*;
+import java.sql.*;
+import java.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
 
 /**
  * Servlet implementation class add_movie
@@ -27,9 +27,9 @@ public class add_movie extends HttpServlet
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
-		String loginUser = "lihengz2";
-        String loginPasswd = "as499069589";
-        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
+        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
 		HttpSession session = request.getSession(true);
 		if(session.isNew())
@@ -54,12 +54,39 @@ public class add_movie extends HttpServlet
 		// Output stream to STDOUT
 		PrintWriter out = response.getWriter();
 		
+		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
+				"<HTML>\r\n" + 
+				"<HEAD>\r\n" + 
+				"  <TITLE>Add Movie Success</TITLE>\r\n" + 
+				"</HEAD>\r\n" + 
+				"\r\n" + 
+				"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
+				"<H1 ALIGN=\"CENTER\">Movie Added</H1>\r\n" + 
+				"\r\n");
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Context initCtx = new InitialContext();
+			if (initCtx ==null)
+				out.println("initCtx is NULL");
 			
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+			if (envCtx == null)
+				out.println("envCtx is NULL");
+			
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+			if (ds == null)
+				out.println("ds is null");
+			
+			
+			//Class.forName("com.mysql.jdbc.Driver").newInstance();
+			
+			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+			Connection dbcon = ds.getConnection();
+			if (dbcon == null)
+				out.println("dbcon is null");
+			
 			// Declare our statement
+			
 			Statement statement = dbcon.createStatement();
 			
 			String movie = request.getParameter("movie_title");
@@ -73,17 +100,7 @@ public class add_movie extends HttpServlet
 
 			
 			
-			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
-					"<HTML>\r\n" + 
-					"<HEAD>\r\n" + 
-					"  <TITLE>Add Movie Success</TITLE>\r\n" + 
-					"</HEAD>\r\n" + 
-					"\r\n" + 
-					"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
-					"<H1 ALIGN=\"CENTER\">Movie Added</H1>\r\n" + 
-					"\r\n" + 
-
-					"<FORM ACTION=\"/project3/servlet/dashboard\"\r\n" + 
+			out.println("<FORM ACTION=\"/project3/servlet/dashboard\"\r\n" + 
 
 					"      METHOD=\"POST\">\r\n" + 
 					"  <CENTER>\r\n" + 

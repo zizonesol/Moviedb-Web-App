@@ -1,12 +1,10 @@
 
 /* A servlet to display the contents of the MySQL movieDB database */
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.*;
+import java.net.*;
+import java.text.*;
+import java.sql.*;
+import java.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
 
 public class login extends HttpServlet
 {
@@ -41,10 +42,10 @@ public class login extends HttpServlet
     	    		return;
     		}
     	
-        String loginUser = "lihengz2";
-        String loginPasswd = "as499069589";
-        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
-		
+        String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
+        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+        
         HttpSession se = request.getSession(true);
         if(se.isNew())
         {
@@ -62,10 +63,26 @@ public class login extends HttpServlet
         
         try
         {
+        		Context initCtx = new InitialContext();
+        		if (initCtx == null)
+        			out.println("initCtx is NULL");
+        		
+        		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+        		if (envCtx == null)
+        			out.println("envCtx is NULL");
+        		
+        		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+        		if (ds == null)
+        			out.println("ds is NULL");
+        		
+        		Connection dbcon = ds.getConnection();
+        		if (dbcon == null)
+        			out.println("dbcon is NULL");
+        		
            //Class.forName("org.gjt.mm.mysql.Driver");
-           Class.forName("com.mysql.jdbc.Driver").newInstance();
+           //Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-           Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+           //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            // Declare our statement
            Statement statement = dbcon.createStatement();
 
