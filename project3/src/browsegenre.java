@@ -5,6 +5,7 @@ import java.net.*;
 import java.text.*;
 import java.sql.*;
 import java.util.*;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -73,7 +74,6 @@ public class browsegenre extends HttpServlet {
         out.println("<BODY><H1>All Genre</H1>");
 		
         
-        
         try
         {
            Context initCtx = new InitialContext();
@@ -101,7 +101,7 @@ public class browsegenre extends HttpServlet {
            Statement statement = dbcon.createStatement();
 
 	          
-	          String query = "select g.name\r\n" + 
+	       String query = "select g.name\r\n" + 
 	          		"from genres g;";
 
            // Perform the query

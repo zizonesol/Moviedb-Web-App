@@ -5,6 +5,7 @@ import java.net.*;
 import java.text.*;
 import java.sql.*;
 import java.util.*;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -72,7 +73,6 @@ public class genresearch extends HttpServlet {
         out.println("<BODY><H1>Movie List by Genre</H1>");
 		
         
-        
         try
         {
         		Context initCtx = new InitialContext();
@@ -96,7 +96,8 @@ public class genresearch extends HttpServlet {
 
            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            // Declare our statement
-           Statement statement = dbcon.createStatement();
+           //Statement statement = dbcon.createStatement();
+           PreparedStatement statement = null;
 
            String genre = request.getParameter("genre");
 	          
@@ -105,11 +106,15 @@ public class genresearch extends HttpServlet {
 	          		"from movies m, genres_in_movies gm, genres g\r\n" + 
 	          		"where m.id = gm.movieId\r\n" + 
 	          		"	AND gm.genreId = g.id\r\n" + 
-	          		"    AND g.name = \"" + genre +"\"\r\n" + 
+	          		"    AND g.name = ?\r\n" + 
 	          		"LIMIT 20;";
 
+	          statement = dbcon.prepareStatement(query);
+	          statement.setString(1, genre);
+	          
            // Perform the query
-           ResultSet rs = statement.executeQuery(query);
+	       statement.execute();
+           ResultSet rs = statement.getResultSet();
 
            out.println("<TABLE border>");
 
