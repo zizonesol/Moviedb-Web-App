@@ -5,7 +5,6 @@ import java.net.*;
 import java.text.*;
 import java.sql.*;
 import java.util.*;
-import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.sql.PreparedStatement;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -69,7 +70,8 @@ public class search_page_app extends HttpServlet {
 			//Class.forName("com.mysql.jdbc.Driver").newInstance();
 			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            // Declare our statement
-			Statement statement = dbcon.createStatement();
+			//Statement statement = dbcon.createStatement();
+			PreparedStatement statement = null;
 			
 			String name = request.getParameter("movie_title");
 			String pg = request.getParameter("pgnum");
@@ -109,7 +111,7 @@ public class search_page_app extends HttpServlet {
 			String query = "select title, year, director,GROUP_CONCAT(DISTINCT sname) as Stars_Appear,group_concat(DISTINCT gname) as geners_list\r\n" + 
 					"	from\r\n" + 
 					"(select sel.id, sel.title, sel.year, sel.director, s.name as sname , g.name as gname from \r\n" + 
-					"		((select * from movies where "+ srq +") as sel\r\n" + 
+					"		((select * from movies where ?) as sel\r\n" + 
 					"		left join stars_in_movies sm on sm.movieId=sel.id\r\n" + 
 					"		left join stars s on sm.starId=s.id\r\n" + 
 					"		left join genres_in_movies gm on gm.movieId=sel.id\r\n" + 
@@ -117,7 +119,13 @@ public class search_page_app extends HttpServlet {
 					"group by re.id\r\n"
 					+ "limit 10\r\n"
 					+ "offset "+pg+";";
-			ResultSet rs = statement.executeQuery(query);
+			
+			statement = dbcon.prepareStatement(query);
+			
+			statement.setString(1, srq);
+			
+			statement.execute();
+			ResultSet rs = statement.getResultSet();
 			
 			JSONObject jout = new JSONObject();
 			JSONArray ja = new JSONArray();
