@@ -5,6 +5,7 @@ import java.net.*;
 import java.text.*;
 import java.sql.*;
 import java.util.*;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -84,7 +85,7 @@ public class metadata extends HttpServlet {
 
 			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			// Declare our statement
-			Statement statement = dbcon.createStatement();
+			//Statement statement = dbcon.createStatement();
 
 			
 			String table = request.getParameter("table_name");
@@ -93,10 +94,11 @@ public class metadata extends HttpServlet {
 					"FROM information_schema.columns \r\n" + 
 					"WHERE (table_schema='moviedb')\r\n" + 
 					"order by table_name;\r\n";
-
+			PreparedStatement statement = dbcon.prepareStatement(query);
 
 			// Perform the query
-			ResultSet rs = statement.executeQuery(query);
+			statement.execute();
+			ResultSet rs = statement.getResultSet();
 
 
 			out.println("<H1>Metadata</H1><TABLE border>");

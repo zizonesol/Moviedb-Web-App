@@ -6,7 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+//import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -96,7 +97,7 @@ public class starinfo extends HttpServlet {
 
            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            // Declare our statement
-           Statement statement = dbcon.createStatement();
+           //Statement statement = dbcon.createStatement();
 
            String name = request.getParameter("star_name");
 	          
@@ -104,11 +105,16 @@ public class starinfo extends HttpServlet {
 	          String query = "select ss.name, ss.birthYear, GROUP_CONCAT(distinct m.title) as Movie_appear\r\n" + 
 	          		"from stars ss, stars_in_movies sm, movies m\r\n" + 
 	          		"where m.id = sm.movieId\r\n" + 
-	          		"AND	ss.id = sm.starId AND ss.name = \""+ name +"\"\r\n" + 
+	          		"AND	ss.id = sm.starId AND ss.name = ?\r\n" + 
 	          		"GROUP BY ss.id;";
-
+	          PreparedStatement statement = dbcon.prepareStatement(query);
+	          
+	          statement.setString(1, name);
+	          
+	          
            // Perform the query
-           ResultSet rs = statement.executeQuery(query);
+	       statement.execute();
+           ResultSet rs = statement.getResultSet();
 
            out.println("<TABLE border>");
 
