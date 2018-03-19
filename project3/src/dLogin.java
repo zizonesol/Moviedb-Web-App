@@ -4,16 +4,20 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 
 
 public class dLogin extends HttpServlet {
@@ -41,21 +45,29 @@ public class dLogin extends HttpServlet {
         
         try
         {
-        		Class.forName("com.mysql.jdbc.Driver").newInstance();
-        		
-        		Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+        	Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		
+    		
+    		Connection dbcon = ds.getConnection();
+    		
         		// Declare our statement
-        		Statement statement = dbcon.createStatement();
+        		
         		
 
         		String em = request.getParameter("eemail");
         		String passw = request.getParameter("epassword");
         		
-        		String query = "SELECT * from employees where email like \"" + em + "\";";
-
+        		String query = "SELECT * from employees where email like ?;";
         		
-        		// Perform the query
-        		ResultSet rs = statement.executeQuery(query);
+        		PreparedStatement xd = dbcon.prepareStatement(query);
+     	       xd.setString(1,em);
+     	       ResultSet rs = xd.executeQuery();
+
         		
         		if (rs.next())
         		{
@@ -77,17 +89,23 @@ public class dLogin extends HttpServlet {
         		}
         		else
         		{
+        			DataSource ms  = (DataSource) envCtx.lookup("jdbc/master");
+		    		
+		    		
+		    		Connection mm = ms.getConnection();
+		    		
+		    		 Statement statement = mm.createStatement();
         			statement.executeUpdate("INSERT INTO employees (email, password, fullname) \r\n"
 
         					+ "VALUES ('" + em + "', '" + passw + "', \"CS 122B TA\")");
         			HttpSession session = request.getSession(true);
         			session.setAttribute("employsuss", "yes");
         			response.sendRedirect("/project3/servlet/dashboard");
+        			mm.close();
 
         		}
         		
         		rs.close();
-        		statement.close();
         		dbcon.close();
         		
         }

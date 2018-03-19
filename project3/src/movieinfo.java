@@ -3,16 +3,20 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 
 /**
  * Servlet implementation class movieinfo
@@ -33,10 +37,7 @@ public class movieinfo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String loginUser = "lihengz2";
-        String loginPasswd = "as499069589";
-        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
-        
+		
         
         HttpSession session = request.getSession(true);
         if(session.isNew())
@@ -79,12 +80,19 @@ public class movieinfo extends HttpServlet {
 
         try
         {
-           //Class.forName("org.gjt.mm.mysql.Driver");
-           Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-           Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-           // Declare our statement
-           Statement statement = dbcon.createStatement();
+        	Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		if (envCtx == null)
+    			out.println("envCtx is NULL");
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		if (ds == null)
+    			out.println("ds is NULL");
+    		
+    		Connection dbcon = ds.getConnection();
+    		if (dbcon == null)
+    			out.println("dbcon is NULL");
 
            String name = request.getParameter("movie_title");
 	          System.out.println(name);
@@ -106,7 +114,9 @@ public class movieinfo extends HttpServlet {
   					"							;";
 
            // Perform the query
-           ResultSet rs = statement.executeQuery(query);
+  			PreparedStatement xd = dbcon.prepareStatement(query);
+ 	       
+ 	       ResultSet rs = xd.executeQuery();
            String m_id = "";
            out.println("<TABLE border>");
 
@@ -165,7 +175,6 @@ public class movieinfo extends HttpServlet {
            out.print("</BODY></CENTER>");
 
            rs.close();
-           statement.close();
            dbcon.close();
          }
 	     catch (SQLException ex) {

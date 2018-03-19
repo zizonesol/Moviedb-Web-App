@@ -3,16 +3,20 @@
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -37,14 +41,16 @@ public class movie_suggestion extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			
-			String loginUser = "lihengz2";
-	        String loginPasswd = "as499069589";
-	        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
-			        
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-           // Declare our statement
-			Statement statement = dbcon.createStatement();
+        	Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		
+    		
+    		Connection dbcon = ds.getConnection();
+    		
 			
 			// setup the response json arrray
 			JsonArray jsonArray = new JsonArray();
@@ -93,7 +99,9 @@ public class movie_suggestion extends HttpServlet {
 			String qq = "select title from movies where "+srq+"\r\n" + 
 					"limit 10;";
 			
-			ResultSet rs = statement.executeQuery(qq);
+			PreparedStatement xd = dbcon.prepareStatement(qq);
+		    
+		      ResultSet rs = xd.executeQuery();
 			Integer count = 0;
 			while(rs.next())
 			{
@@ -107,7 +115,8 @@ public class movie_suggestion extends HttpServlet {
 				qq = "select name from stars where "+sq+"\r\n" + 
 						"limit 10;";
 				
-				rs = statement.executeQuery(qq);
+				xd = dbcon.prepareStatement(qq);
+				rs = xd.executeQuery();
 				
 				while(rs.next())
 				{
@@ -121,6 +130,8 @@ public class movie_suggestion extends HttpServlet {
 				}
 			}
 			response.getWriter().write(jsonArray.toString());
+			rs.close();
+			dbcon.close();
 			return;
 		} catch (Exception e) {
 			System.out.println(e);

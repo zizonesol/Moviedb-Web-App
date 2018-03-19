@@ -5,16 +5,20 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 
 /**
  * Servlet implementation class add_movie
@@ -27,9 +31,7 @@ public class add_movie extends HttpServlet
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
-		String loginUser = "lihengz2";
-        String loginPasswd = "as499069589";
-        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
+		
 		
 		HttpSession session = request.getSession(true);
 		if(session.isNew())
@@ -56,11 +58,19 @@ public class add_movie extends HttpServlet
 		
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-			// Declare our statement
-			Statement statement = dbcon.createStatement();
+			Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		if (envCtx == null)
+    			out.println("envCtx is NULL");
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		if (ds == null)
+    			out.println("ds is NULL");
+    		
+    		Connection dbcon = ds.getConnection();
+    		if (dbcon == null)
+    			out.println("dbcon is NULL");
 			
 			String movie = request.getParameter("movie_title");
 			String star = request.getParameter("star_name");
@@ -69,7 +79,11 @@ public class add_movie extends HttpServlet
 			String year = request.getParameter("year");
 			
 
-			statement.executeQuery("CALL add_movie(\""+ movie +"\","+ year +",\"" + director +"\", \""+ star +"\",\""+ genre +"\");");
+			String q = "CALL add_movie(\""+ movie +"\","+ year +",\"" + director +"\", \""+ star +"\",\""+ genre +"\");";
+			
+			PreparedStatement xd = dbcon.prepareStatement(q);
+		    
+		      ResultSet rs = xd.executeQuery();
 
 			
 			
@@ -95,7 +109,7 @@ public class add_movie extends HttpServlet
 					"</HTML>\r\n" + 
 					"");
 			
-			statement.close();
+			rs.close();
 			dbcon.close();
 		}
 		catch (SQLException ex)
