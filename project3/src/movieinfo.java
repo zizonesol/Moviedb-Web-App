@@ -5,7 +5,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+//import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -98,7 +99,7 @@ public class movieinfo extends HttpServlet {
 
            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            // Declare our statement
-           Statement statement = dbcon.createStatement();
+           //Statement statement = dbcon.createStatement();
 
            String name = request.getParameter("movie_title");
 	          
@@ -110,14 +111,18 @@ public class movieinfo extends HttpServlet {
 	            		"	where gs.id = gm.genreId\r\n" + 
 	            		"		AND gm.movieId = s.id\r\n" + 
 	            		"		AND ss.id = sm.starId\r\n" + 
-	            		"        AND sm.movieId = s.id\r\n AND s.title = \"" + name + "\" \r\n" + 
+	            		"        AND sm.movieId = s.id\r\n AND s.title = ? \r\n" + 
 	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
 	            		"    where m.title = masterp.title\r\n" + 
 	            		"    AND m.id = r.movieId \r\n" + 
 	            		"limit 20;";
-
+	          PreparedStatement statement = dbcon.prepareStatement(query);
+	          
+	          statement.setString(1, name);
+	          
            // Perform the query
-           ResultSet rs = statement.executeQuery(query);
+	          statement.execute();
+           ResultSet rs = statement.getResultSet();
            String m_id = "";
            out.println("<TABLE border>");
 

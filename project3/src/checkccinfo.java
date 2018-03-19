@@ -5,6 +5,7 @@ import java.net.*;
 import java.text.*;
 import java.sql.*;
 import java.util.*;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -73,7 +74,7 @@ public class checkccinfo extends HttpServlet {
            //Class.forName("com.mysql.jdbc.Driver").newInstance();
 
            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-           Statement statement = dbcon.createStatement();
+           //Statement statement = dbcon.createStatement();
 
            ArrayList<String> mlist = (ArrayList<String>) session.getAttribute("mlist");
            
@@ -83,9 +84,19 @@ public class checkccinfo extends HttpServlet {
            String expdate = request.getParameter("expdate");
            
            String search = "select * from creditcards\r\n" + 
-           		"where id = \""+ ccnum + "\" and firstName = \"" + fn +"\" and lastName = \""+ ln + "\" and DATE(expiration) = '"+expdate+ "';";
+           		"where id = \""+ ccnum + "\" "
+           				+ "and firstName = ? "
+           				+ "and lastName = ? "
+           				+ "and DATE(expiration) = ?;";
+           PreparedStatement statement = dbcon.prepareStatement(search);
            
-           ResultSet zs = statement.executeQuery(search);
+           statement.setString(1, ccnum);
+           statement.setString(2, fn);
+           statement.setString(3, ln);
+           statement.setString(4, expdate);
+           
+           statement.execute();
+           ResultSet zs = statement.getResultSet();
            
            if(zs.next() == false)
            {
@@ -106,11 +117,14 @@ public class checkccinfo extends HttpServlet {
 	           for(String n : mlist)
 	           {
 		           String query = "select * from movies\r\n" + 
-		           		"where id = \""+ n +"\"\r\n" + 
+		           		"where id = ?\r\n" + 
 		           		"limit 1;";
-			     
+			       statement = dbcon.prepareStatement(query);
 		       
-		           ResultSet rs = statement.executeQuery(query);
+			       statement.setString(1, n);
+			       
+			       statement.execute();
+		           ResultSet rs = statement.getResultSet();
 		           String am = (String) session.getAttribute(n);
 		           String mid = "";
 		           while (rs.next()) {

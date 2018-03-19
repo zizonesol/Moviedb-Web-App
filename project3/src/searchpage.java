@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -92,7 +93,9 @@ public class searchpage extends HttpServlet {
 
            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            // Declare our statement
-           Statement statement = dbcon.createStatement();
+           //Statement statement = dbcon.createStatement();
+           
+           PreparedStatement statement = null;
            String query = "";
            
            String yearsort = request.getParameter("sorty");
@@ -185,61 +188,102 @@ public class searchpage extends HttpServlet {
         	   
            if(request.getParameter("title") != null)
            {
-        	   String title = request.getParameter("title");
-        	   query = "select * , r.rating from\r\n" + 
-	            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
-	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
-	            		"	where gs.id = gm.genreId\r\n" + 
-	            		"		AND gm.movieId = s.id\r\n" + 
-	            		"		AND ss.id = sm.starId\r\n" + 
-	            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '" + title + "%'\r\n" + 
-	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
-	            		"    where m.title = masterp.title\r\n" + 
-	            		"    AND m.id = r.movieId \r\n" + qsort +
-	            		"limit " + Numpp + ";";
-        	   //+ "\r\n"+ "OFFSET " + os +
-        	   
-        	   msortbutton = "<a href= \"/project3/servlet/searchpage?title=" + title  + mhtmlicon +"</a>";
-        	   ysortbutton= "<a href= \"/project3/servlet/searchpage?title=" + title + yhtmlicon +"</a>";
-        	   b10 = b10 + "&title=\"" + title + "\">"+ "10</a>";
-    		   b25 = b25 + "&title=\"" + title + "\">"+ "25</a>";
-    		   b50 = b50 + "&title=\"" + title + "\">"+ "50</a>";
-    		   backbutton = backbutton + "&title=\"" + title;
-    		   nextbutton = nextbutton + "&title=\"" + title;
-    		   
-        	   
+	        	   String title = request.getParameter("title");
+	        	   /*query = "select * , r.rating from\r\n" + 
+		            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
+		            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
+		            		"	where gs.id = gm.genreId\r\n" + 
+		            		"		AND gm.movieId = s.id\r\n" + 
+		            		"		AND ss.id = sm.starId\r\n" + 
+		            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '" + title + "%'\r\n" + 
+		            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
+		            		"    where m.title = masterp.title\r\n" + 
+		            		"    AND m.id = r.movieId \r\n" + qsort +
+		            		"limit " + Numpp + ";";*/
+	        	   query = "select * , r.rating from\r\n" + 
+		            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
+		            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
+		            		"	where gs.id = gm.genreId\r\n" + 
+		            		"		AND gm.movieId = s.id\r\n" + 
+		            		"		AND ss.id = sm.starId\r\n" + 
+		            		"        AND sm.movieId = s.id\r\n AND s.title LIKE ?\r\n" + 
+		            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
+		            		"    where m.title = masterp.title\r\n" + 
+		            		"    AND m.id = r.movieId \r\n" + qsort +
+		            		"limit " + Numpp + ";";
+	        	   //+ "\r\n"+ "OFFSET " + os +
+	        	   
+	        	   msortbutton = "<a href= \"/project3/servlet/searchpage?title=" + title  + mhtmlicon +"</a>";
+	        	   ysortbutton= "<a href= \"/project3/servlet/searchpage?title=" + title + yhtmlicon +"</a>";
+	        	   b10 = b10 + "&title=\"" + title + "\">"+ "10</a>";
+	    		   b25 = b25 + "&title=\"" + title + "\">"+ "25</a>";
+	    		   b50 = b50 + "&title=\"" + title + "\">"+ "50</a>";
+	    		   backbutton = backbutton + "&title=\"" + title;
+	    		   nextbutton = nextbutton + "&title=\"" + title;
+	    		   
+	           statement = dbcon.prepareStatement(query);
+    		   	   statement.setString(1, '%' + title + '%');
+        	   		
            }
-           else {
-           
+           else 
+           {
 	          String name = request.getParameter("movie_title");
 	          String year = request.getParameter("year");
 	          String director = request.getParameter("director");
 	          String star_name = request.getParameter("star_name");
 	          
+	          /*query = "select * , r.rating from\r\n" + 
+	            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
+	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
+	            		"	where gs.id = gm.genreId\r\n" + 
+	            		"		AND gm.movieId = s.id\r\n" + 
+	            		"		AND ss.id = sm.starId\r\n" + 
+	            		"       AND sm.movieId = s.id\r\n AND s.title LIKE '%" + name + "%'" +
+	            		"		AND s.director LIKE '%" + director + "%'" + 
+	            		"		AND s.year LIKE '%" + year+"%'\r\n" + 
+	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
+	            		"   where m.title = masterp.title\r\n" + 
+	            		"   		AND m.id = r.movieId " +
+	            		"		AND masterp.Stars_Appear LIKE '%" + star_name + "%'\r\n" + qsort +
+	            		"limit "+ Numpp + ";";*/
 	          query = "select * , r.rating from\r\n" + 
 	            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
 	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
 	            		"	where gs.id = gm.genreId\r\n" + 
 	            		"		AND gm.movieId = s.id\r\n" + 
 	            		"		AND ss.id = sm.starId\r\n" + 
-	            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '%" + name + "%'AND s.director LIKE '%" + director + "%' AND s.year LIKE '%" + year+"%'\r\n" + 
+	            		"       AND sm.movieId = s.id\r\n AND s.title LIKE ?" +
+	            		"		AND s.director LIKE ?" + 
+	            		"		AND s.year LIKE ?\r\n" + 
 	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
-	            		"    where m.title = masterp.title\r\n" + 
-	            		"    AND m.id = r.movieId AND masterp.Stars_Appear LIKE '%" + star_name + "%'\r\n" + qsort +
+	            		"   where m.title = masterp.title\r\n" + 
+	            		"   		AND m.id = r.movieId " +
+	            		"		AND masterp.Stars_Appear LIKE ?\r\n" + 
+	            		qsort +
 	            		"limit "+ Numpp + ";";
 	            		
 	            		//+ "OFFSET " + os +";";
 	          
-	          msortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + mhtmlicon +"</a>";
-	          ysortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + yhtmlicon +"</a>";
-	          b10 = b10 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "10</a>";
-	   		   b25 = b25 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "25</a>";
-	   		   b50 = b50 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "50</a>";
-	   		backbutton = backbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name ;
- 		   nextbutton = nextbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name;
+		          msortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + mhtmlicon +"</a>";
+		          ysortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + yhtmlicon +"</a>";
+		          b10 = b10 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "10</a>";
+		   		  b25 = b25 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "25</a>";
+		   		  b50 = b50 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "50</a>";
+		   		  backbutton = backbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name ;
+		   		  nextbutton = nextbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name;
+		   		  
+		   		  statement = dbcon.prepareStatement(query);
+		   		  statement.setString(1, '%' + name + '%');
+		   		  statement.setString(2, '%' + director + '%');
+		   		  statement.setString(3, '%' + year + '%');
+		   		  statement.setString(4, '%' + star_name + '%');
            }
            // Perform the query
-           ResultSet rs = statement.executeQuery(query);
+           
+           
+           
+           statement.execute();
+           ResultSet rs = statement.getResultSet();
 
            out.println("<div align=\"right\">Number of Movie per page:"+ b10 + ", " + b25 + ", " + b50 +"</div>");
            out.println("<TABLE border>");

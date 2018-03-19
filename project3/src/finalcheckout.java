@@ -5,6 +5,7 @@ import java.net.*;
 import java.text.*;
 import java.sql.*;
 import java.util.*;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -74,8 +75,9 @@ public class finalcheckout extends HttpServlet {
            //Class.forName("com.mysql.jdbc.Driver").newInstance();
 
            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-           Statement statement = dbcon.createStatement();
-
+           //Statement statement = dbcon.createStatement();
+        	   PreparedStatement statement = null;
+        		
            ArrayList<String> mlist = (ArrayList<String>) session.getAttribute("mlist");
            
            out.println("<TABLE border>");
@@ -87,11 +89,14 @@ public class finalcheckout extends HttpServlet {
 	           for(String n : mlist)
 	           {
 		           String query = "select * from movies\r\n" + 
-		           		"where id = \""+ n +"\"\r\n" + 
+		           		"where id = ?\r\n" + 
 		           		"limit 1;";
-			     
+		           statement = dbcon.prepareStatement(query);
+		           
+		           statement.setString(1, n);
 		       
-		           ResultSet rs = statement.executeQuery(query);
+		           statement.execute();
+		           ResultSet rs = statement.getResultSet();
 		           String am = (String) session.getAttribute(n);
 		           
 		           while (rs.next()) {

@@ -4,6 +4,7 @@ import java.net.*;
 import java.text.*;
 import java.sql.*;
 import java.util.*;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -61,17 +62,21 @@ public class dLogin extends HttpServlet {
         		
         		//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
         		// Declare our statement
-        		Statement statement = dbcon.createStatement();
+        		//Statement statement = dbcon.createStatement();
         		
 
         		String em = request.getParameter("eemail");
         		String passw = request.getParameter("epassword");
         		
-        		String query = "SELECT * from employees where email like \"" + em + "\";";
+        		String query = "SELECT * from employees where email like ?;";
 
+        		PreparedStatement statement = dbcon.prepareStatement(query);
+        		
+        		statement.setString(1, em);
         		
         		// Perform the query
-        		ResultSet rs = statement.executeQuery(query);
+        		statement.execute();
+        		ResultSet rs = statement.getResultSet();
         		
         		if (rs.next())
         		{

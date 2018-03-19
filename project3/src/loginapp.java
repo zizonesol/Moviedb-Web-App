@@ -6,7 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+//import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -57,15 +58,20 @@ public class loginapp extends HttpServlet {
 	
 	       //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 	       // Declare our statement
-	       Statement statement = dbcon.createStatement();
+	       //Statement statement = dbcon.createStatement();
 	
 	       String em = request.getParameter("email");
 	       String passw = request.getParameter("password");
 	       
-	       String query = "SELECT * from customers where email = \""+ em   +"\";";
+	       String query = "SELECT * from customers where email = ?;";
 	
+	       PreparedStatement statement = dbcon.prepareStatement(query);
+	       
+	       statement.setString(1, em);
+	       
 	       // Perform the query
-	       ResultSet rs = statement.executeQuery(query);
+	       statement.execute();
+	       ResultSet rs = statement.getResultSet();
 	       
 	       if(rs.next())
 	       {
