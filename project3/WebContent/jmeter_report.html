@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+	background-color: linen;
+}
+
+td {
+	border-top-styel:solid;
+}
+</style>
+<title>JMeter Report</title>
+</head>
+<body>
+
+<table style="width: 100%">
+	<tr style="font-weight:bold; background-color:orange">
+		<td width="300px">Single-instance version cases</td>
+		<td>Graph Results Screenshot</td>
+		<td>Average Query Time</td>
+		<td>Average Search Servlet Time(ms)</td>
+		<td>Average JDBC TIME(ms)</td>
+		<td>Analysis</td>
+	</tr>
+	<tr>
+		<td>Case 1: HTTP/1 thread</td>
+		<td><img src="file:///Users/zizonesol/Documents/workspace/project3/Images/graph_results_case1.png" alt="Graph Results Screenshot Case 1" style="width:304px;height:228px;"></td>
+		<td>25</td>
+		<td>2287178.147004277</td>
+		<td>122530.1048408463</td>
+		<td>This test case was the fastest because it did not have any overhead going through the queries and there was only a single thread.</td>
+	</tr>
+	<tr>
+		<td>Case 2: HTTP/10 threads</td>
+		<td><img src="file:///Users/zizonesol/Documents/workspace/project3/Images/graph_results_case2.png" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
+		<td>29</td>
+		<td>6378932.462225587</td>
+		<td>213470.14439818318</td>
+		<td>The performance dropped a bit since there was 10 threads instead of 1 working on the instance.</td>
+	</tr>
+		<tr>
+		<td>Case 3: HTTPS/10 threads</td>
+		<td><img src="file:///Users/zizonesol/Documents/workspace/project3/Images/graph_results_case3.png" alt="Graph Results Screenshot Case 3" style="width:304px;height:228px;"></td>
+		<td>29</td>
+		<td>1141736.4337623012</td>
+		<td>90231.96707040121</td>
+		<td>The ecryption/decryption and the increased thread numbers dropped the performance of the query time.</td>
+	</tr>
+	<tr>
+		<td>Case 4: HTTP/10 threads/No prepared statements</td>
+		<td><img src="file:///Users/zizonesol/Documents/workspace/project3/Images/graph_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+		<td>30</td>
+		<td>1949459.4626040878</td>
+		<td>108412.69473883422</td>
+		<td>There's a drop in the TJ and TS because we are not using the prepared statements, making the web application to create connection every time we call the query.</td>
+	</tr>
+		<tr>
+		<td>Case 5: HTTP/10 threads/No connection pooling</td>
+		<td><img src="file:///Users/zizonesol/Documents/workspace/project3/Images/graph_results_case5.png" alt="Graph Results Screenshot Case 5" style="width:304px;height:228px;"></td>
+		<td>29</td>
+		<td>2558404.6939061317</td>
+		<td>147890.08626040877</td>
+		<td>Because we are not using the connection pooling, the overall performance suffers.</td>
+	</tr>
+</table>
+
+<table style="width:100%">
+	<tr style="font-weight:bold; background-color: orange">
+		<td width="300px">Scaled version cases</td>
+		<td>Graph Results Screenshot</td>
+		<td>Average Query Time</td>
+		<td>Average Search Servlet Time(ms)</td>
+		<td>Average JDBC Time(ms)</td>
+		<td>Analysis</td>
+	</tr>
+	<tr>
+		<td>Case 1: HTTP/1 thread</td>
+		<td><img src="file:///Users/zizonesol/Documents/workspace/project3/Images/scaled_results_case1.png" alt="Graph Results Screenshot Case 1" style="width:304px;height:228px;"></td>
+		<td>25</td>
+		<td>1436138.054577798</td>
+		<td>97146.61261875024</td>
+		<td>The performance is the fastest because we are using single thread to perform the query operation.</td>
+	</tr>
+	<tr>
+		<td>Case 2: HTTP/10 threads</td>
+		<td><img src="file:///Users/zizonesol/Documents/workspace/project3/Images/scaled_results_case2.png" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
+		<td>27</td>
+		<td>3380212.158705526</td>
+		<td>113183.74761544284</td>
+		<td>The performance decrease greatly but it is still faster than the case 2 in the single instance because client connections are distributed evenly in the load balancer.</td>
+	</tr>
+	<tr>
+		<td>Case 3: HTTP/10 threads/No prepared statements</td>
+		<td><img src="file:///Users/zizonesol/Documents/workspace/project3/Images/scaled_results_case4.png" alt="Graph Results Screenshot Case 3" style="width:304px;height:228px;"></td>
+		<td>26</td>
+		<td>1406249.8955336865</td>
+		<td>103621.85881907646</td>
+		<td>The performance suffered due to the fact that there are no single thread. However, it is still faster than the case 4 in the single instance.</td>
+	</tr>
+	<tr>
+		<td>Case 4: HTTP/10 threads/No connection pooling</td>
+		<td><img src="file:///Users/zizonesol/Documents/workspace/project3/Images/scaled_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+		<td>26</td>
+		<td>1406429.0242619228</td>
+		<td>93333.84394398183</td>
+		<td>The load performance suffers but JDBC performance increases because the operations are shared in the multiple backend servers.</td>
+	</tr>
+</table>
+
+</body>
+</html>
+
+
