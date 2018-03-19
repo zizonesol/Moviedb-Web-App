@@ -1,10 +1,17 @@
 
 
-import java.io.*;
-import java.net.*;
-import java.text.*;
-import java.sql.*;
-import java.util.*;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -13,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 
 import javax.naming.InitialContext;
 import javax.naming.Context;
@@ -39,9 +47,7 @@ public class addstar extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
 		
 		HttpSession session = request.getSession(true);
 		
@@ -77,38 +83,38 @@ public class addstar extends HttpServlet {
 					"\r\n");
 			try
 			{
-				Context initCtx = new InitialContext();
-				if (initCtx == null)
-					out.println("initCtx is NULL");
-				
-				Context envCtx = (Context) initCtx.lookup("java:comp/env");
-				if (envCtx == null)
-					out.println("envCtx is NULL");
-					
-				DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
-				
-				if (ds == null)
-					out.println("ds is null");
-				
-				Connection dbcon = ds.getConnection();
-				if (dbcon == null)
-					out.println("dbcon is NULL");
-				
-				//Class.forName("com.mysql.jdbc.Driver").newInstance();
-				//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-				
-				// Declare our statement
-				Statement statement = dbcon.createStatement();
+
+	        	Context initCtx = new InitialContext();
+	    		
+	    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+	    		if (envCtx == null)
+	    			out.println("envCtx is NULL");
+	    		
+	    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+	    		if (ds == null)
+	    			out.println("ds is NULL");
+	    		
+	    		Connection dbcon = ds.getConnection();
+	    		if (dbcon == null)
+	    			out.println("dbcon is NULL");
+
 				
 				String star = request.getParameter("star_name");
-				ResultSet rs = statement.executeQuery("select * from stars where name like \""+ star + "\";");
+				String q = "select * from stars where name like \""+ star + "\";";
+				
+				PreparedStatement xd = dbcon.prepareStatement(q);
+			    
+			       ResultSet rs = xd.executeQuery();
 				
 				if(!rs.next())
 				{
 					// Get the unique id number;
-					rs = statement.executeQuery("select max(id) from stars\r\n" + 
-							"where id like \"aa%\";");
+					q = "select max(id) from stars\r\n" + 
+							"where id like \"aa%\";";
 					
+					xd = dbcon.prepareStatement(q);
+					
+					rs = xd.executeQuery();
 					
 					String idf = "aa";
 					Integer idb = 0;
@@ -129,9 +135,31 @@ public class addstar extends HttpServlet {
 					
 					String queryS = "INSERT INTO stars (id, name) VALUES(\"" + sid + "\", \"" + star + "\");";
 					
+					DataSource ms  = (DataSource) envCtx.lookup("jdbc/master");
+		    		if (ms == null)
+		    			out.println("ds is NULL");
+		    		
+		    		Connection mm = ms.getConnection();
+		    		if (mm == null)
+		    			out.println("dbcon is NULL");
+		    		 Statement statement = mm.createStatement();
+					
 					statement.executeUpdate(queryS);
 					
-					out.println("<FORM ACTION=\"/project3/servlet/dashboard\"\r\n" + 
+
+					statement.close();
+					
+					out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
+							"<HTML>\r\n" + 
+							"<HEAD>\r\n" + 
+							"  <TITLE>Add Star Success</TITLE>\r\n" + 
+							"</HEAD>\r\n" + 
+							"\r\n" + 
+							"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
+							"<H1 ALIGN=\"CENTER\">Star Added</H1>\r\n" + 
+							"\r\n" + 
+							"<FORM ACTION=\"/project3/servlet/dashboard\"\r\n" + 
+
 							"      METHOD=\"POST\">\r\n" + 
 							"  <CENTER>\r\n" + 
 							"    <INPUT TYPE=\"SUBMIT\" VALUE=\"Go Back\">\r\n" + 
@@ -164,7 +192,7 @@ public class addstar extends HttpServlet {
 								"</HTML>\r\n" + 
 								"");
 					}
-				statement.close();
+				rs.close();
 				dbcon.close();
 				
 			}

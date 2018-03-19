@@ -94,17 +94,21 @@ function handleSelectSuggestion(suggestion) {
 	console.log("you select " + suggestion["value"])
 	var url = suggestion["data"]["category"] + "-movie" + "?id=";
 	
-	
+
+	console.log(window.location.origin)
 	var zz = suggestion["value"]
-	zz.relace(new RegExp(' ', 'g'), '+');
+	zz.replace(new RegExp(' ', 'g'), '+');
 	if(suggestion["data"]["category"] == "movie")
 		{
-			window.location.replace("http://localhost:8080/project3/servlet/movieinfo?movie_title="+zz);
+			window.location.href = ("http://"+window.location.host+"/project3/servlet/movieinfo?movie_title="+zz);
+
 			console.log("http://localhost:8080/project3/servlet/searchpage?title=");
 		}
 	else
 		{
-			window.location.replace("http://localhost:8080/project3/servlet/starinfo?star_name="+zz);
+
+			window.location.href = ("http://"+window.location.host+"/project3/servlet/starinfo?star_name="+zz);
+
 		}
 	
 }
@@ -158,4 +162,4 @@ $('#autocomplete').keypress(function(event) {
 	}
 })
 
-// TODO: if you have a "search" button, you may want to bind the onClick event as well of that button
+

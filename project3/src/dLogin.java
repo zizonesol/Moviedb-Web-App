@@ -1,17 +1,25 @@
 
-import java.io.*;
-import java.net.*;
-import java.text.*;
-import java.sql.*;
-import java.util.*;
-import java.sql.PreparedStatement;
 
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 
 import javax.naming.InitialContext;
 import javax.naming.Context;
@@ -42,27 +50,20 @@ public class dLogin extends HttpServlet {
         
         try
         {
-        		Context initCtx = new InitialContext();
-        		if (initCtx == null)
-        			System.out.println("initCtx is NULL");
 
-        		Context envCtx = (Context) initCtx.lookup("java:comp/env");
-        		if (envCtx == null)
-        			System.out.println("envCtx is NULL");
-        		
-        		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
-        		if (ds == null)
-        			System.out.println("ds is NULL");
-        		
-        		Connection dbcon = ds.getConnection();
-        		if (dbcon == null)
-        			System.out.println("dbcon is NULL");
-        		
-        		//Class.forName("com.mysql.jdbc.Driver").newInstance();
-        		
-        		//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+        	Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		
+    		
+    		Connection dbcon = ds.getConnection();
+    		
         		// Declare our statement
-        		//Statement statement = dbcon.createStatement();
+        		
+
         		
 
         		String em = request.getParameter("eemail");
@@ -70,13 +71,12 @@ public class dLogin extends HttpServlet {
         		
         		String query = "SELECT * from employees where email like ?;";
 
-        		PreparedStatement statement = dbcon.prepareStatement(query);
         		
-        		statement.setString(1, em);
-        		
-        		// Perform the query
-        		statement.execute();
-        		ResultSet rs = statement.getResultSet();
+        		PreparedStatement xd = dbcon.prepareStatement(query);
+     	       xd.setString(1,em);
+     	       ResultSet rs = xd.executeQuery();
+
+
         		
         		if (rs.next())
         		{
@@ -98,17 +98,25 @@ public class dLogin extends HttpServlet {
         		}
         		else
         		{
+        			DataSource ms  = (DataSource) envCtx.lookup("jdbc/master");
+		    		
+		    		
+		    		Connection mm = ms.getConnection();
+		    		
+		    		 Statement statement = mm.createStatement();
         			statement.executeUpdate("INSERT INTO employees (email, password, fullname) \r\n"
 
         					+ "VALUES ('" + em + "', '" + passw + "', \"CS 122B TA\")");
         			HttpSession session = request.getSession(true);
         			session.setAttribute("employsuss", "yes");
-        			response.sendRedirect("/project3/servlet/_dashboard");
+
+        			response.sendRedirect("/project3/servlet/dashboard");
+        			mm.close();
+
 
         		}
         		
         		rs.close();
-        		statement.close();
         		dbcon.close();
         		
         }

@@ -4,17 +4,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 //import java.sql.Statement;
 import java.sql.PreparedStatement;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 
 import javax.naming.InitialContext;
 import javax.naming.Context;
@@ -39,9 +43,7 @@ public class starinfo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
 
         
         HttpSession session = request.getSession(true);
@@ -77,27 +79,22 @@ public class starinfo extends HttpServlet {
         
         try
         {
-	        	Context initCtx = new InitialContext();
-	    		if (initCtx == null)
-	    			out.println("initCtx is NULL");
-	    		
-	    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
-	    		if (envCtx == null)
-	    			out.println("envCtx is NULL");
-	    		
-	    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
-	    		if (ds == null)
-	    			out.println("ds is NULL");
-	    		
-	    		Connection dbcon = ds.getConnection();
-	    		if (dbcon == null)
-	    			out.println("dbcon is NULL");
-           //Class.forName("org.gjt.mm.mysql.Driver");
-           //Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-           //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-           // Declare our statement
-           //Statement statement = dbcon.createStatement();
+        	Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		if (envCtx == null)
+    			out.println("envCtx is NULL");
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		if (ds == null)
+    			out.println("ds is NULL");
+    		
+    		Connection dbcon = ds.getConnection();
+    		if (dbcon == null)
+    			out.println("dbcon is NULL");
+           
+
 
            String name = request.getParameter("star_name");
 	          
@@ -113,8 +110,11 @@ public class starinfo extends HttpServlet {
 	          
 	          
            // Perform the query
-	       statement.execute();
-           ResultSet rs = statement.getResultSet();
+
+	          PreparedStatement xd = dbcon.prepareStatement(query);
+		      
+		      ResultSet rs = xd.executeQuery();
+
 
            out.println("<TABLE border>");
 
@@ -143,7 +143,6 @@ public class starinfo extends HttpServlet {
            out.println("</TABLE></BODY></CENTER>");
 
            rs.close();
-           statement.close();
            dbcon.close();
          }
 	     catch (SQLException ex) {

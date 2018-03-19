@@ -1,18 +1,26 @@
 
 
-import java.io.*;
-import java.net.*;
-import java.text.*;
-import java.sql.*;
-import java.util.*;
-import java.sql.PreparedStatement;
 
+import java.io.IOException;
+
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 
 import javax.naming.InitialContext;
 import javax.naming.Context;
@@ -32,9 +40,7 @@ public class metadata extends HttpServlet {
 			throws ServletException, IOException 
 	{
 
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
 		
 		HttpSession session = request.getSession(true);
 		if(session.isNew())
@@ -65,27 +71,21 @@ public class metadata extends HttpServlet {
 		
 		try
 		{
-			Context initCtx = new InitialContext();
-    			if (initCtx == null)
-    				out.println("initCtx is NULL");
-    		
-    			Context envCtx = (Context) initCtx.lookup("java:comp/env");
-	    		if (envCtx == null)
-	    			out.println("envCtx is NULL");
-	    		
-	    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
-	    		if (ds == null)
-	    			out.println("ds is NULL");
-	    		
-	    		Connection dbcon = ds.getConnection();
-	    		if (dbcon == null)
-	    			out.println("dbcon is NULL");
-	    		
-	        //Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-			//Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-			// Declare our statement
-			//Statement statement = dbcon.createStatement();
+Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		if (envCtx == null)
+    			out.println("envCtx is NULL");
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		if (ds == null)
+    			out.println("ds is NULL");
+    		
+    		Connection dbcon = ds.getConnection();
+    		if (dbcon == null)
+    			out.println("dbcon is NULL");
+
 
 			
 			String table = request.getParameter("table_name");
@@ -96,9 +96,12 @@ public class metadata extends HttpServlet {
 					"order by table_name;\r\n";
 			PreparedStatement statement = dbcon.prepareStatement(query);
 
-			// Perform the query
-			statement.execute();
-			ResultSet rs = statement.getResultSet();
+
+			 PreparedStatement xd = dbcon.prepareStatement(query);
+		    
+		      ResultSet rs = xd.executeQuery();
+	           
+
 
 
 			out.println("<H1>Metadata</H1><TABLE border>");
@@ -120,7 +123,6 @@ public class metadata extends HttpServlet {
 
 
 			rs.close();
-			statement.close();
 			dbcon.close();
 		} 
 		catch (SQLException ex) 

@@ -2,12 +2,15 @@
 <Context path="/project3">
 
 	<Resource name="jdbc/moviedb" auth="Container" type="javax.sql.DataSource"
-		initialSize="40" maxActive="100" maxIdle="80" minIdle="40" minEvictableIdleTimeMillis="55000"
-		timeBetweenEvictionRunsMillis="34000"
-		testOnBorrow="true" validationInterval="60000" validationQuery="SELECT 1"
-		removeAbandoned="true" removeAbandonedTimeout="55"
-		maxWait="10000"
+
+		maxTotal="100" maxIdle="30" maxWaitMills="10000"
 		username="mytestuser" password="mypassword" driverClassName="com.mysql.jdbc.Driver"
 		url="jdbc:mysql://localhost:3306/moviedb?autoReconnect=true&amp;useSSL=false&amp;cachePrepStmts=true" />
+		
+	<Resource name="jdbc/master" auth="Container" type="javax.sql.DataSource"
+		maxTotal="100" maxIdle="30" maxWaitMills="10000"
+		username="mytestuser" password="mypassword" driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://ec2-54-183-3-88.us-west-1.compute.amazonaws.com:3306/moviedb?autoReconnect=true&amp;useSSL=false;" />
+
 
 </Context>
