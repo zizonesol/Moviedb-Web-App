@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Connection Pooling Report</title>
+</head>
+<body>
+	<h1>Connection Pooling Explanation Report</h1>
+	<p>
+		Connection Pooling is used to enhance the performance of executing commands 
+		on database and make the web applications perform much more efficiently. By
+		reusing the connections through the caching of the connections, we are able
+		to perform the database connections much faster and much more efficiently.
+	</p>
+	<br/>
+	<p>
+		To use the Connection Pooling, we simply overrode the Connection made 
+		in the earlier projects. Also, we added the context.xml in the 
+		/WebContent/META-INF file to add the following line:
+	</p>
+	<br>
+	<p>
+		&lt;Context path="/project3">
+		<br/>
+			&lt;Resource name="jdbc/moviedb" auth="Container" type="javax.sql.DataSource"
+				initialSize="40" maxActive="100" maxIdle="80" minIdle="40" minEvictableIdleTimeMillis="55000"
+				timeBetweenEvictionRunsMillis="34000"
+				testOnBorrow="true" validationInterval="60000" validationQuery="SELECT 1"
+				removeAbandoned="true" removeAbandonedTimeout="55"
+				maxWait="10000"
+				username="mytestuser" password="mypassword" driverClassName="com.mysql.jdbc.Driver"
+				url="jdbc:mysql://localhost:3306/moviedb?autoReconnect=true&amp;useSSL=false&amp;cachePrepStmts=true" />
+		<br/>
+		&lt;/Context>
+	</p>
+</body>
+</html>

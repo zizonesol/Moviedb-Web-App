@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.sql.PreparedStatement;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -18,6 +19,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.sql.DataSource;
 
 /**
@@ -99,6 +104,7 @@ public class shoppingcart extends HttpServlet {
         
         try
         {
+
         	Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -113,6 +119,11 @@ public class shoppingcart extends HttpServlet {
     		if (dbcon == null)
     			out.println("dbcon is NULL");
 
+
+           //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+           //Statement statement = dbcon.createStatement();
+	    	   PreparedStatement statement = null;
+	    		
            out.println("<TABLE border>");
 
            
@@ -121,9 +132,10 @@ public class shoppingcart extends HttpServlet {
            for(String n : mlist)
            {
 	           String query = "select * from movies\r\n" + 
-	           		"where id = \""+ n +"\"\r\n" + 
+	           		"where id = ?\r\n" + 
 	           		"limit 1;";
-		     
+	           statement = dbcon.prepareStatement(query);
+	           statement.setString(1, n);
 	       
 	           PreparedStatement xd = dbcon.prepareStatement(query);
 		       ResultSet rs = xd.executeQuery();

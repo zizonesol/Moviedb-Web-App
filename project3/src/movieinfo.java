@@ -6,7 +6,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+//import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -16,6 +17,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.sql.DataSource;
 
 /**
@@ -37,21 +42,21 @@ public class movieinfo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
         
         HttpSession session = request.getSession(true);
         if(session.isNew())
         {
-        	session.setAttribute("loginsuss", "no");
-        	response.sendRedirect("/project3/servlet/welcome");
-        	
+	        	session.setAttribute("loginsuss", "no");
+	        	response.sendRedirect("/project3/servlet/welcome");
+	        	
         }
         else
         {
-        	if(session.getAttribute("loginsuss").equals("no"))
-        	{
-        		response.sendRedirect("/project3/servlet/welcome");
-        	}
+	        	if(session.getAttribute("loginsuss").equals("no"))
+	        	{
+	        		response.sendRedirect("/project3/servlet/welcome");
+	        	}
         }
 
         response.setContentType("text/html");    // Response mime type
@@ -60,15 +65,10 @@ public class movieinfo extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         out.println("<HTML><HEAD><TITLE>Movie Information</TITLE></HEAD>");
-        out.println("<div align=\"right\"><form action=\"/project3/mainpage.html\">\r\n" + 
-           		"<input type=\"submit\" value=\"Back\" />\r\n" + 
-           		"</form>\r\n" + 
-           		"</div>");
         out.println("<div align=\"center\"><form action=\"/project3/servlet/shoppingcart\">\r\n" + 
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
         		"</form>\r\n" + 
         		"</div>");
-        
         out.println("<div align=\"right\"><form action=\"/project3/servlet/dLoginpage\">\r\n" + 
         		"<input type=\"submit\" value=\"Dashboard\" />\r\n" + 
         		"</form>\r\n" + 
@@ -80,6 +80,7 @@ public class movieinfo extends HttpServlet {
 
         try
         {
+
         	Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -95,28 +96,30 @@ public class movieinfo extends HttpServlet {
     			out.println("dbcon is NULL");
 
            String name = request.getParameter("movie_title");
-	          System.out.println(name);
+	          
 	         
 	          
+	          String query = "select * , r.rating from\r\n" + 
+	            		"	(select s.id,s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
+	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
+	            		"	where gs.id = gm.genreId\r\n" + 
+	            		"		AND gm.movieId = s.id\r\n" + 
+	            		"		AND ss.id = sm.starId\r\n" + 
+	            		"        AND sm.movieId = s.id\r\n AND s.title = ? \r\n" + 
+	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
+	            		"    where m.title = masterp.title\r\n" + 
+	            		"    AND m.id = r.movieId \r\n" + 
+	            		"limit 20;";
+	          PreparedStatement statement = dbcon.prepareStatement(query);
 	          
-  			String query = "select * from (select id, title, year, director,GROUP_CONCAT(DISTINCT sname) as Stars_Appear,group_concat(DISTINCT gname) as geners_list\r\n" + 
-  					"from\r\n" + 
-  					"	(select sel.id, sel.title, sel.year, sel.director, s.name as sname , g.name as gname from \r\n" + 
-  					"							((select * from movies where title LIKE \""+ name +"\") as sel\r\n" + 
-  					"							left join stars_in_movies sm on sm.movieId=sel.id\r\n" + 
-  					"							left join stars s on sm.starId=s.id\r\n" + 
-  					"							left join genres_in_movies gm on gm.movieId=sel.id\r\n" + 
-  					"							left join genres g on g.id=gm.genreId)) as re\r\n" + 
-  					"                            \r\n" + 
-  					"							group by re.id ) as final\r\n" + 
-  					"                            left join ratings r on r.movieId=final.id\r\n" + 
-  					"                            limit 1\r\n" + 
-  					"							;";
-
+	          statement.setString(1, name);
+	          
            // Perform the query
+
   			PreparedStatement xd = dbcon.prepareStatement(query);
  	       
  	       ResultSet rs = xd.executeQuery();
+
            String m_id = "";
            out.println("<TABLE border>");
 
@@ -127,15 +130,10 @@ public class movieinfo extends HttpServlet {
         	   m_id = rs.getString("id");
                String m_title = rs.getString("title");
                Integer m_year = rs.getInt("year");
-               String m_rating = rs.getString("rating");
+               Float m_rating = rs.getFloat("rating");
                String m_director = rs.getString("director");
                String m_stars = rs.getString("Stars_Appear");
                String m_genres = rs.getString("geners_list");
-               
-               if(m_rating == null)
-               {
-            	   m_rating = "Unrated";
-               }
                
                String m_hyperstars = "";
                String[] splitstar = m_stars.split(",");
@@ -146,20 +144,14 @@ public class movieinfo extends HttpServlet {
                }
                m_hyperstars = m_hyperstars.substring(0, m_hyperstars.length()-2);
                
+               
                String m_hypergenre = "";
-               if(m_genres == null)
+               for (String n : m_genres.split(","))
                {
-            	   m_hypergenre = "Unknown";
+            	   m_hypergenre = m_hypergenre + "<a href= \"/project3/servlet/genresearch?genre=" + n + "\">" + n + "</a>, ";
                }
-               else
-               {
-	               
-	               for (String n : m_genres.split(","))
-	               {
-	            	   m_hypergenre = m_hypergenre + "<a href= \"/project3/servlet/genresearch?genre=" + n + "\">" + n + "</a>, ";
-	               }
-	               m_hypergenre = m_hypergenre.substring(0, m_hypergenre.length()-2);
-               }
+               m_hypergenre = m_hypergenre.substring(0, m_hypergenre.length()-2);
+               
                
                
                out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + m_year + "</td>" + "<td>" + m_director + "</td>"

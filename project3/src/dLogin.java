@@ -1,5 +1,6 @@
 
 
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -8,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -19,6 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
 
 public class dLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -38,13 +43,14 @@ public class dLogin extends HttpServlet {
 			throws ServletException, IOException 
 	{
 
-		String loginUser = "lihengz2";
-        String loginPasswd = "as499069589";
-        String loginUrl = "jdbc:mysql://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:3306/moviedb";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
+        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
         
         try
         {
+
         	Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -57,16 +63,19 @@ public class dLogin extends HttpServlet {
     		
         		// Declare our statement
         		
+
         		
 
         		String em = request.getParameter("eemail");
         		String passw = request.getParameter("epassword");
         		
         		String query = "SELECT * from employees where email like ?;";
+
         		
         		PreparedStatement xd = dbcon.prepareStatement(query);
      	       xd.setString(1,em);
      	       ResultSet rs = xd.executeQuery();
+
 
         		
         		if (rs.next())
@@ -80,7 +89,7 @@ public class dLogin extends HttpServlet {
         				session.setAttribute("employsuss", "yes");
 
         				//session.setAttribute("fullname", rs.getString(""));
-        				response.sendRedirect("/project3/servlet/dashboard");
+        				response.sendRedirect("/project3/servlet/_dashboard");
         			}
         			else
         			{
@@ -100,8 +109,10 @@ public class dLogin extends HttpServlet {
         					+ "VALUES ('" + em + "', '" + passw + "', \"CS 122B TA\")");
         			HttpSession session = request.getSession(true);
         			session.setAttribute("employsuss", "yes");
+
         			response.sendRedirect("/project3/servlet/dashboard");
         			mm.close();
+
 
         		}
         		

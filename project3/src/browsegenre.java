@@ -1,3 +1,4 @@
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -7,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.ServletException;
@@ -15,6 +17,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.sql.DataSource;
 
 /**
@@ -36,7 +42,7 @@ public class browsegenre extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
         
         
         HttpSession session = request.getSession(true);
@@ -71,9 +77,9 @@ public class browsegenre extends HttpServlet {
         out.println("<BODY><H1>All Genre</H1>");
 		
         
-        
         try
         {
+
         	Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");

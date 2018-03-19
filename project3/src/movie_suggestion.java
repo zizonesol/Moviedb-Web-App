@@ -1,5 +1,4 @@
 
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,6 +20,10 @@ import javax.sql.DataSource;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
+
 /**
  * Servlet implementation class movie_suggestion
  */
@@ -38,9 +41,11 @@ public class movie_suggestion extends HttpServlet {
             ,"was","what","when","where"
             ,"who","will","with","und","the","www"};
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
 		try {
 			
+
         	Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -51,6 +56,7 @@ public class movie_suggestion extends HttpServlet {
     		
     		Connection dbcon = ds.getConnection();
     		
+
 			
 			// setup the response json arrray
 			JsonArray jsonArray = new JsonArray();

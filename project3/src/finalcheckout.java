@@ -1,5 +1,6 @@
 
 
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.ServletException;
@@ -18,6 +20,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.sql.DataSource;
 
 /**
@@ -31,18 +37,19 @@ public class finalcheckout extends HttpServlet {
 		HttpSession session = request.getSession(true);
         if(session.isNew())
         {
-        	session.setAttribute("loginsuss", "no");
-        	response.sendRedirect("/project3/servlet/welcome");
-        	
+	        	session.setAttribute("loginsuss", "no");
+	        	response.sendRedirect("/project3/servlet/welcome");
+	        	
         }
         else
         {
-        	if(session.getAttribute("loginsuss").equals("no"))
-        	{
-        		response.sendRedirect("/project3/servlet/welcome");
-        	}
+        		if(session.getAttribute("loginsuss").equals("no"))
+        		{
+        			response.sendRedirect("/project3/servlet/welcome");
+        		}
         }
         
+
         
         response.setContentType("text/html");
         
@@ -54,6 +61,7 @@ public class finalcheckout extends HttpServlet {
         
         try
         {
+
         	Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -68,6 +76,11 @@ public class finalcheckout extends HttpServlet {
     		if (dbcon == null)
     			out.println("dbcon is NULL");
 
+
+           //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+           //Statement statement = dbcon.createStatement();
+        	   PreparedStatement statement = null;
+        		
            ArrayList<String> mlist = (ArrayList<String>) session.getAttribute("mlist");
            
            out.println("<TABLE border>");
@@ -81,12 +94,14 @@ public class finalcheckout extends HttpServlet {
 		           String query = "select * from movies\r\n" + 
 		           		"where id = ?\r\n" + 
 		           		"limit 1;";
+
 		           
 		           PreparedStatement xd = dbcon.prepareStatement(query);
 			       xd.setString(1,n);
 			       ResultSet rs = xd.executeQuery();
 		       
 		           
+
 		           String am = (String) session.getAttribute(n);
 		           
 		           while (rs.next()) {

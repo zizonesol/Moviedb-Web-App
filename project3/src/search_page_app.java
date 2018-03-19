@@ -10,7 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+
 import java.io.*;
+
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -50,6 +52,7 @@ public class search_page_app extends HttpServlet {
 		
 		try {
 		
+
         	Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -63,6 +66,7 @@ public class search_page_app extends HttpServlet {
     		Connection dbcon = ds.getConnection();
     		if (dbcon == null)
     			out.println("dbcon is NULL");
+
 			
 			String name = request.getParameter("movie_title");
 			String pg = request.getParameter("pgnum");
@@ -75,7 +79,7 @@ public class search_page_app extends HttpServlet {
 			String srq = "title LIKE \"%" + name + "%\"";
 			Integer stopc = 0;
 			String zz = "match(title) against(\"";
-			if(sear.length > 0)
+			if(sear.length > 1)
 			{
 				for (int z = 0; z < sear.length ; z++)
 				{
@@ -102,7 +106,7 @@ public class search_page_app extends HttpServlet {
 			String query = "select title, year, director,GROUP_CONCAT(DISTINCT sname) as Stars_Appear,group_concat(DISTINCT gname) as geners_list\r\n" + 
 					"	from\r\n" + 
 					"(select sel.id, sel.title, sel.year, sel.director, s.name as sname , g.name as gname from \r\n" + 
-					"		((select * from movies where "+ srq +") as sel\r\n" + 
+					"		((select * from movies where ?) as sel\r\n" + 
 					"		left join stars_in_movies sm on sm.movieId=sel.id\r\n" + 
 					"		left join stars s on sm.starId=s.id\r\n" + 
 					"		left join genres_in_movies gm on gm.movieId=sel.id\r\n" + 
@@ -110,10 +114,12 @@ public class search_page_app extends HttpServlet {
 					"group by re.id\r\n"
 					+ "limit 10\r\n"
 					+ "offset "+pg+";";
+
 			PreparedStatement xd = dbcon.prepareStatement(query);
 		    
 		    ResultSet rs = xd.executeQuery();
 	           
+
 			
 			JSONObject jout = new JSONObject();
 			JSONArray ja = new JSONArray();

@@ -1,5 +1,6 @@
 
 
+
 import java.io.IOException;
 
 import java.io.PrintWriter;
@@ -10,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.ServletException;
@@ -18,6 +20,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.sql.DataSource;
 
 /**
@@ -34,7 +40,7 @@ public class metadata extends HttpServlet {
 			throws ServletException, IOException 
 	{
 
-		
+
 		
 		HttpSession session = request.getSession(true);
 		if(session.isNew())
@@ -65,6 +71,7 @@ public class metadata extends HttpServlet {
 		
 		try
 		{
+
 Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -79,6 +86,7 @@ Context initCtx = new InitialContext();
     		if (dbcon == null)
     			out.println("dbcon is NULL");
 
+
 			
 			String table = request.getParameter("table_name");
 
@@ -86,12 +94,14 @@ Context initCtx = new InitialContext();
 					"FROM information_schema.columns \r\n" + 
 					"WHERE (table_schema='moviedb')\r\n" + 
 					"order by table_name;\r\n";
+			PreparedStatement statement = dbcon.prepareStatement(query);
 
 
 			 PreparedStatement xd = dbcon.prepareStatement(query);
 		    
 		      ResultSet rs = xd.executeQuery();
 	           
+
 
 
 			out.println("<H1>Metadata</H1><TABLE border>");

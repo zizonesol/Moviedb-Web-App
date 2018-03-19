@@ -1,5 +1,6 @@
 
 
+
 import java.io.IOException;
 
 import java.io.PrintWriter;
@@ -10,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.ServletException;
@@ -18,6 +20,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.sql.DataSource;
 
 /**
@@ -31,7 +37,7 @@ public class add_movie extends HttpServlet
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
-		
+
 		
 		HttpSession session = request.getSession(true);
 		if(session.isNew())
@@ -56,9 +62,19 @@ public class add_movie extends HttpServlet
 		// Output stream to STDOUT
 		PrintWriter out = response.getWriter();
 		
+		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
+				"<HTML>\r\n" + 
+				"<HEAD>\r\n" + 
+				"  <TITLE>Add Movie Success</TITLE>\r\n" + 
+				"</HEAD>\r\n" + 
+				"\r\n" + 
+				"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
+				"<H1 ALIGN=\"CENTER\">Movie Added</H1>\r\n" + 
+				"\r\n");
 		try
 		{
 			Context initCtx = new InitialContext();
+
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
     		if (envCtx == null)
@@ -71,6 +87,7 @@ public class add_movie extends HttpServlet
     		Connection dbcon = ds.getConnection();
     		if (dbcon == null)
     			out.println("dbcon is NULL");
+
 			
 			String movie = request.getParameter("movie_title");
 			String star = request.getParameter("star_name");
@@ -87,17 +104,7 @@ public class add_movie extends HttpServlet
 
 			
 			
-			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
-					"<HTML>\r\n" + 
-					"<HEAD>\r\n" + 
-					"  <TITLE>Add Movie Success</TITLE>\r\n" + 
-					"</HEAD>\r\n" + 
-					"\r\n" + 
-					"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
-					"<H1 ALIGN=\"CENTER\">Movie Added</H1>\r\n" + 
-					"\r\n" + 
-
-					"<FORM ACTION=\"/project3/servlet/dashboard\"\r\n" + 
+			out.println("<FORM ACTION=\"/project3/servlet/dashboard\"\r\n" + 
 
 					"      METHOD=\"POST\">\r\n" + 
 					"  <CENTER>\r\n" + 

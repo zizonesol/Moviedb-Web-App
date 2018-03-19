@@ -1,5 +1,6 @@
 
 
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -9,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.ServletException;
@@ -17,6 +19,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.sql.DataSource;
 
 /**
@@ -38,6 +44,7 @@ public class genresearch extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         
         HttpSession session = request.getSession(true);
         if(session.isNew())
@@ -48,10 +55,10 @@ public class genresearch extends HttpServlet {
         }
         else
         {
-        	if(session.getAttribute("loginsuss").equals("no"))
-        	{
-        		response.sendRedirect("/project3/servlet/welcome");
-        	}
+	        	if(session.getAttribute("loginsuss").equals("no"))
+	        	{
+	        		response.sendRedirect("/project3/servlet/welcome");
+	        	}
         }
 
         response.setContentType("text/html");    // Response mime type
@@ -71,9 +78,9 @@ public class genresearch extends HttpServlet {
         out.println("<BODY><H1>Movie List by Genre</H1>");
 		
         
-        
         try
         {
+
         	Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -88,6 +95,7 @@ public class genresearch extends HttpServlet {
     		if (dbcon == null)
     			out.println("dbcon is NULL");
 
+
            String genre = request.getParameter("genre");
 	          
 	          
@@ -98,10 +106,12 @@ public class genresearch extends HttpServlet {
 	          		"    AND g.name = ?\r\n" + 
 	          		"LIMIT 20;";
 
+
           PreparedStatement xd = dbcon.prepareStatement(query);
 	       xd.setString(1,genre);
 	       ResultSet rs = xd.executeQuery();
 	           
+
 
            out.println("<TABLE border>");
 

@@ -1,5 +1,6 @@
 
 
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -11,6 +12,7 @@ import java.sql.Statement;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,6 +20,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.sql.DataSource;
 
 /**
@@ -41,6 +47,7 @@ public class addstar extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
+
 		
 		HttpSession session = request.getSession(true);
 		
@@ -65,8 +72,18 @@ public class addstar extends HttpServlet {
 			// Output stream to STDOUT
 			PrintWriter out = response.getWriter();
 			
+			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
+					"<HTML>\r\n" + 
+					"<HEAD>\r\n" + 
+					"  <TITLE>Add Star Success</TITLE>\r\n" + 
+					"</HEAD>\r\n" + 
+					"\r\n" +
+					"<BODY BGCOLOR=\"#FDF5E6\">\r\n" + 
+					"<H1 ALIGN=\"CENTER\">Star Added</H1>\r\n" + 
+					"\r\n");
 			try
 			{
+
 	        	Context initCtx = new InitialContext();
 	    		
 	    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -80,6 +97,7 @@ public class addstar extends HttpServlet {
 	    		Connection dbcon = ds.getConnection();
 	    		if (dbcon == null)
 	    			out.println("dbcon is NULL");
+
 				
 				String star = request.getParameter("star_name");
 				String q = "select * from stars where name like \""+ star + "\";";
@@ -128,6 +146,7 @@ public class addstar extends HttpServlet {
 					
 					statement.executeUpdate(queryS);
 					
+
 					statement.close();
 					
 					out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\r\n" + 
@@ -140,6 +159,7 @@ public class addstar extends HttpServlet {
 							"<H1 ALIGN=\"CENTER\">Star Added</H1>\r\n" + 
 							"\r\n" + 
 							"<FORM ACTION=\"/project3/servlet/dashboard\"\r\n" + 
+
 							"      METHOD=\"POST\">\r\n" + 
 							"  <CENTER>\r\n" + 
 							"    <INPUT TYPE=\"SUBMIT\" VALUE=\"Go Back\">\r\n" + 

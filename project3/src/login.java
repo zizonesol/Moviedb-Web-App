@@ -1,12 +1,11 @@
 
 /* A servlet to display the contents of the MySQL movieDB database */
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.*;
+import java.net.*;
+import java.text.*;
+import java.sql.*;
+import java.util.*;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +17,9 @@ import javax.naming.Context;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
 
 public class login extends HttpServlet
 {
@@ -45,7 +47,7 @@ public class login extends HttpServlet
     	    		return;
     		}
     	
- 
+
         HttpSession se = request.getSession(true);
         if(se.isNew())
         {
@@ -63,6 +65,7 @@ public class login extends HttpServlet
         
         try
         {
+
         	
         	Context initCtx = new InitialContext();
     		
@@ -80,14 +83,21 @@ public class login extends HttpServlet
            //Class.forName("org.gjt.mm.mysql.Driver");
            
 
+
            String em = request.getParameter("email");
            String passw = request.getParameter("password");
            
-	       String query = "SELECT * from customers where email = \""+ em   +"\";";
+	       String query = "SELECT * from customers where email = ?;";
 
+	       PreparedStatement statement = dbcon.prepareStatement(query);
+	       
+	       statement.setString(1, em);
+	       	       
            // Perform the query
+
 	       PreparedStatement xd = dbcon.prepareStatement(query);
 	       ResultSet rs = xd.executeQuery();
+
            
            if(rs.next())
            {

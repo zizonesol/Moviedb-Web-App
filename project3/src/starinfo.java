@@ -7,7 +7,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+//import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -17,6 +18,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.sql.DataSource;
 
 /**
@@ -38,7 +43,7 @@ public class starinfo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 
         
         HttpSession session = request.getSession(true);
@@ -62,10 +67,6 @@ public class starinfo extends HttpServlet {
 
         out.println("<HTML><HEAD><TITLE>Star Information</TITLE></HEAD>");
         out.println("<BODY><H1>Star Information</H1>");
-        out.println("<div align=\"right\"><form action=\"/project3/mainpage.html\">\r\n" + 
-           		"<input type=\"submit\" value=\"Back\" />\r\n" + 
-           		"</form>\r\n" + 
-           		"</div>");
 		
         out.println("<div align=\"center\"><form action=\"/project3/servlet/shoppingcart\">\r\n" + 
         		"<input type=\"submit\" value=\"Checkout\" />\r\n" + 
@@ -78,6 +79,7 @@ public class starinfo extends HttpServlet {
         
         try
         {
+
         	Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -93,20 +95,26 @@ public class starinfo extends HttpServlet {
     			out.println("dbcon is NULL");
            
 
+
            String name = request.getParameter("star_name");
 	          
 	          
 	          String query = "select ss.name, ss.birthYear, GROUP_CONCAT(distinct m.title) as Movie_appear\r\n" + 
 	          		"from stars ss, stars_in_movies sm, movies m\r\n" + 
 	          		"where m.id = sm.movieId\r\n" + 
-	          		"AND	ss.id = sm.starId AND ss.name = \""+ name +"\"\r\n" + 
+	          		"AND	ss.id = sm.starId AND ss.name = ?\r\n" + 
 	          		"GROUP BY ss.id;";
-
+	          PreparedStatement statement = dbcon.prepareStatement(query);
+	          
+	          statement.setString(1, name);
+	          
+	          
            // Perform the query
+
 	          PreparedStatement xd = dbcon.prepareStatement(query);
 		      
 		      ResultSet rs = xd.executeQuery();
-	           
+
 
            out.println("<TABLE border>");
 

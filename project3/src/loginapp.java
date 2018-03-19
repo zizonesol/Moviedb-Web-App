@@ -7,7 +7,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+//import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -17,6 +18,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.sql.DataSource;
 
 /**
@@ -30,6 +35,7 @@ public class loginapp extends HttpServlet {
 		response.setContentType("text/plain");
 		PrintWriter out = response.getWriter();
    
+
 		
 	    try
 	    {
@@ -58,6 +64,7 @@ public class loginapp extends HttpServlet {
 	       PreparedStatement xd = dbcon.prepareStatement(query);
 	       xd.setString(1,em);
 	       ResultSet rs = xd.executeQuery();
+
 	       
 	       if(rs.next())
 	       {

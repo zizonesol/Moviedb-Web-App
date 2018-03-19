@@ -170,3 +170,5 @@ buildNumber.properties
 # End of https://www.gitignore.io/api/java,maven,eclipse,java-web,intellij
 
 /build/
+project3/WebContent/autocomplete.js
+project3/WebContent/mainpage.html
