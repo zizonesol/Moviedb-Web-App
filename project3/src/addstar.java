@@ -112,7 +112,6 @@ public class addstar extends HttpServlet {
 							}
 						}
 					}
-					System.out.println(idb);
 					
 					String sid = idf + String.format("%07d", idb);
 					
@@ -126,7 +125,7 @@ public class addstar extends HttpServlet {
 		    		if (mm == null)
 		    			out.println("dbcon is NULL");
 		    		 Statement statement = mm.createStatement();
-					System.out.println(ms);
+					
 					statement.executeUpdate(queryS);
 					
 					statement.close();
