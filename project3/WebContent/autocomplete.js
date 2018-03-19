@@ -95,15 +95,16 @@ function handleSelectSuggestion(suggestion) {
 	var url = suggestion["data"]["category"] + "-movie" + "?id=";
 	
 	
+	var zz = suggestion["value"]
+	zz.relace(new RegExp(' ', 'g'), '+');
 	if(suggestion["data"]["category"] == "movie")
 		{
-			window.location.replace("http://http://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:8080/project3/servlet/movieinfo?movie_title="+suggestion["value"]);
-			console.log("http://localhost:8080/project3/servlet/movieinfo?movie_title="+suggestion["value"])
+			window.location.replace("http://localhost:8080/project3/servlet/movieinfo?movie_title="+zz);
+			console.log("http://localhost:8080/project3/servlet/searchpage?title=");
 		}
 	else
 		{
-			window.location.replace("http://http://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:8080/project3/servlet/starinfo?star_name="+suggestion["value"]);
-			console.log("http://localhost:8080/project3/servlet/starinfo?star_name="+suggestion["value"])
+			window.location.replace("http://localhost:8080/project3/servlet/starinfo?star_name="+zz);
 		}
 	
 }
@@ -144,7 +145,7 @@ function handleNormalSearch(query) {
 	console.log("doing normal search with query: " + query);
 	var x = query;
 	x.replace(" ","+")
-	window.location.replace("http://http://ec2-52-53-153-231.us-west-1.compute.amazonaws.com:8080/project3/servlet/searchpage?title="+x)
+	window.location.replace("http://localhost:8080/project3/servlet/searchpage?title="+query)
 	// TODO: you should do normal search here
 }
 
