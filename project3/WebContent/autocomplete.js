@@ -24,17 +24,12 @@ function handleLookup(query, doneCallback) {
 	console.log("sending AJAX request to backend Java Servlet")
 	
 	var notfound = true;
+	var y = query;
+	var z;
 	
-	for(var key in jdict )
-		{
-			if(key.include(query))
-				{
-					doneCallback( { suggestions: jdict[key] } );
-					notfound = false;
-				}
-		}
-	
-	if(notfound)
+
+	console.log(y);
+	if(!(jdict.hasOwnProperty(y)))
 		{
 			// sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
 			// with the query data
@@ -42,9 +37,9 @@ function handleLookup(query, doneCallback) {
 				"method": "GET",
 				// generate the request url from the query.
 				// escape the query string to avoid errors caused by special characters 
-				"url": "movie_suggestion?query=" + escape(query),
+				"url": "movie_suggestion?query=" + escape(y),
 				"success": function(data) {
-					
+					console.log("look up from ajax")
 					handleLookupAjaxSuccess(data, query, doneCallback) 
 				},
 				"error": function(errorData) {
@@ -52,6 +47,11 @@ function handleLookup(query, doneCallback) {
 					console.log(errorData)
 				}
 			})
+		}
+	else
+		{
+		console.log("look up from cache");
+		doneCallback( { suggestions: jdict[y] } );
 		}
 }
 
@@ -68,9 +68,10 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
 	
 	// parse the string into JSON
 	var jsonData = JSON.parse(data);
-	console.log(jsonData)
-	
-	jdict[query] = jsonData;
+	console.log(jsonData);
+	var z = query;
+	jdict[z] = jsonData;
+	console.log(jdict);
 	
 	// TODO: if you want to cache the result into a global variable you can do it here
 
@@ -92,17 +93,18 @@ function handleSelectSuggestion(suggestion) {
 	
 	console.log("you select " + suggestion["value"])
 	var url = suggestion["data"]["category"] + "-movie" + "?id=";
-	console.log(url)
+	
+	console.log(window.location.origin)
 	var zz = suggestion["value"]
-	zz.relace(new RegExp(' ', 'g'), '+');
+	zz.replace(new RegExp(' ', 'g'), '+');
 	if(suggestion["data"]["category"] == "movie")
 		{
-			window.location.replace("http://localhost:8080/project3/servlet/movieinfo?movie_title="+zz);
+			window.location.href = ("http://"+window.location.host+"/project3/servlet/movieinfo?movie_title="+zz);
 			console.log("http://localhost:8080/project3/servlet/searchpage?title=");
 		}
 	else
 		{
-			window.location.replace("http://localhost:8080/project3/servlet/starinfo?star_name="+zz);
+			window.location.href = ("http://"+window.location.host+"/project3/servlet/starinfo?star_name="+zz);
 		}
 	
 }
@@ -141,7 +143,8 @@ $('#autocomplete').autocomplete({
  */
 function handleNormalSearch(query) {
 	console.log("doing normal search with query: " + query);
-	query.replace(" ","+")
+	var x = query;
+	x.replace(" ","+")
 	window.location.replace("http://localhost:8080/project3/servlet/searchpage?title="+query)
 	// TODO: you should do normal search here
 }
@@ -156,5 +159,3 @@ $('#autocomplete').keypress(function(event) {
 })
 
 // TODO: if you have a "search" button, you may want to bind the onClick event as well of that button
-
-
