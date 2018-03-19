@@ -93,14 +93,16 @@ function handleSelectSuggestion(suggestion) {
 	console.log("you select " + suggestion["value"])
 	var url = suggestion["data"]["category"] + "-movie" + "?id=";
 	console.log(url)
-	
+	var zz = suggestion["value"]
+	zz.relace(new RegExp(' ', 'g'), '+');
 	if(suggestion["data"]["category"] == "movie")
 		{
-			window.location.replace("http://localhost:8080/project3/servlet/movieinfo?movie_title="+suggestion["value"]);
+			window.location.replace("http://localhost:8080/project3/servlet/movieinfo?movie_title="+zz);
+			console.log("http://localhost:8080/project3/servlet/searchpage?title=");
 		}
 	else
 		{
-			window.location.replace("http://localhost:8080/project3/servlet/starinfo?star_name="+suggestion["value"]);
+			window.location.replace("http://localhost:8080/project3/servlet/starinfo?star_name="+zz);
 		}
 	
 }
