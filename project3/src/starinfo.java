@@ -4,16 +4,25 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+//import java.sql.Statement;
+import java.sql.PreparedStatement;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
 
 /**
  * Servlet implementation class starinfo
@@ -34,9 +43,7 @@ public class starinfo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
 
         
         HttpSession session = request.getSession(true);
@@ -72,12 +79,22 @@ public class starinfo extends HttpServlet {
         
         try
         {
-           //Class.forName("org.gjt.mm.mysql.Driver");
-           Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-           Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-           // Declare our statement
-           Statement statement = dbcon.createStatement();
+        	Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		if (envCtx == null)
+    			out.println("envCtx is NULL");
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		if (ds == null)
+    			out.println("ds is NULL");
+    		
+    		Connection dbcon = ds.getConnection();
+    		if (dbcon == null)
+    			out.println("dbcon is NULL");
+           
+
 
            String name = request.getParameter("star_name");
 	          
@@ -85,11 +102,17 @@ public class starinfo extends HttpServlet {
 	          String query = "select ss.name, ss.birthYear, GROUP_CONCAT(distinct m.title) as Movie_appear\r\n" + 
 	          		"from stars ss, stars_in_movies sm, movies m\r\n" + 
 	          		"where m.id = sm.movieId\r\n" + 
-	          		"AND	ss.id = sm.starId AND ss.name = \""+ name +"\"\r\n" + 
+	          		"AND	ss.id = sm.starId AND ss.name LIKE ?\r\n" + 
 	          		"GROUP BY ss.id;";
+	          PreparedStatement statement = dbcon.prepareStatement(query);
+	          
+	          statement.setString(1, name);
+	          
+	          
 
-           // Perform the query
-           ResultSet rs = statement.executeQuery(query);
+		      
+		      ResultSet rs = statement.executeQuery();
+
 
            out.println("<TABLE border>");
 
@@ -118,7 +141,6 @@ public class starinfo extends HttpServlet {
            out.println("</TABLE></BODY></CENTER>");
 
            rs.close();
-           statement.close();
            dbcon.close();
          }
 	     catch (SQLException ex) {

@@ -1,19 +1,25 @@
 
 /* A servlet to display the contents of the MySQL movieDB database */
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.*;
+import java.net.*;
+import java.text.*;
+import java.sql.*;
+import java.util.*;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
+import java.sql.PreparedStatement;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
 
 public class login extends HttpServlet
 {
@@ -41,10 +47,7 @@ public class login extends HttpServlet
     	    		return;
     		}
     	
-        String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
-        
+
         HttpSession se = request.getSession(true);
         if(se.isNew())
         {
@@ -62,20 +65,37 @@ public class login extends HttpServlet
         
         try
         {
-           //Class.forName("org.gjt.mm.mysql.Driver");
-           Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-           Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-           // Declare our statement
-           Statement statement = dbcon.createStatement();
+        	
+        	Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		if (envCtx == null)
+    			out.println("envCtx is NULL");
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		if (ds == null)
+    			out.println("ds is NULL");
+    		
+    		Connection dbcon = ds.getConnection();
+    		if (dbcon == null)
+    			out.println("dbcon is NULL");
+           //Class.forName("org.gjt.mm.mysql.Driver");
+           
+
 
            String em = request.getParameter("email");
            String passw = request.getParameter("password");
            
-	       String query = "SELECT * from customers where email = \""+ em   +"\";";
+	       String query = "SELECT * from customers where email = ?;";
 
+	       
            // Perform the query
-           ResultSet rs = statement.executeQuery(query);
+
+	       PreparedStatement xd = dbcon.prepareStatement(query);
+	       xd.setString(1, em);
+	       ResultSet rs = xd.executeQuery();
+
            
            if(rs.next())
            {
@@ -95,16 +115,25 @@ public class login extends HttpServlet
 	        }
 	        else
 	        {
-	        	   statement.executeUpdate("INSERT INTO customers (email,password,ccId) \r\n"
+		        	DataSource ms  = (DataSource) envCtx.lookup("jdbc/master");
+		    		if (ms == null)
+		    			out.println("ds is NULL");
+		    		
+		    		Connection mm = ms.getConnection();
+		    		if (mm == null)
+		    			out.println("dbcon is NULL");
+		    		 Statement st = mm.createStatement();
+		    		 st.executeUpdate("INSERT INTO customers (email,password,ccId) \r\n"
 	        			   + "VALUES ('" + em + "', '" + passw + "',941);");
 	        	   HttpSession session = request.getSession(true);
 	        	   session.setAttribute("loginsuss", "yes");
+	        	   System.out.println("add");
+	        	   mm.close();
 	     	   response.sendRedirect("/project3/mainpage.html");
 	        }
 	
 	
 	           rs.close();
-	           statement.close();
 	           dbcon.close();
          }
 	     catch (SQLException ex) {

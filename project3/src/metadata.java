@@ -1,24 +1,35 @@
 
 
+
 import java.io.IOException;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
 
 /**
  * Servlet implementation class metadata
  */
+
 public class metadata extends HttpServlet {
 
 
@@ -28,38 +39,54 @@ public class metadata extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException 
 	{
-		String loginUser = "mytestuser";
-		String loginPasswd = "mypassword";
-		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
+
 		
 		HttpSession session = request.getSession(true);
-		if (session.isNew())
+		if(session.isNew())
 		{
 			session.setAttribute("employsuss", "no");
 			response.sendRedirect("/project3/servlet/dLoginpage");
 		}
+		else if(session.getAttribute("employsuss") == null)
+		{
+			response.sendRedirect("/project3/servlet/dLoginpage");
+		}
+		else if(session.getAttribute("employsuss").equals("no"))
+		{
+			response.sendRedirect("/project3/servlet/dLoginpage");
+		}
 		else
 		{
-			if(session.getAttribute("employsuss").equals("no"))
-			{
-				response.sendRedirect("/project3/servlet/dLoginpage");
-			}
-		}
+
 		
 		response.setContentType("text/html");
 		
 		// Output stream to STDOUT
 		PrintWriter out = response.getWriter();
 		
+
 		out.println("<HTML><HEAD><TITLE>Metadata</TITLE></HEAD><center><body>");
+
 		
 		try
 		{
-	        Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-			Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-			// Declare our statement
-			Statement statement = dbcon.createStatement();
+Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		if (envCtx == null)
+    			out.println("envCtx is NULL");
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		if (ds == null)
+    			out.println("ds is NULL");
+    		
+    		Connection dbcon = ds.getConnection();
+    		if (dbcon == null)
+    			out.println("dbcon is NULL");
+
+
 			
 			String table = request.getParameter("table_name");
 
@@ -67,9 +94,15 @@ public class metadata extends HttpServlet {
 					"FROM information_schema.columns \r\n" + 
 					"WHERE (table_schema='moviedb')\r\n" + 
 					"order by table_name;\r\n";
+			PreparedStatement statement = dbcon.prepareStatement(query);
 
-			// Perform the query
-			ResultSet rs = statement.executeQuery(query);
+
+			 PreparedStatement xd = dbcon.prepareStatement(query);
+		    
+		      ResultSet rs = xd.executeQuery();
+	           
+
+
 
 			out.println("<H1>Metadata</H1><TABLE border>");
 
@@ -88,8 +121,8 @@ public class metadata extends HttpServlet {
 
 			out.println("</TABLE></BODY></CENTER></html>");
 
+
 			rs.close();
-			statement.close();
 			dbcon.close();
 		} 
 		catch (SQLException ex) 
@@ -111,7 +144,9 @@ public class metadata extends HttpServlet {
             return;
         }
 		out.close();
-	}
+
+	}}
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

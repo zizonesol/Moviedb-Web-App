@@ -4,17 +4,26 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
 
 /**
  * Servlet implementation class checkccinfo
@@ -38,9 +47,7 @@ public class checkccinfo extends HttpServlet {
 	        		response.sendRedirect("/project3/servlet/welcome");
 	        	}
         }
-        String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+
         
         response.setContentType("text/html");
         
@@ -52,11 +59,24 @@ public class checkccinfo extends HttpServlet {
         
         try
         {
-           //Class.forName("org.gjt.mm.mysql.Driver");
-           Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-           Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-           Statement statement = dbcon.createStatement();
+           
+        	Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		if (envCtx == null)
+    			out.println("envCtx is NULL");
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		if (ds == null)
+    			out.println("ds is NULL");
+    		
+    		Connection dbcon = ds.getConnection();
+    		if (dbcon == null)
+    			out.println("dbcon is NULL");
+        	
+  
+
 
            ArrayList<String> mlist = (ArrayList<String>) session.getAttribute("mlist");
            
@@ -66,15 +86,22 @@ public class checkccinfo extends HttpServlet {
            String expdate = request.getParameter("expdate");
            
            String search = "select * from creditcards\r\n" + 
-           		"where id = \""+ ccnum + "\" and firstName = \"" + fn +"\" and lastName = \""+ ln + "\" and DATE(expiration) = '"+expdate+ "';";
+
+           		"where id = ? and firstName = ? and lastName = ? and DATE(expiration) = ?;";
            
-           ResultSet zs = statement.executeQuery(search);
+           PreparedStatement xd = dbcon.prepareStatement(search);
+	       xd.setString(1,fn);
+	       xd.setString(2,ln);
+	       xd.setString(3,ccnum);
+	       xd.setString(4,expdate);
+	       ResultSet zs = xd.executeQuery();
+
            
            if(zs.next() == false)
            {
         	   zs.close();
         	   session.setAttribute("ccauth", "fail");
-        	   response.sendRedirect("/project3/servlet/finalcheckout");
+        	   response.sendRedirect("/project2/servlet/finalcheckout");
         	   out.close();
            }
            zs.close();
@@ -89,11 +116,14 @@ public class checkccinfo extends HttpServlet {
 	           for(String n : mlist)
 	           {
 		           String query = "select * from movies\r\n" + 
-		           		"where id = \""+ n +"\"\r\n" + 
+		           		"where id = ?\r\n" + 
 		           		"limit 1;";
+
 			     
-		       
-		           ResultSet rs = statement.executeQuery(query);
+		           xd = dbcon.prepareStatement(query);
+		           xd.setString(1,n);
+		           ResultSet rs = xd.executeQuery();
+
 		           String am = (String) session.getAttribute(n);
 		           String mid = "";
 		           while (rs.next()) {
@@ -101,9 +131,18 @@ public class checkccinfo extends HttpServlet {
 		               mid = rs.getString("id");
 		               out.println("<tr>" + "<td>" + m_title + "</td>" + "<td>" + am  + "</td>" + "</tr>");
 		           }
+		           
+		           DataSource ms  = (DataSource) envCtx.lookup("jdbc/master");
+		    		if (ms == null)
+		    			out.println("ds is NULL");
+		    		
+		    		Connection mm = ms.getConnection();
+		    		if (mm == null)
+		    			out.println("dbcon is NULL");
+		    		 Statement statement = mm.createStatement();
 		           statement.executeUpdate("INSERT INTO sales (customerId,movieId,saleDate) \r\n"
 	        			   + "VALUES ('" + cid + "', '" + mid + "',CURDATE());");
-		           
+		           mm.close();
 		           rs.close();
 		           
 		           
@@ -113,9 +152,6 @@ public class checkccinfo extends HttpServlet {
            
            
            out.println("</BODY></CENTER>");
-           
-     
-           statement.close();
            dbcon.close();
          }
 	     catch (SQLException ex) {

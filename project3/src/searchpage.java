@@ -1,20 +1,33 @@
 
 
+
+import java.io.File;
+import java.io.FileOutputStream;
+
 import java.io.IOException;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
 
 /**
  * Servlet implementation class searchpage
@@ -24,13 +37,18 @@ public class searchpage extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-
+		
 		String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
-        
+		
+		long startTime = System.nanoTime();
+		long qstart = 0;
+		long qend = 0;
+
         
         HttpSession session = request.getSession(true);
+        /*
         if(session.isNew())
         {
 	        	session.setAttribute("loginsuss", "no");
@@ -44,9 +62,11 @@ public class searchpage extends HttpServlet {
 	        		response.sendRedirect("/project3/servlet/welcome");
 	        	}
         }
-        
+        */
 
         response.setContentType("text/html");    // Response mime type
+        
+        
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
@@ -69,12 +89,28 @@ public class searchpage extends HttpServlet {
 		
         try
         {
-           //Class.forName("org.gjt.mm.mysql.Driver");
-           Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-           Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-           // Declare our statement
-           Statement statement = dbcon.createStatement();
+        	
+        	Context initCtx = new InitialContext();
+    		
+    		Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    		if (envCtx == null)
+    			out.println("envCtx is NULL");
+    		
+    		DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+    		if (ds == null)
+    			out.println("ds is NULL");
+    		
+    		Connection dbcon = ds.getConnection();
+    		if (dbcon == null)
+    			out.println("dbcon is NULL");
+    			
+        	
+        	//Class.forName("com.mysql.jdbc.Driver").newInstance();
+
+            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+           
+
            String query = "";
            
            String yearsort = request.getParameter("sorty");
@@ -91,7 +127,7 @@ public class searchpage extends HttpServlet {
            String npp = request.getParameter("npp");
            if(npp != null)
            {
-        	   Numpp = npp;
+        	   		Numpp = npp;
            }
         	   
            String b10 = "<a href= \"/project3/servlet/searchpage?npp=10";
@@ -104,15 +140,15 @@ public class searchpage extends HttpServlet {
            String pagen = request.getParameter("pagenum");
            if (pagen != null)
            {
-        	   page = pagen;
+        	   		page = pagen;
            }
            
-           int x = Integer.parseInt(page);
-           if (x > 1)
-           {
-        	   int y = Integer.parseInt(Numpp);
-        	   int z = (x-1)*y;
-        	   os = String.valueOf(z);
+	       int x = Integer.parseInt(page);
+	       if (x > 1)
+	       {
+	        	   int y = Integer.parseInt(Numpp);
+	        	   int z = (x-1)*y;
+	        	   os = String.valueOf(z);
            }
            
            String backbutton = "<a href= \"/project3/servlet/searchpage?npp=" + Numpp;
@@ -167,32 +203,32 @@ public class searchpage extends HttpServlet {
         	   
            if(request.getParameter("title") != null)
            {
-        	   String title = request.getParameter("title");
-        	   query = "select * , r.rating from\r\n" + 
-	            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
-	            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
-	            		"	where gs.id = gm.genreId\r\n" + 
-	            		"		AND gm.movieId = s.id\r\n" + 
-	            		"		AND ss.id = sm.starId\r\n" + 
-	            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '" + title + "%'\r\n" + 
-	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
-	            		"    where m.title = masterp.title\r\n" + 
-	            		"    AND m.id = r.movieId \r\n" + qsort +
-	            		"limit " + Numpp + "\r\n"+
-	            		"OFFSET " + os +";";
-        	   
-        	   msortbutton = "<a href= \"/project3/servlet/searchpage?title=" + title  + mhtmlicon +"</a>";
-        	   ysortbutton= "<a href= \"/project3/servlet/searchpage?title=" + title + yhtmlicon +"</a>";
-        	   b10 = b10 + "&title=\"" + title + "\">"+ "10</a>";
-    		   b25 = b25 + "&title=\"" + title + "\">"+ "25</a>";
-    		   b50 = b50 + "&title=\"" + title + "\">"+ "50</a>";
-    		   backbutton = backbutton + "&title=\"" + title;
-    		   nextbutton = nextbutton + "&title=\"" + title;
-    		   
-        	   
+	        	   String title = request.getParameter("title");
+	        	   query = "select * , r.rating from\r\n" + 
+		            		"	(select s.title,s.year,s.director,GROUP_CONCAT(DISTINCT ss.name) as Stars_Appear,group_concat(DISTINCT gs.name) as geners_list\r\n" + 
+		            		"	from movies s, stars_in_movies sm, stars ss,genres_in_movies gm, genres gs\r\n" + 
+		            		"	where gs.id = gm.genreId\r\n" + 
+		            		"		AND gm.movieId = s.id\r\n" + 
+		            		"		AND ss.id = sm.starId\r\n" + 
+		            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '" + title + "%'\r\n" + 
+		            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
+		            		"    where m.title = masterp.title\r\n" + 
+		            		"    AND m.id = r.movieId \r\n" + qsort +
+		            		"limit " + Numpp 
+	        	   			+ "\r\n"+ "OFFSET " + os +";";
+	        	   
+	        	   msortbutton = "<a href= \"/project3/servlet/searchpage?title=" + title  + mhtmlicon +"</a>";
+	        	   ysortbutton= "<a href= \"/project3/servlet/searchpage?title=" + title + yhtmlicon +"</a>";
+	        	   b10 = b10 + "&title=\"" + title + "\">"+ "10</a>";
+	    		   b25 = b25 + "&title=\"" + title + "\">"+ "25</a>";
+	    		   b50 = b50 + "&title=\"" + title + "\">"+ "50</a>";
+	    		   backbutton = backbutton + "&title=\"" + title;
+	    		   nextbutton = nextbutton + "&title=\"" + title;
+	    	
+        	   		
            }
-           else {
-           
+           else 
+           {
 	          String name = request.getParameter("movie_title");
 	          String year = request.getParameter("year");
 	          String director = request.getParameter("director");
@@ -204,23 +240,36 @@ public class searchpage extends HttpServlet {
 	            		"	where gs.id = gm.genreId\r\n" + 
 	            		"		AND gm.movieId = s.id\r\n" + 
 	            		"		AND ss.id = sm.starId\r\n" + 
-	            		"        AND sm.movieId = s.id\r\n AND s.title LIKE '%" + name + "%'AND s.director LIKE '%" + director + "%' AND s.year LIKE '%" + year+"%'\r\n" + 
+	            		"       AND sm.movieId = s.id\r\n AND s.title LIKE '%" + name + "%'" +
+	            		"		AND s.director LIKE '%" + director + "%'" + 
+	            		"		AND s.year LIKE '%" + year+"%'\r\n" + 
 	            		"	Group by s.id) as masterp , ratings r , movies m\r\n" + 
-	            		"    where m.title = masterp.title\r\n" + 
-	            		"    AND m.id = r.movieId AND masterp.Stars_Appear LIKE '%" + star_name + "%'\r\n" + qsort +
-	            		"limit "+ Numpp + "\r\n"+
-	            		"OFFSET " + os +";";
+	            		"   where m.title = masterp.title\r\n" + 
+	            		"   		AND m.id = r.movieId " +
+	            		"		AND masterp.Stars_Appear LIKE '%" + star_name + "%'\r\n" + qsort +
+	            		"limit "+ Numpp
+	            		+ "\r\nOFFSET " + os +";";
 	          
-	          msortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + mhtmlicon +"</a>";
-	          ysortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + yhtmlicon +"</a>";
-	          b10 = b10 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "10</a>";
-	   		   b25 = b25 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "25</a>";
-	   		   b50 = b50 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "50</a>";
-	   		backbutton = backbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name ;
- 		   nextbutton = nextbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name;
+		          msortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + mhtmlicon +"</a>";
+		          ysortbutton = "<a href= \"/project3/servlet/searchpage?movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name + yhtmlicon +"</a>";
+		          b10 = b10 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "10</a>";
+		   		  b25 = b25 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "25</a>";
+		   		  b50 = b50 + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name+ "\">"+ "50</a>";
+		   		  backbutton = backbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name ;
+		   		  nextbutton = nextbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name;
+		   		  
+		   		  
            }
            // Perform the query
-           ResultSet rs = statement.executeQuery(query);
+           //Statement statement = dbcon.createStatement();
+           PreparedStatement xd = dbcon.prepareStatement(query);
+           qstart = System.nanoTime();
+           
+
+           //ResultSet rs = statement.executeQuery(query);
+           ResultSet rs = xd.executeQuery();
+	       qend = System.nanoTime();
+
 
            out.println("<div align=\"right\">Number of Movie per page:"+ b10 + ", " + b25 + ", " + b50 +"</div>");
            out.println("<TABLE border>");
@@ -268,7 +317,7 @@ public class searchpage extends HttpServlet {
            out.println("</BODY></CENTER>");
            
            rs.close();
-           statement.close();
+           
            dbcon.close();
          }
 	     catch (SQLException ex) {
@@ -288,6 +337,25 @@ public class searchpage extends HttpServlet {
 	                         ex.getMessage() + "</P></BODY></HTML>");
 	             return;
 	         }
+        
+        
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime; // elapsed time in nano seconds. Note: print the values in nano seconds 
+        long qTime = qend - qstart;
+        
+        String contextPath = getServletContext().getRealPath("/");
+
+        String xmlFilePath=contextPath+"\\log_stat.txt";
+
+        System.out.println(xmlFilePath);
+        System.out.println(elapsedTime);
+        PrintWriter pw = new PrintWriter(new FileOutputStream(
+        	    new File(xmlFilePath), 
+        	    true /* append = true */)); 
+        
+        pw.println(String.valueOf(elapsedTime) + " " + String.valueOf(qTime));
+        pw.close();
+        
         out.close();
 
 	}
