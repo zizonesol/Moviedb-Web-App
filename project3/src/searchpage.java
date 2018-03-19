@@ -1,5 +1,7 @@
 
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.io.PrintWriter;
@@ -37,10 +39,17 @@ public class searchpage extends HttpServlet {
             ,"who","will","with","und","the","www"};
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
+        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+		
+		long startTime = System.nanoTime();
+		long qstart = 0;
+		long qend = 0;
         
         HttpSession session = request.getSession(true);
+        /*
         if(session.isNew())
         {
 	        	session.setAttribute("loginsuss", "no");
@@ -54,9 +63,11 @@ public class searchpage extends HttpServlet {
 	        		response.sendRedirect("/project3/servlet/welcome");
 	        	}
         }
-        
+        */
 
         response.setContentType("text/html");    // Response mime type
+        
+        
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
@@ -79,6 +90,7 @@ public class searchpage extends HttpServlet {
 		
         try
         {
+        	/*
         	Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -92,6 +104,12 @@ public class searchpage extends HttpServlet {
     		Connection dbcon = ds.getConnection();
     		if (dbcon == null)
     			out.println("dbcon is NULL");
+    			*/
+        	
+        	Class.forName("com.mysql.jdbc.Driver").newInstance();
+
+            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+           
            String query = "";
            
            String yearsort = request.getParameter("sorty");
@@ -300,10 +318,13 @@ public class searchpage extends HttpServlet {
  		   nextbutton = nextbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name;
            }
            // Perform the query
-           
+           //Statement statement = dbcon.createStatement();
            PreparedStatement xd = dbcon.prepareStatement(query);
-	       
-	       ResultSet rs = xd.executeQuery();
+           qstart = System.nanoTime();
+           
+           //ResultSet rs = statement.executeQuery(query);
+           ResultSet rs = xd.executeQuery();
+	       qend = System.nanoTime();
 
            out.println("<div align=\"right\">Number of Movie per page:"+ b10 + ", " + b25 + ", " + b50 +"</div>");
            out.println("<TABLE border>");
@@ -384,6 +405,25 @@ public class searchpage extends HttpServlet {
 	                         ex.getMessage() + "</P></BODY></HTML>");
 	             return;
 	         }
+        
+        
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime; // elapsed time in nano seconds. Note: print the values in nano seconds 
+        long qTime = qend - qstart;
+        
+        String contextPath = getServletContext().getRealPath("/");
+
+        String xmlFilePath=contextPath+"\\log_stat.txt";
+
+        System.out.println(xmlFilePath);
+        System.out.println(elapsedTime);
+        PrintWriter pw = new PrintWriter(new FileOutputStream(
+        	    new File(xmlFilePath), 
+        	    true /* append = true */)); 
+        
+        pw.println(String.valueOf(elapsedTime) + " " + String.valueOf(qTime));
+        pw.close();
+        
         out.close();
 
 	}

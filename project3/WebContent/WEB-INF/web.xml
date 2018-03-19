@@ -163,4 +163,5 @@
     <servlet-name>moviesuggestion</servlet-name>
     <url-pattern>/servlet/movie_suggestion</url-pattern>
   </servlet-mapping>
+  
 </web-app>

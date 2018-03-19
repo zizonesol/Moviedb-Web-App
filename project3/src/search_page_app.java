@@ -1,5 +1,6 @@
 
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -9,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.io.*;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -40,7 +42,9 @@ public class search_page_app extends HttpServlet {
 	                  ,"who","will","with","und","the","www"};
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+		
+		
+		
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		
@@ -183,6 +187,7 @@ public class search_page_app extends HttpServlet {
 	             return;
 	         }
         out.close();
+        
 
 	
 	}
