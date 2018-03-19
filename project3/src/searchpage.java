@@ -90,7 +90,7 @@ public class searchpage extends HttpServlet {
 		
         try
         {
-        	/*
+        	
         	Context initCtx = new InitialContext();
     		
     		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -104,11 +104,11 @@ public class searchpage extends HttpServlet {
     		Connection dbcon = ds.getConnection();
     		if (dbcon == null)
     			out.println("dbcon is NULL");
-    			*/
+    			
         	
-        	Class.forName("com.mysql.jdbc.Driver").newInstance();
+        	//Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
            
            String query = "";
            
