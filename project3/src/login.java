@@ -89,13 +89,11 @@ public class login extends HttpServlet
            
 	       String query = "SELECT * from customers where email = ?;";
 
-	       PreparedStatement statement = dbcon.prepareStatement(query);
 	       
-	       statement.setString(1, em);
-	       	       
            // Perform the query
 
 	       PreparedStatement xd = dbcon.prepareStatement(query);
+	       xd.setString(1, em);
 	       ResultSet rs = xd.executeQuery();
 
            
@@ -124,8 +122,8 @@ public class login extends HttpServlet
 		    		Connection mm = ms.getConnection();
 		    		if (mm == null)
 		    			out.println("dbcon is NULL");
-		    		 Statement statement = mm.createStatement();
-		    		 statement.executeUpdate("INSERT INTO customers (email,password,ccId) \r\n"
+		    		 Statement st = mm.createStatement();
+		    		 st.executeUpdate("INSERT INTO customers (email,password,ccId) \r\n"
 	        			   + "VALUES ('" + em + "', '" + passw + "',941);");
 	        	   HttpSession session = request.getSession(true);
 	        	   session.setAttribute("loginsuss", "yes");

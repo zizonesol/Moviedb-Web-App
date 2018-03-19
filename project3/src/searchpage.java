@@ -235,9 +235,7 @@ public class searchpage extends HttpServlet {
 	    		   b50 = b50 + "&title=\"" + title + "\">"+ "50</a>";
 	    		   backbutton = backbutton + "&title=\"" + title;
 	    		   nextbutton = nextbutton + "&title=\"" + title;
-	    		   
-	           statement = dbcon.prepareStatement(query);
-    		   	   statement.setString(1, '%' + title + '%');
+	    	
         	   		
            }
            else 
@@ -287,11 +285,7 @@ public class searchpage extends HttpServlet {
 		   		  backbutton = backbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name ;
 		   		  nextbutton = nextbutton + "&movie_title=" + name + "&year="+ year + "&director=" + director + "&star_name="+ star_name;
 		   		  
-		   		  statement = dbcon.prepareStatement(query);
-		   		  statement.setString(1, '%' + name + '%');
-		   		  statement.setString(2, '%' + director + '%');
-		   		  statement.setString(3, '%' + year + '%');
-		   		  statement.setString(4, '%' + star_name + '%');
+		   		  
            }
            // Perform the query
            //Statement statement = dbcon.createStatement();
